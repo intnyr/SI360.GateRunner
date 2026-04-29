@@ -1,0 +1,26 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Light palette (AAA-tuned) -->
+    <SolidColorBrush x:Key="BackgroundBrush" Color="#FFF3F5F8"/>
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="SurfaceAltBrush" Color="#FFE8ECF1"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="#FFB0B8C2"/>
+    <SolidColorBrush x:Key="ForegroundBrush" Color="#FF0B1220"/>
+    <SolidColorBrush x:Key="MutedForegroundBrush" Color="#FF3D4756"/>
+    <SolidColorBrush x:Key="PrimaryBrush" Color="#FF052472"/>
+    <SolidColorBrush x:Key="PrimaryHoverBrush" Color="#FF073087"/>
+    <SolidColorBrush x:Key="SuccessGreenBrush" Color="#FF166B2A"/>
+    <SolidColorBrush x:Key="WarningAmberBrush" Color="#FF7A5A04"/>
+    <SolidColorBrush x:Key="DangerRedBrush" Color="#FF9E1614"/>
+    <SolidColorBrush x:Key="DangerRowBrush" Color="#88FBD0D0"/>
+    <SolidColorBrush x:Key="ScrollThumbBrush" Color="#FF2A3240"/>
+    <SolidColorBrush x:Key="ScrollThumbDragBrush" Color="#FF0B1220"/>
+    <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#FFDDE3EA"/>
+    <SolidColorBrush x:Key="SelectedTintBrush" Color="#50084297"/>
+    <SolidColorBrush x:Key="HoverTintBrush" Color="#30084297"/>
+    <SolidColorBrush x:Key="SelectedCellBrush" Color="#50084297"/>
+    <SolidColorBrush x:Key="OnPrimaryForegroundBrush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="DisabledBgBrush" Color="#FFD6DBE2"/>
+    <SolidColorBrush x:Key="DisabledFgBrush" Color="#FF6A7280"/>
+</ResourceDictionary>

@@ -1,0 +1,69 @@
+<UserControl x:Class="SI360.GateRunner.Views.FailureInventoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:SI360.GateRunner.ViewModels"
+             d:DataContext="{d:DesignInstance Type=vm:MainViewModel}"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0" Margin="0,0,0,8">
+            <Button DockPanel.Dock="Right"
+                    Content="📋 Copy all as Markdown"
+                    MinHeight="36"
+                    Padding="14,0"
+                    FontSize="13"
+                    Command="{Binding CopyAllFailuresMarkdownCommand}"/>
+            <TextBlock Text="Failure Inventory" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+        </DockPanel>
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding FailuresView}"
+                  AutomationProperties.Name="Failure inventory"
+                  HorizontalScrollBarVisibility="Auto">
+            <DataGrid.Resources>
+                <ContextMenu x:Key="RowMenu">
+                    <MenuItem Header="Copy row as Markdown"
+                              Command="{Binding DataContext.CopyFailureMarkdownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                              CommandParameter="{Binding}"/>
+                    <MenuItem Header="Copy all failures as Markdown"
+                              Command="{Binding DataContext.CopyAllFailuresMarkdownCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                </ContextMenu>
+            </DataGrid.Resources>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+                    <Setter Property="ContextMenu" Value="{StaticResource RowMenu}"/>
+                    <Setter Property="Background" Value="{DynamicResource DangerRowBrush}"/>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Severity" Binding="{Binding SeverityRank}" Width="80"/>
+                <DataGridTextColumn Header="Gate" Binding="{Binding GateName}" Width="180"/>
+                <DataGridTextColumn Header="Test" Binding="{Binding TestName}" MinWidth="320" Width="3*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            <Setter Property="ToolTip" Value="{Binding TestName}"/>
+                            <Setter Property="FontFamily" Value="Consolas"/>
+                            <Setter Property="FontSize" Value="13"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Type" Binding="{Binding FailureType}" Width="180"/>
+                <DataGridTextColumn Header="Error" Binding="{Binding ErrorMessage}" MinWidth="280" Width="4*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            <Setter Property="ToolTip" Value="{Binding ErrorMessage}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Location" Binding="{Binding Location}" Width="200"/>
+                <DataGridTextColumn Header="Component" Binding="{Binding ComponentHint}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

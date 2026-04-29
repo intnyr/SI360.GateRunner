@@ -1,0 +1,58 @@
+<UserControl x:Class="SI360.GateRunner.Views.ScorecardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:SI360.GateRunner.ViewModels"
+             d:DataContext="{d:DesignInstance Type=vm:ScorecardViewModel}"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+            <Border Padding="16" CornerRadius="8" Background="{DynamicResource SurfaceBrush}">
+                <StackPanel>
+                    <TextBlock Text="Scenario Score (60%)" Foreground="{DynamicResource MutedForegroundBrush}"/>
+                    <TextBlock Text="{Binding ScenarioScore, StringFormat={}{0:0.0}}" FontSize="32" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Padding="16" Margin="12,0,0,0" CornerRadius="8" Background="{DynamicResource SurfaceBrush}">
+                <StackPanel>
+                    <TextBlock Text="Probabilistic Score (40%)" Foreground="{DynamicResource MutedForegroundBrush}"/>
+                    <TextBlock Text="{Binding ProbabilisticScore, StringFormat={}{0:0.0}}" FontSize="32" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Padding="16" Margin="12,0,0,0" CornerRadius="8" Background="{DynamicResource SurfaceBrush}">
+                <StackPanel>
+                    <TextBlock Text="Overall" Foreground="{DynamicResource MutedForegroundBrush}"/>
+                    <TextBlock Text="{Binding OverallScore, StringFormat={}{0:0.0}}" FontSize="32" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding Grade}" FontSize="14" Foreground="{DynamicResource MutedForegroundBrush}"/>
+                </StackPanel>
+            </Border>
+            <Border Padding="16" Margin="12,0,0,0" CornerRadius="8">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="{DynamicResource DangerRedBrush}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Decision}" Value="Go">
+                                <Setter Property="Background" Value="{DynamicResource SuccessGreenBrush}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Decision}" Value="Hold">
+                                <Setter Property="Background" Value="{DynamicResource WarningAmberBrush}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <StackPanel>
+                    <TextBlock Text="Deploy Decision" Foreground="White" Opacity="0.9"/>
+                    <TextBlock Text="{Binding DecisionText}" FontSize="32" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+        <TextBlock Grid.Row="1" Text="Formula: Overall = Scenario × 0.6 + Probabilistic × 0.4. Decision: ≥95 GO, ≥85 HOLD, else NO-GO."
+                   Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"/>
+    </Grid>
+</UserControl>

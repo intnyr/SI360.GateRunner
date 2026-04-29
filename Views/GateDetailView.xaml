@@ -1,0 +1,49 @@
+<UserControl x:Class="SI360.GateRunner.Views.GateDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:SI360.GateRunner.ViewModels"
+             d:DataContext="{d:DesignInstance Type=vm:GateRunViewModel}"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="0,0,0,8">
+            <TextBlock Text="{Binding DisplayName, FallbackValue='(select a gate)'}" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Text="{Binding Tooltip}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding Summary}" Margin="0,4,0,0"/>
+        </StackPanel>
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Tests}"
+                  AutomationProperties.Name="Test results"
+                  HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Test" Binding="{Binding Name}" MinWidth="420" Width="2*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            <Setter Property="ToolTip" Value="{Binding Name}"/>
+                            <Setter Property="FontFamily" Value="Consolas"/>
+                            <Setter Property="FontSize" Value="13"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Outcome" Binding="{Binding Status}" Width="100"/>
+                <DataGridTextColumn Header="ms" Binding="{Binding DurationMs, StringFormat={}{0:N0}}" Width="80"/>
+                <DataGridTextColumn Header="Error" Binding="{Binding ErrorExcerpt}" MinWidth="320" Width="3*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                            <Setter Property="ToolTip" Value="{Binding ErrorExcerpt}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Location" Binding="{Binding Location}" MinWidth="200" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

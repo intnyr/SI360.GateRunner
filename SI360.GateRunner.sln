@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SI360.GateRunner", "SI360.GateRunner.csproj", "{77179AD8-F853-1532-67ED-97AEA2047B4A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77179AD8-F853-1532-67ED-97AEA2047B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77179AD8-F853-1532-67ED-97AEA2047B4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77179AD8-F853-1532-67ED-97AEA2047B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77179AD8-F853-1532-67ED-97AEA2047B4A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2A77DF59-20E5-4969-B14B-E1B706F803A3}
+	EndGlobalSection
+EndGlobal

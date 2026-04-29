@@ -1,0 +1,2 @@
+D:\SI360.GateRunner\bin\Release\net8.0-windows\win-x86\publish\SI360.GateRunner.pdb
+D:\SI360.GateRunner\bin\Release\net8.0-windows\win-x86\publish\SI360.GateRunner.exe

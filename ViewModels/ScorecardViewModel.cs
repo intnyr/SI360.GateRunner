@@ -8,7 +8,7 @@ public partial class ScorecardViewModel : ObservableObject
     [ObservableProperty] private double scenarioScore;
     [ObservableProperty] private double probabilisticScore;
     [ObservableProperty] private double overallScore;
-    [ObservableProperty] private string grade = "—";
+    [ObservableProperty] private string grade = "-";
     [ObservableProperty] private DeployDecision decision = DeployDecision.NoGo;
     [ObservableProperty] private string decisionText = "NO-GO";
 

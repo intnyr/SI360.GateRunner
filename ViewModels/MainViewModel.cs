@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SI360.GateRunner.Models;
 using SI360.GateRunner.Services;
+using SI360.GateRunner.Views;
 
 namespace SI360.GateRunner.ViewModels;
 
@@ -21,7 +22,10 @@ public partial class MainViewModel : ObservableObject
     private readonly BuildErrorCollector _build;
     private readonly TrxResultParser _parser;
     private readonly ScorecardAggregator _aggregator;
-    private readonly ReportWriter _reportWriter;
+    private readonly IDecisionPolicy _decisionPolicy;
+    private readonly GateCatalogDriftAnalyzer _catalogDriftAnalyzer;
+    private readonly IReportWriter _reportWriter;
+    private readonly IProcessRunner _processRunner;
     private readonly ThemeManager _themeManager;
     private readonly ToastNotifier _toast;
     private CancellationTokenSource? _cts;
@@ -37,7 +41,10 @@ public partial class MainViewModel : ObservableObject
         BuildErrorCollector build,
         TrxResultParser parser,
         ScorecardAggregator aggregator,
-        ReportWriter reportWriter,
+        IDecisionPolicy decisionPolicy,
+        GateCatalogDriftAnalyzer catalogDriftAnalyzer,
+        IReportWriter reportWriter,
+        IProcessRunner processRunner,
         ThemeManager themeManager,
         ToastNotifier toast)
     {
@@ -46,7 +53,10 @@ public partial class MainViewModel : ObservableObject
         _build = build;
         _parser = parser;
         _aggregator = aggregator;
+        _decisionPolicy = decisionPolicy;
+        _catalogDriftAnalyzer = catalogDriftAnalyzer;
         _reportWriter = reportWriter;
+        _processRunner = processRunner;
         _themeManager = themeManager;
         _toast = toast;
 
@@ -82,6 +92,10 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private GateRunViewModel? selectedGate;
     [ObservableProperty] private string solutionPath = string.Empty;
     [ObservableProperty] private string testProjectPath = string.Empty;
+    [ObservableProperty] private string settingsWarningText = string.Empty;
+    [ObservableProperty] private bool hasSettingsWarnings;
+    [ObservableProperty] private string catalogWarningText = string.Empty;
+    [ObservableProperty] private bool hasCatalogWarnings;
 
     // Filter chips
     [ObservableProperty] private bool showRed = true;
@@ -100,10 +114,10 @@ public partial class MainViewModel : ObservableObject
     public int GreenCount => Gates.Count(g => g.Status == GateStatus.Green);
     public int PendingCount => Gates.Count(g => g.Status is GateStatus.Pending or GateStatus.Running);
 
-    public string RedChipLabel => $"● Red ({RedCount})";
-    public string YellowChipLabel => $"● Yellow ({YellowCount})";
-    public string GreenChipLabel => $"● Green ({GreenCount})";
-    public string PendingChipLabel => $"○ Pending ({PendingCount})";
+    public string RedChipLabel => $"Red ({RedCount})";
+    public string YellowChipLabel => $"Yellow ({YellowCount})";
+    public string GreenChipLabel => $"Green ({GreenCount})";
+    public string PendingChipLabel => $"Pending ({PendingCount})";
 
     private void RefreshChipCounts()
     {
@@ -132,13 +146,34 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string etaText = string.Empty;
 
     // Theme (#9)
-    [ObservableProperty] private string themeToggleText = "☀ Light";
+    [ObservableProperty] private string themeToggleText = "Light";
 
     public void RefreshSettings()
     {
         SolutionPath = _settings.SolutionPath;
         TestProjectPath = _settings.TestProjectPath;
+        RefreshWarnings();
         LoadPreviousRun();
+    }
+
+    private void RefreshWarnings()
+    {
+        var warnings = new List<string>();
+        if (string.IsNullOrWhiteSpace(_settings.SolutionPath) || !File.Exists(_settings.SolutionPath))
+            warnings.Add("Solution path is missing or invalid.");
+        if (string.IsNullOrWhiteSpace(_settings.TestProjectPath) || !File.Exists(_settings.TestProjectPath))
+            warnings.Add("Test project path is missing or invalid.");
+        if (_settings.GateTimeoutSeconds <= 0 || _settings.BuildTimeoutSeconds <= 0 || _settings.RestoreTimeoutSeconds <= 0)
+            warnings.Add("Timeout values must be greater than zero.");
+
+        SettingsWarningText = string.Join(" ", warnings);
+        HasSettingsWarnings = warnings.Count > 0;
+
+        var catalogWarnings = _catalogDriftAnalyzer.Validate(_settings);
+        CatalogWarningText = catalogWarnings.Count == 0
+            ? string.Empty
+            : string.Join(" ", catalogWarnings.Select(w => $"{w.Code}: {w.Message}"));
+        HasCatalogWarnings = catalogWarnings.Count > 0;
     }
 
     private void LoadPreviousRun()
@@ -150,7 +185,7 @@ public partial class MainViewModel : ObservableObject
             ScoreDeltaText = string.Empty;
             return;
         }
-        PreviousRunText = $"Last run {prev.StartedAt:yyyy-MM-dd HH:mm} → {prev.OverallScore:0.0} ({prev.Grade}, {prev.Decision})";
+        PreviousRunText = $"Last run {prev.StartedAt:yyyy-MM-dd HH:mm} -> {prev.OverallScore:0.0} ({prev.Grade}, {prev.Decision})";
     }
 
     private bool FilterGate(object obj)
@@ -192,7 +227,20 @@ public partial class MainViewModel : ObservableObject
             ClearPreviousRun(singleGate);
             LoadPreviousRun();
             var startedAt = _runStartedAt;
-            var summary = new RunSummary { StartedAt = startedAt };
+            var runDir = Path.Combine(_settings.ResultsDirectory, $"GateRun_{startedAt:yyyyMMdd_HHmmss}");
+            Directory.CreateDirectory(runDir);
+            var summary = new RunSummary
+            {
+                StartedAt = startedAt,
+                Environment = await RunEnvironmentCollector
+                    .CollectAsync(_settings, _processRunner, runDir, _cts.Token)
+                    .ConfigureAwait(true)
+            };
+            foreach (var warning in _catalogDriftAnalyzer.Validate(_settings))
+            {
+                summary.GateCatalogWarnings.Add(warning);
+                AppendLog($"[CATALOG] {warning.Code}: {warning.Message}");
+            }
 
             if (string.IsNullOrWhiteSpace(_settings.SolutionPath) || !File.Exists(_settings.SolutionPath))
             {
@@ -205,30 +253,36 @@ public partial class MainViewModel : ObservableObject
 
             if (singleGate is null)
             {
-                StatusText = "Restoring…";
-                await _runner.RestoreAsync(log, _cts.Token);
+                StatusText = "Restoring...";
+                var restore = await _runner.RestoreAsync(log, _cts.Token, runDir);
+                if (restore.ExitCode != 0)
+                {
+                    summary.BuildErrors.Add(new BuildError(_settings.TestProjectPath, 0, 0, "RESTORE", "dotnet restore failed."));
+                    StatusText = "Restore failed. Deploy decision = NO-GO.";
+                    ApplyDecision(summary);
+                    await FinalizeAsync(summary, startedAt);
+                    _toast.Show("Gate Run - NO-GO", "Restore failed. Deploy blocked.", error: true);
+                    return;
+                }
 
-                StatusText = "Building (Release)…";
-                var (buildExit, errors) = await _build.BuildAsync(log, _cts.Token);
+                StatusText = "Building (Release)...";
+                var (buildExit, errors) = await _build.BuildAsync(log, _cts.Token, runDir);
                 foreach (var e in errors) BuildErrors.Add(e);
                 summary.BuildErrors.AddRange(errors);
 
                 if (buildExit != 0 || errors.Count > 0)
                 {
                     StatusText = $"Build failed: {errors.Count} errors. Deploy decision = NO-GO.";
-                    summary.Decision = DeployDecision.NoGo;
+                    ApplyDecision(summary);
                     await FinalizeAsync(summary, startedAt);
-                    _toast.Show("Gate Run — NO-GO", $"{errors.Count} build errors. Deploy blocked.", error: true);
+                    _toast.Show("Gate Run - NO-GO", $"{errors.Count} build errors. Deploy blocked.", error: true);
                     return;
                 }
             }
             else
             {
-                StatusText = $"Re-running {singleGate.DisplayName}…";
+                StatusText = $"Re-running {singleGate.DisplayName}...";
             }
-
-            var runDir = Path.Combine(_settings.ResultsDirectory, $"GateRun_{startedAt:yyyyMMdd_HHmmss}");
-            Directory.CreateDirectory(runDir);
 
             foreach (var gateVm in gatesToRun)
             {
@@ -236,7 +290,7 @@ public partial class MainViewModel : ObservableObject
                 gateVm.IsRunning = true;
                 gateVm.Status = GateStatus.Running;
                 GatesView.Refresh();
-                StatusText = $"Running {gateVm.DisplayName} ({CompletedGates + 1}/{TotalGates})…";
+                StatusText = $"Running {gateVm.DisplayName} ({CompletedGates + 1}/{TotalGates})...";
 
                 var sw = Stopwatch.StartNew();
                 var (exit, trxPath, stdOut) = await _runner.RunGateAsync(
@@ -275,7 +329,7 @@ public partial class MainViewModel : ObservableObject
             if (singleGate is null)
             {
                 summary.Scorecard = _aggregator.Build(summary.GateResults);
-                summary.Decision = _aggregator.Decide(summary);
+                ApplyDecision(summary);
                 Scorecard.Apply(summary.Scorecard, summary.Decision);
 
                 var prev = PreviousRunLoader.LoadLatest(_settings.ResultsDirectory);
@@ -284,7 +338,7 @@ public partial class MainViewModel : ObservableObject
 
                 StatusText = $"Done. Decision: {Scorecard.DecisionText}. Score {summary.Scorecard.OverallScore:0.0} ({summary.Scorecard.Grade}).";
                 _toast.Show(
-                    $"Gate Run — {Scorecard.DecisionText}",
+                    $"Gate Run - {Scorecard.DecisionText}",
                     $"Overall {summary.Scorecard.OverallScore:0.0} ({summary.Scorecard.Grade}). {Failures.Count} failures.",
                     error: summary.Decision != DeployDecision.Go);
             }
@@ -320,24 +374,33 @@ public partial class MainViewModel : ObservableObject
         if (prev is null) { ScoreDeltaText = string.Empty; return; }
         var delta = Math.Round(current - prev.OverallScore, 2);
         ScoreDelta = delta;
-        var sign = delta > 0 ? "▲ +" : delta < 0 ? "▼ " : "= ";
+        var sign = delta > 0 ? "+ " : delta < 0 ? "- " : "= ";
         ScoreDeltaText = $"{sign}{delta:0.00} since {prev.StartedAt:yyyy-MM-dd HH:mm}";
     }
 
     private void RecomputeEta()
     {
-        if (!IsRunning || CompletedGates == 0) { EtaText = "…"; return; }
+        if (!IsRunning || CompletedGates == 0) { EtaText = "..."; return; }
         var elapsed = DateTime.Now - _runStartedAt;
         var avgPerGate = elapsed.TotalSeconds / CompletedGates;
         var remaining = Math.Max(0, TotalGates - CompletedGates);
         var etaSec = avgPerGate * remaining;
-        EtaText = $"ETA ~{FormatDuration(TimeSpan.FromSeconds(etaSec))} · elapsed {FormatDuration(elapsed)}";
+        EtaText = $"ETA ~{FormatDuration(TimeSpan.FromSeconds(etaSec))} / elapsed {FormatDuration(elapsed)}";
     }
 
     private static string FormatDuration(TimeSpan t)
         => t.TotalHours >= 1 ? $"{(int)t.TotalHours}h{t.Minutes:D2}m" :
            t.TotalMinutes >= 1 ? $"{t.Minutes}m{t.Seconds:D2}s" :
            $"{t.Seconds}s";
+
+    private void ApplyDecision(RunSummary summary)
+    {
+        var decision = _decisionPolicy.Decide(summary);
+        summary.Decision = decision.Decision;
+        summary.DecisionPolicyName = decision.PolicyName;
+        summary.DecisionPolicyVersion = decision.PolicyVersion;
+        summary.DecisionRationale = decision.Rationale;
+    }
 
     private async Task FinalizeAsync(RunSummary summary, DateTime startedAt)
     {
@@ -357,7 +420,7 @@ public partial class MainViewModel : ObservableObject
     private void Cancel()
     {
         _cts?.Cancel();
-        StatusText = "Cancelling…";
+        StatusText = "Cancelling...";
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenReport))]
@@ -412,7 +475,23 @@ public partial class MainViewModel : ObservableObject
     private void ToggleTheme()
     {
         _themeManager.Toggle();
-        ThemeToggleText = _themeManager.Current == AppTheme.Dark ? "☀ Light" : "🌙 Dark";
+        ThemeToggleText = _themeManager.Current == AppTheme.Dark ? "Light" : "Dark";
+    }
+
+    [RelayCommand]
+    private void OpenSettings()
+    {
+        var dialog = new SettingsWindow(_settings)
+        {
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            _settings.Save();
+            RefreshSettings();
+            StatusText = "Settings saved.";
+        }
     }
 
     [RelayCommand]

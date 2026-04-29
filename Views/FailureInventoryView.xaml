@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" Margin="0,0,0,8">
             <Button DockPanel.Dock="Right"
-                    Content="📋 Copy all as Markdown"
+                    Content="Copy all as Markdown"
                     MinHeight="36"
                     Padding="14,0"
                     FontSize="13"

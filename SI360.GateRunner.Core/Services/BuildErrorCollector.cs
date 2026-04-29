@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Text.RegularExpressions;
 using SI360.GateRunner.Models;
 
@@ -12,25 +11,24 @@ public sealed partial class BuildErrorCollector
     private static partial Regex MakeErrorRegex();
 
     private readonly RunnerSettings _settings;
+    private readonly IProcessRunner _processRunner;
 
-    public BuildErrorCollector(RunnerSettings settings) => _settings = settings;
+    public BuildErrorCollector(RunnerSettings settings, IProcessRunner processRunner)
+    {
+        _settings = settings;
+        _processRunner = processRunner;
+    }
 
-    public async Task<(int ExitCode, List<BuildError> Errors)> BuildAsync(IProgress<string>? log, CancellationToken ct)
+    public async Task<(int ExitCode, List<BuildError> Errors)> BuildAsync(
+        IProgress<string>? log,
+        CancellationToken ct,
+        string? artifactDirectory = null)
     {
         if (string.IsNullOrWhiteSpace(_settings.SolutionPath))
             throw new InvalidOperationException("SolutionPath not configured.");
 
         var errors = new List<BuildError>();
         var args = $"build \"{_settings.SolutionPath}\" -c Release -p:GenerateFullPaths=true -nologo -clp:ErrorsOnly";
-
-        var psi = new ProcessStartInfo("dotnet", args)
-        {
-            RedirectStandardOutput = true,
-            RedirectStandardError = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        };
-        using var proc = new Process { StartInfo = psi, EnableRaisingEvents = true };
 
         void Handle(string? data)
         {
@@ -48,15 +46,23 @@ public sealed partial class BuildErrorCollector
             }
         }
 
-        proc.OutputDataReceived += (_, e) => Handle(e.Data);
-        proc.ErrorDataReceived += (_, e) => Handle(e.Data);
+        var capture = new Progress<string>(Handle);
+        var result = await _processRunner.RunAsync(
+            new ProcessCommand(
+                "dotnet",
+                args,
+                Path.GetDirectoryName(_settings.SolutionPath) ?? Environment.CurrentDirectory,
+                TimeSpan.FromSeconds(Math.Max(1, _settings.BuildTimeoutSeconds)),
+                artifactDirectory,
+                "build"),
+            capture,
+            ct).ConfigureAwait(false);
 
-        if (!proc.Start()) throw new InvalidOperationException("Failed to start dotnet.");
-        proc.BeginOutputReadLine();
-        proc.BeginErrorReadLine();
+        if (result.TimedOut)
+            log?.Report($"[TIMEOUT] Build exceeded {_settings.BuildTimeoutSeconds}s.");
+        if (result.Canceled)
+            log?.Report("[CANCELED] Build was canceled.");
 
-        using var reg = ct.Register(() => { try { if (!proc.HasExited) proc.Kill(true); } catch { } });
-        await proc.WaitForExitAsync(ct).ConfigureAwait(false);
-        return (proc.ExitCode, errors);
+        return (result.ExitCode, errors);
     }
 }

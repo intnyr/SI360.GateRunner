@@ -1,6 +1,9 @@
 using System.Diagnostics;
 using System.Windows;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SI360.GateRunner.Services;
 using SI360.GateRunner.ViewModels;
 using SI360.GateRunner.Views;
@@ -12,6 +15,7 @@ namespace SI360.GateRunner;
 public partial class App : Application
 {
     public IServiceProvider Services { get; private set; } = null!;
+    private IHost? _host;
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -28,22 +32,31 @@ public partial class App : Application
             return;
         }
 
-        var settings = RunnerSettings.LoadOrDiscover();
+        _host = Host.CreateDefaultBuilder(e.Args)
+            .ConfigureAppConfiguration(builder =>
+            {
+                builder.SetBasePath(AppContext.BaseDirectory);
+                builder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                builder.AddEnvironmentVariables(prefix: "GATERUNNER_");
+            })
+            .ConfigureLogging(logging =>
+            {
+                logging.ClearProviders();
+                logging.AddConsole();
+                logging.AddDebug();
+            })
+            .ConfigureServices((context, services) =>
+            {
+                var settings = RunnerSettings.LoadOrDiscover();
+                context.Configuration.GetSection("RunnerSettings").Bind(settings);
+                ValidateSettings(settings);
+                services.AddSingleton(settings);
+                services.AddGateRunnerCore();
+                services.AddGateRunnerWpf();
+            })
+            .Build();
 
-        var sc = new ServiceCollection();
-        sc.AddSingleton(settings);
-        sc.AddSingleton<DotnetTestRunner>();
-        sc.AddSingleton<BuildErrorCollector>();
-        sc.AddSingleton<TrxResultParser>();
-        sc.AddSingleton<ScorecardAggregator>();
-        sc.AddSingleton<ReportWriter>();
-        sc.AddSingleton<ThemeManager>();
-        sc.AddSingleton<ToastNotifier>();
-        sc.AddSingleton<MainViewModel>();
-        sc.AddSingleton<MainWindow>();
-        Services = sc.BuildServiceProvider();
-
-        Exit += (_, _) => Services.GetService<ToastNotifier>()?.Dispose();
+        Services = _host.Services;
 
         var vm = Services.GetRequiredService<MainViewModel>();
         vm.RefreshSettings();
@@ -51,6 +64,13 @@ public partial class App : Application
         main.DataContext = vm;
         MainWindow = main;
         main.Show();
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        Services.GetService<ToastNotifier>()?.Dispose();
+        _host?.Dispose();
+        base.OnExit(e);
     }
 
     private static bool ProbeDotnetCli()
@@ -69,5 +89,15 @@ public partial class App : Application
             return p.ExitCode == 0;
         }
         catch { return false; }
+    }
+
+    private static void ValidateSettings(RunnerSettings settings)
+    {
+        if (settings.GateTimeoutSeconds <= 0)
+            settings.GateTimeoutSeconds = 900;
+        if (settings.BuildTimeoutSeconds <= 0)
+            settings.BuildTimeoutSeconds = 600;
+        if (settings.RestoreTimeoutSeconds <= 0)
+            settings.RestoreTimeoutSeconds = 300;
     }
 }

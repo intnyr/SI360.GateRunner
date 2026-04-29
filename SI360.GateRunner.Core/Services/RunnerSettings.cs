@@ -9,6 +9,9 @@ public sealed class RunnerSettings
     public string TestProjectPath { get; set; } = string.Empty;
     public string ResultsDirectory { get; set; } = string.Empty;
     public int PerTestTimeoutSeconds { get; set; } = 60;
+    public int RestoreTimeoutSeconds { get; set; } = 300;
+    public int BuildTimeoutSeconds { get; set; } = 600;
+    public int GateTimeoutSeconds { get; set; } = 900;
 
     private static string SettingsFile => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -32,7 +35,6 @@ public sealed class RunnerSettings
 
     public static RunnerSettings Discover()
     {
-        var s = new RunnerSettings();
         var candidates = new[]
         {
             AppContext.BaseDirectory,
@@ -41,6 +43,13 @@ public sealed class RunnerSettings
             @"D:\SI36020WPF",
             @"D:\SI360"
         };
+
+        return Discover(candidates);
+    }
+
+    public static RunnerSettings Discover(IEnumerable<string> candidates)
+    {
+        var s = new RunnerSettings();
 
         foreach (var root in candidates)
         {

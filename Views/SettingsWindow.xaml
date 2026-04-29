@@ -1,0 +1,70 @@
+<Window x:Class="SI360.GateRunner.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GateRunner Settings"
+        Width="760"
+        Height="470"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Style="{StaticResource AppWindowStyle}"
+        KeyboardNavigation.TabNavigation="Cycle">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="170"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2"
+                   Text="Settings"
+                   FontSize="22"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,18"/>
+
+        <TextBlock Grid.Row="1" Text="Solution path" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <TextBox x:Name="SolutionPathBox" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10"
+                 AutomationProperties.Name="Solution path"/>
+
+        <TextBlock Grid.Row="2" Text="Test project path" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <TextBox x:Name="TestProjectPathBox" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10"
+                 AutomationProperties.Name="Test project path"/>
+
+        <TextBlock Grid.Row="3" Text="Results directory" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <TextBox x:Name="ResultsDirectoryBox" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10"
+                 AutomationProperties.Name="Results directory"/>
+
+        <TextBlock Grid.Row="4" Text="Restore timeout" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <TextBox x:Name="RestoreTimeoutBox" Grid.Row="4" Grid.Column="1" Width="120" HorizontalAlignment="Left" Margin="0,0,0,10"
+                 AutomationProperties.Name="Restore timeout seconds"/>
+
+        <TextBlock Grid.Row="5" Text="Build timeout" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBox x:Name="BuildTimeoutBox" Width="120" AutomationProperties.Name="Build timeout seconds"/>
+            <TextBlock Text="Gate timeout" VerticalAlignment="Center" Margin="24,0,12,0"/>
+            <TextBox x:Name="GateTimeoutBox" Width="120" AutomationProperties.Name="Gate timeout seconds"/>
+        </StackPanel>
+
+        <TextBlock x:Name="ValidationText"
+                   Grid.Row="6"
+                   Grid.ColumnSpan="2"
+                   Foreground="{DynamicResource DangerRedBrush}"
+                   TextWrapping="Wrap"
+                   Margin="0,8,0,0"/>
+
+        <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="_Cancel" MinWidth="120" Style="{StaticResource SecondaryButtonStyle}" IsCancel="True"
+                    AutomationProperties.Name="Cancel settings"/>
+            <Button Content="_Save" MinWidth="120" Margin="8,0,0,0" Style="{StaticResource PrimaryButtonStyle}"
+                    IsDefault="True" Click="Save_Click" AutomationProperties.Name="Save settings"/>
+        </StackPanel>
+    </Grid>
+</Window>

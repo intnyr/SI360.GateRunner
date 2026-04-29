@@ -21,9 +21,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="SI360.GateRunner.Tests\**\*.cs" />
+    <Compile Remove="SI360.GateRunner.Core\**\*.cs" />
+    <Compile Remove="SI360.GateRunner.Cli\**\*.cs" />
+    <None Remove="SI360.GateRunner.Tests\**\*" />
+    <None Remove="SI360.GateRunner.Core\**\*" />
+    <None Remove="SI360.GateRunner.Cli\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="SI360.GateRunner.Core\SI360.GateRunner.Core.csproj" />
   </ItemGroup>
 
 </Project>

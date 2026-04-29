@@ -28,7 +28,7 @@ public static class GateCatalog
             "Health monitor, telemetry, logging."),
         new GateDefinition("Phase3CoverageGate", "Phase 3 Coverage Gate",
             "FullyQualifiedName~SI360.Tests.PreDeploymentGate.Phase3CoverageGateTests",
-            51, GateCategory.Coverage,
+            48, GateCategory.Coverage,
             "Coverage thresholds, rollback dual-DB support."),
         new GateDefinition("Phase4ScaleGate", "Phase 4 Scale Gate",
             "FullyQualifiedName~SI360.Tests.PreDeploymentGate.Phase4ScaleGateTests",
@@ -52,7 +52,7 @@ public static class GateCatalog
             "Composite formula, grade boundaries, GO/HOLD/NO-GO."),
         new GateDefinition("ScenarioWeightGate", "Scenario Weight Gate",
             "FullyQualifiedName~SI360.Tests.PreDeploymentGate.ScenarioWeightGateTests",
-            36, GateCategory.ScenarioWeights,
+            35, GateCategory.ScenarioWeights,
             "Scenario weights sum to 100, integrity."),
         new GateDefinition("SecurityGate", "Security Gate",
             "FullyQualifiedName~SI360.Tests.PreDeploymentGate.SecurityGateTests",
@@ -65,6 +65,6 @@ public static class GateCatalog
         new GateDefinition("TestInventoryGate", "Test Inventory Gate",
             "FullyQualifiedName~SI360.Tests.PreDeploymentGate.TestInventoryGateTests",
             38, GateCategory.TestInventory,
-            "Total test count ≥ threshold, class count thresholds.")
+            "Total test count >= threshold, class count thresholds.")
     };
 }

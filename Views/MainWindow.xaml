@@ -47,20 +47,20 @@
                         CornerRadius="12"
                         Padding="3">
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="▶  _Run Gates  (F5)"
+                        <Button Content="_Run Gates  (F5)"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 MinWidth="220"
                                 Command="{Binding RunGatesCommand}"
                                 AutomationProperties.Name="Run all gates"
                                 AutomationProperties.AutomationId="RunGatesButton"/>
-                        <Button Content="■  _Cancel  (Esc)"
+                        <Button Content="_Cancel  (Esc)"
                                 Margin="4,0,0,0"
                                 MinWidth="180"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Command="{Binding CancelCommand}"
                                 AutomationProperties.Name="Cancel current run"
                                 AutomationProperties.AutomationId="CancelButton"/>
-                        <Button Content="📄  _Open Report  (Ctrl+R)"
+                        <Button Content="_Open Report  (Ctrl+R)"
                                 Margin="4,0,0,0"
                                 MinWidth="240"
                                 Style="{StaticResource SecondaryButtonStyle}"
@@ -77,6 +77,15 @@
                         Command="{Binding ToggleThemeCommand}"
                         ToolTip="Toggle theme (Ctrl+T)"
                         AutomationProperties.Name="Toggle theme"/>
+                <Button DockPanel.Dock="Right"
+                        Content="_Settings"
+                        Margin="14,0,0,0"
+                        MinWidth="130"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding OpenSettingsCommand}"
+                        ToolTip="Configure paths and timeouts"
+                        AutomationProperties.Name="Open settings"
+                        AutomationProperties.AutomationId="SettingsButton"/>
                 <StackPanel Orientation="Vertical" Margin="28,0,14,0" VerticalAlignment="Center">
                     <TextBlock Text="{Binding StatusText}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
                     <StackPanel Orientation="Horizontal">
@@ -104,6 +113,38 @@
                             </TextBlock.Style>
                         </TextBlock>
                     </StackPanel>
+                    <TextBlock Text="{Binding SettingsWarningText}"
+                               FontSize="12"
+                               Foreground="{DynamicResource DangerRedBrush}"
+                               TextWrapping="Wrap"
+                               AutomationProperties.Name="Settings warning">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasSettingsWarnings}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock Text="{Binding CatalogWarningText}"
+                               FontSize="12"
+                               Foreground="{DynamicResource WarningAmberBrush}"
+                               TextWrapping="Wrap"
+                               AutomationProperties.Name="Catalog warning">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasCatalogWarnings}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                 </StackPanel>
             </DockPanel>
         </Border>

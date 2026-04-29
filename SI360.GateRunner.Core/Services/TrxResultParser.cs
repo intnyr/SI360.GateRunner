@@ -9,7 +9,7 @@ public sealed partial class TrxResultParser
 {
     private static readonly XNamespace Ns = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010";
 
-    [GeneratedRegex(@"in\s+(?<file>[^:]+):line\s+(?<line>\d+)", RegexOptions.Compiled)]
+    [GeneratedRegex(@"in\s+(?<file>.+):line\s+(?<line>\d+)", RegexOptions.Compiled)]
     private static partial Regex StackLocationRegex();
 
     public IReadOnlyList<TestOutcome> Parse(string trxPath, string gateName)
@@ -84,6 +84,6 @@ public sealed partial class TrxResultParser
         if (string.IsNullOrEmpty(s)) return s;
         var lines = s.Split('\n');
         if (lines.Length <= maxLines) return s;
-        return string.Join('\n', lines.Take(maxLines)) + $"\n… ({lines.Length - maxLines} more lines)";
+        return string.Join('\n', lines.Take(maxLines)) + $"\n... ({lines.Length - maxLines} more lines)";
     }
 }

@@ -240,8 +240,7 @@ public partial class MainViewModel : ObservableObject
 
                 var sw = Stopwatch.StartNew();
                 var (exit, trxPath, stdOut) = await _runner.RunGateAsync(
-                    gateVm.Definition.Id,
-                    gateVm.Definition.TestClassFilter,
+                    gateVm.Definition,
                     runDir,
                     log,
                     _cts.Token);

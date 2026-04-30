@@ -37,11 +37,11 @@ public static class GateCatalog
         new GateDefinition("PreDeploymentGate", "Pre-Deployment Orchestrator",
             "FullyQualifiedName~SI360.Tests.PreDeploymentGate.PreDeploymentGateTests",
             1, GateCategory.Orchestrator,
-            "Orchestrator: runs 5 scenarios + 5 probabilistic; fails when composite < 95."),
+            "Orchestrator: runs 5 scenarios and 5 probabilistic; fails when composite < 95."),
         new GateDefinition("ProductionMonitoringGate", "Production Monitoring Gate",
             "FullyQualifiedName~SI360.Tests.PreDeploymentGate.ProductionMonitoringGateTests",
             44, GateCategory.Production,
-            "Runtime alerting + Serilog sinks."),
+            "Runtime alerting and Serilog sinks."),
         new GateDefinition("ProductionSafetyGate", "Production Safety Gate",
             "FullyQualifiedName~SI360.Tests.PreDeploymentGate.ProductionSafetyGateTests",
             40, GateCategory.Safety,
@@ -65,6 +65,11 @@ public static class GateCatalog
         new GateDefinition("TestInventoryGate", "Test Inventory Gate",
             "FullyQualifiedName~SI360.Tests.PreDeploymentGate.TestInventoryGateTests",
             38, GateCategory.TestInventory,
-            "Total test count ≥ threshold, class count thresholds.")
+            "Total test count >= threshold, class count thresholds."),
+        new GateDefinition("WpfUiAutomationGate", "WPF UI Automation Gate",
+            "Category=Smoke&Auth!=Required",
+            0, GateCategory.UIAutomation,
+            "FlaUI smoke tests against the repo-built SI360.UI.exe in --test-mode.",
+            UsesUiTestProject: true)
     };
 }

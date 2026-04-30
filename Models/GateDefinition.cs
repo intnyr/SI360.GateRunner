@@ -16,7 +16,8 @@ public enum GateCategory
     ScenarioWeights,
     Security,
     StagedRollout,
-    TestInventory
+    TestInventory,
+    UIAutomation
 }
 
 public sealed record GateDefinition(
@@ -25,4 +26,5 @@ public sealed record GateDefinition(
     string TestClassFilter,
     int ExpectedTestCount,
     GateCategory Category,
-    string Notes);
+    string Notes,
+    bool UsesUiTestProject = false);

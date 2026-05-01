@@ -18,7 +18,7 @@ GateRunner remains the deployment validation and synthetic probe tool. It should
 - JSON and Markdown reports exist.
 - Decision policy is explicit.
 - Gate catalog discovery and validation exist.
-- GateRunner tests pass after restore/build: 36 tests passed after the latest modernization pass.
+- GateRunner tests pass after restore/build: 41 tests passed after strict quality enforcement coverage.
 - Catalog validation against current `D:\SI36020WPF` pre-deployment gates exits successfully.
 
 ## Documentation Ownership
@@ -42,6 +42,10 @@ GateRunner remains the deployment validation and synthetic probe tool. It should
 - TAS-127: Done - WPF metadata/probe views and redacted support bundle export added.
 - TAS-128: In Progress - documentation synchronization.
 - TAS-129: Done - CLI/settings/environment configuration surface expanded.
+- TAS-165: Done - build/test warnings are first-class quality issues with score and decision impact.
+- TAS-166: Done - runtime readiness errors and unknown readiness affect deployment decisions.
+- TAS-167: Done - reports include quality issue and grading-impact traceability.
+- TAS-168: Done - strict quality enforcement regression coverage added.
 
 ## P0 Required Changes
 
@@ -122,7 +126,20 @@ Extend GateRunner JSON reports with:
 - Redacted auth/config validation results.
 - Runtime readiness decision separate from pre-deployment gate score.
 
-Keep schema versioning explicit. Current schema version is `2.1`.
+Keep schema versioning explicit. Current schema version is `2.2`.
+
+## Strict Quality Enforcement
+
+GateRunner quality enforcement is intentionally fail-hard and warning-strict:
+
+- Error quality issues produce NO-GO.
+- Warning quality issues produce HOLD and subtract 2.00 points per warning from the scorecard.
+- Compiler/MSBuild warnings are captured from build output and are not informational-only.
+- Runtime readiness `NotReady` is an error quality issue.
+- Runtime readiness `Unknown` is a warning quality issue unless a future approved release mode explicitly changes that behavior.
+- JSON reports include `qualityIssues`, `gradingImpacts`, and `decisionPolicy.impacts` so every issue is traceable to score and deployment impact.
+
+Regression coverage includes build warning/error parsing, warning penalties, runtime readiness `NotReady` and `Unknown` policy behavior, and report contract assertions for quality issue traceability.
 
 ## P1 Deterministic Commands
 

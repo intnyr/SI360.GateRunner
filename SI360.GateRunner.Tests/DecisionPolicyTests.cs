@@ -57,7 +57,7 @@ public sealed class DecisionPolicyTests
         var result = _policy.Decide(summary);
 
         Assert.Equal(DeployDecision.Hold, result.Decision);
-        Assert.Contains("gate catalog warning", result.Rationale);
+        Assert.Contains("warning issue", result.Rationale);
         Assert.Contains("GATE_TEST_COUNT_DRIFT", result.Rationale);
     }
 
@@ -70,7 +70,68 @@ public sealed class DecisionPolicyTests
         var result = _policy.Decide(summary);
 
         Assert.Equal(DeployDecision.NoGo, result.Decision);
-        Assert.Contains("build produced 1 error", result.Rationale);
+        Assert.Contains("error issue", result.Rationale);
+    }
+
+    [Fact]
+    public void Decide_ReturnsHold_WhenBuildWarningExists()
+    {
+        var summary = SummaryWithScore(100, 100);
+        summary.GateResults.Add(Gate("BuildGate", GateStatus.Green));
+        summary.QualityIssues.Add(new QualityIssue(
+            "build:warning:CS0618",
+            QualityIssueSeverity.Warning,
+            QualityIssueSource.Build,
+            "A.cs:10",
+            "CS0618",
+            "Obsolete member.",
+            2,
+            "HOLD: build warning applies a strict quality penalty."));
+
+        var result = _policy.Decide(summary);
+
+        Assert.Equal(DeployDecision.Hold, result.Decision);
+        Assert.Contains("warning issue", result.Rationale);
+        Assert.Equal(98, summary.Scorecard.OverallScore);
+        Assert.Single(result.Impacts);
+    }
+
+    [Fact]
+    public void Decide_ReturnsNoGo_WhenRuntimeReadinessIsNotReady()
+    {
+        var summary = SummaryWithScore(100, 100);
+        summary.GateResults.Add(Gate("BuildGate", GateStatus.Green));
+        summary.RuntimeReadiness = RuntimeReadinessDecision.NotReady;
+        summary.RuntimeReadinessRationale = "One or more synthetic probes failed.";
+        summary.SyntheticProbes.Add(new SyntheticProbeResult(
+            "si360-health",
+            "SI360 health summary",
+            "https://si360.example.test/health",
+            "phase-1-readonly",
+            SyntheticProbeStatus.Failed,
+            10,
+            "HTTP 500 Internal Server Error"));
+
+        var result = _policy.Decide(summary);
+
+        Assert.Equal(DeployDecision.NoGo, result.Decision);
+        Assert.Contains("probe:si360-health", result.Rationale);
+        Assert.Contains(result.Impacts, i => i.Source == QualityIssueSource.SyntheticProbe);
+    }
+
+    [Fact]
+    public void Decide_ReturnsHold_WhenRuntimeReadinessIsUnknown()
+    {
+        var summary = SummaryWithScore(100, 100);
+        summary.GateResults.Add(Gate("BuildGate", GateStatus.Green));
+        summary.RuntimeReadiness = RuntimeReadinessDecision.Unknown;
+        summary.RuntimeReadinessRationale = "Deployment metadata was not configured.";
+
+        var result = _policy.Decide(summary);
+
+        Assert.Equal(DeployDecision.Hold, result.Decision);
+        Assert.Contains("runtime-readiness:unknown", result.Rationale);
+        Assert.Equal(98, summary.Scorecard.OverallScore);
     }
 
     [Fact]
@@ -89,6 +150,7 @@ public sealed class DecisionPolicyTests
         new()
         {
             StartedAt = DateTime.UtcNow,
+            RuntimeReadiness = RuntimeReadinessDecision.Ready,
             Scorecard = new Scorecard
             {
                 ScenarioScore = scenarioScore,

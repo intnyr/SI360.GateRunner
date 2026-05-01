@@ -71,17 +71,18 @@ Each run writes:
 
 The JSON report includes:
 
-- `schemaVersion`: current contract version, currently `2.1`
+- `schemaVersion`: current contract version, currently `2.2`
 - `startedAt` in UTC, `durationSeconds`, and environment `LocalUtcOffset`
 - `decision`
 - `environment`: tool version, machine, OS, runtime, SDK, repo path, branch, commit, artifact directory, command snapshots
-- `decisionPolicy`: policy name, version, and rationale
-- `runtimeReadiness`: runtime readiness decision and rationale, separate from pre-deployment GO/HOLD/NO-GO
+- `decisionPolicy`: policy name, version, rationale, and decision-impact issues
+- `runtimeReadiness`: runtime readiness decision and rationale
 - `healthContracts`: phase-1 contract version labels for SI360, SyncHealthHub, and third-party KDS
 - `deploymentMetadata`: installer-supplied metadata plus validation issues
 - `syntheticProbes`: read-only probe status, duration, endpoint, contract version, and redacted diagnostics
 - `gateCatalogWarnings`
-- `scorecard`
+- `qualityIssues` and `gradingImpacts`: issue severity, source location, score impact, and deployment impact
+- `scorecard`: scenario/probabilistic score, quality penalty, and final score
 - `history`: prior report path plus new, recurring, and resolved failures
 - `buildErrors`
 - `gates`: status, counts, duration, TRX path, and per-test failures
@@ -95,14 +96,15 @@ Report retention defaults to 30 days and prunes old `GateRun_*` reports and per-
 The decision policy is owned by GateRunner and mirrored in tests:
 
 ```text
-build errors present       -> NO-GO
+error quality issues       -> NO-GO
+warning quality issues     -> HOLD with a 2.00 point penalty per warning
 any red/error gate         -> NO-GO
 score >= 95 and no holds   -> GO
 score >= 85                -> HOLD
 otherwise                 -> NO-GO
 ```
 
-Catalog drift warnings produce a HOLD decision in reports and fail catalog validation in CI until the GateRunner catalog is reconciled with SI360.Tests.
+Compiler/MSBuild warnings, catalog drift warnings, and runtime readiness unknown are deployment-grade warnings. Metadata validation errors and failed/error probes are deployment-grade errors. Catalog drift warnings produce a HOLD decision in reports and fail catalog validation in CI until the GateRunner catalog is reconciled with SI360.Tests.
 
 ## UI
 
@@ -113,6 +115,7 @@ The WPF app provides:
 - gate status filters and per-gate rerun
 - score delta from the prior JSON report
 - visible settings and catalog warnings
+- quality issue traceability from source location to score and decision impact
 - failure inventory with Markdown copy support
 
 ## Documentation

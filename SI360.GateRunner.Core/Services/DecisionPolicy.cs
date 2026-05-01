@@ -6,7 +6,8 @@ public sealed record DecisionPolicyResult(
     DeployDecision Decision,
     string PolicyName,
     string PolicyVersion,
-    string Rationale);
+    string Rationale,
+    IReadOnlyList<QualityIssue> Impacts);
 
 public interface IDecisionPolicy
 {
@@ -22,11 +23,17 @@ public sealed class DecisionPolicy : IDecisionPolicy
 
     public DecisionPolicyResult Decide(RunSummary summary)
     {
-        if (summary.BuildErrors.Count > 0)
+        QualityIssueAggregator.RefreshDerivedIssues(summary);
+
+        var hardErrors = summary.QualityIssues
+            .Where(i => i.Severity == QualityIssueSeverity.Error)
+            .ToList();
+        if (hardErrors.Count > 0)
         {
             return Result(
                 DeployDecision.NoGo,
-                $"NO-GO: build produced {summary.BuildErrors.Count} error(s).");
+                $"NO-GO: {hardErrors.Count} error issue(s) fail the quality gate: {string.Join(", ", hardErrors.Select(i => i.Id))}.",
+                hardErrors);
         }
 
         if (summary.GateResults.Count == 0)
@@ -45,11 +52,15 @@ public sealed class DecisionPolicy : IDecisionPolicy
                 $"NO-GO: {redOrError.Count} gate(s) are red/error: {string.Join(", ", redOrError)}.");
         }
 
-        if (summary.GateCatalogWarnings.Count > 0)
+        var warnings = summary.QualityIssues
+            .Where(i => i.Severity == QualityIssueSeverity.Warning)
+            .ToList();
+        if (warnings.Count > 0)
         {
             return Result(
                 DeployDecision.Hold,
-                $"HOLD: {summary.GateCatalogWarnings.Count} gate catalog warning(s) require release-owner review: {string.Join(", ", summary.GateCatalogWarnings.Select(w => w.Code))}.");
+                $"HOLD: {warnings.Count} warning issue(s) apply {summary.Scorecard.QualityPenalty:0.00} point(s) of quality penalty: {string.Join(", ", warnings.Select(i => i.Id))}.",
+                warnings);
         }
 
         var score = summary.Scorecard.OverallScore;
@@ -83,6 +94,9 @@ public sealed class DecisionPolicy : IDecisionPolicy
             $"GO: all gates are green and score {score:0.00} meets the GO threshold.");
     }
 
-    private DecisionPolicyResult Result(DeployDecision decision, string rationale) =>
-        new(decision, Name, Version, rationale);
+    private DecisionPolicyResult Result(
+        DeployDecision decision,
+        string rationale,
+        IReadOnlyList<QualityIssue>? impacts = null) =>
+        new(decision, Name, Version, rationale, impacts ?? Array.Empty<QualityIssue>());
 }

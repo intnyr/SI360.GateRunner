@@ -31,7 +31,23 @@ public sealed class GateRunnerCommandsTests
         Assert.NotNull(command);
         Assert.Contains($"build \"{settings.SolutionPath}\"", command!.Arguments);
         Assert.Contains("--no-restore", command.Arguments);
+        Assert.DoesNotContain("ErrorsOnly", command.Arguments);
         Assert.Equal("build", command.ArtifactName);
+    }
+
+    [Fact]
+    public async Task BuildAsync_CapturesWarningsAndErrorsAsQualityIssues()
+    {
+        var settings = Settings();
+        var runner = new BuildErrorCollector(settings, new CaptureProcessRunner(
+            "D:\\Repo\\Warn.cs(12,4): warning CS0618: Obsolete member",
+            "D:\\Repo\\Error.cs(20,8): error CS1002: ; expected"));
+
+        var (_, issues) = await runner.BuildAsync(null, CancellationToken.None, "artifacts");
+
+        Assert.Equal(2, issues.Count);
+        Assert.Contains(issues, i => i.Severity == SI360.GateRunner.Models.QualityIssueSeverity.Warning && i.Code == "CS0618");
+        Assert.Contains(issues, i => i.Severity == SI360.GateRunner.Models.QualityIssueSeverity.Error && i.Code == "CS1002");
     }
 
     [Fact]
@@ -65,6 +81,13 @@ public sealed class GateRunnerCommandsTests
 
     private sealed class CaptureProcessRunner : IProcessRunner
     {
+        private readonly string[] _lines;
+
+        public CaptureProcessRunner(params string[] lines)
+        {
+            _lines = lines;
+        }
+
         public static ProcessCommand? LastCommand { get; private set; }
 
         public Task<ProcessRunResult> RunAsync(
@@ -73,6 +96,8 @@ public sealed class GateRunnerCommandsTests
             CancellationToken cancellationToken)
         {
             LastCommand = command;
+            foreach (var line in _lines)
+                log?.Report(line);
             return Task.FromResult(new ProcessRunResult(0, string.Empty, string.Empty, false, false, command.ArtifactDirectory));
         }
     }

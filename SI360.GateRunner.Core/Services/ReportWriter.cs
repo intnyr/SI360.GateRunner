@@ -12,7 +12,7 @@ public interface IReportWriter
 
 public sealed class ReportWriter : IReportWriter
 {
-    public const string SchemaVersion = "2.1";
+    public const string SchemaVersion = "2.2";
     private readonly IReportHistoryAnalyzer _historyAnalyzer;
     private readonly ISecretRedactor _redactor;
 
@@ -144,6 +144,17 @@ public sealed class ReportWriter : IReportWriter
             sb.AppendLine();
         }
 
+        if (s.QualityIssues.Count > 0)
+        {
+            sb.AppendLine("## Quality Issues And Grading Impact");
+            sb.AppendLine();
+            sb.AppendLine("| Severity | Source | Location | Code | Score Impact | Decision Impact | Message |");
+            sb.AppendLine("|----------|--------|----------|------|-------------:|-----------------|---------|");
+            foreach (var issue in s.QualityIssues)
+                sb.AppendLine($"| {issue.Severity} | {issue.Source} | `{Escape(issue.SourceLocation, redactor)}` | {Escape(issue.Code, redactor)} | -{Math.Abs(issue.ScoreImpact):0.00} | {Escape(issue.DecisionImpact, redactor)} | {Escape(issue.Message, redactor)} |");
+            sb.AppendLine();
+        }
+
         sb.AppendLine("## Gates");
         sb.AppendLine();
         sb.AppendLine("| # | Gate | Status | Passed | Failed | Skipped | Duration |");
@@ -239,7 +250,8 @@ public sealed class ReportWriter : IReportWriter
             {
                 name = Safe(s.DecisionPolicyName, redactor),
                 version = Safe(s.DecisionPolicyVersion, redactor),
-                rationale = Safe(s.DecisionRationale, redactor)
+                rationale = Safe(s.DecisionRationale, redactor),
+                impacts = RedactQualityIssues(s.DecisionImpacts, redactor)
             },
             runtimeReadiness = new
             {
@@ -299,6 +311,8 @@ public sealed class ReportWriter : IReportWriter
             {
                 scenarioScore = s.Scorecard.ScenarioScore,
                 probabilisticScore = s.Scorecard.ProbabilisticScore,
+                baseOverallScore = s.Scorecard.BaseOverallScore,
+                qualityPenalty = s.Scorecard.QualityPenalty,
                 overallScore = s.Scorecard.OverallScore,
                 grade = s.Scorecard.Grade,
                 scenarios = s.Scorecard.Scenarios.Select(sc => new
@@ -334,6 +348,8 @@ public sealed class ReportWriter : IReportWriter
                 Code = Safe(e.Code, redactor),
                 Message = Safe(e.Message, redactor)
             }),
+            qualityIssues = RedactQualityIssues(s.QualityIssues, redactor),
+            gradingImpacts = RedactQualityIssues(s.QualityIssues, redactor),
             gates = s.GateResults.Select(g => new
             {
                 id = Safe(g.Definition.Id, redactor),
@@ -377,6 +393,20 @@ public sealed class ReportWriter : IReportWriter
             TestName = Safe(f.TestName, redactor),
             FilePath = Safe(f.FilePath, redactor),
             f.LineNumber
+        });
+
+    private static IEnumerable<object> RedactQualityIssues(IEnumerable<QualityIssue> issues, ISecretRedactor redactor) =>
+        issues.Select(i => new
+        {
+            id = Safe(i.Id, redactor),
+            severity = i.Severity.ToString(),
+            source = i.Source.ToString(),
+            sourceLocation = Safe(i.SourceLocation, redactor),
+            code = Safe(i.Code, redactor),
+            message = Safe(i.Message, redactor),
+            scoreImpact = i.ScoreImpact,
+            decisionImpact = Safe(i.DecisionImpact, redactor),
+            artifactPath = Safe(i.ArtifactPath, redactor)
         });
 
     private static string ClassifyFailure(TestOutcome o)

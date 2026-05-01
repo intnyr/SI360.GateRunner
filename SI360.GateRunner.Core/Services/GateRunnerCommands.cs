@@ -16,7 +16,7 @@ public static class GateRunnerCommands
     public static ProcessCommand Build(RunnerSettings settings, string? artifactDirectory) =>
         new(
             "dotnet",
-            $"build \"{Require(settings.SolutionPath, nameof(settings.SolutionPath))}\" -c {Require(settings.BuildConfiguration, nameof(settings.BuildConfiguration))} --no-restore -p:GenerateFullPaths=true -nologo -clp:ErrorsOnly",
+            $"build \"{Require(settings.SolutionPath, nameof(settings.SolutionPath))}\" -c {Require(settings.BuildConfiguration, nameof(settings.BuildConfiguration))} --no-restore -p:GenerateFullPaths=true -nologo -clp:Summary",
             WorkingDirectoryFor(settings.SolutionPath),
             TimeSpan.FromSeconds(Math.Max(1, settings.BuildTimeoutSeconds)),
             artifactDirectory,

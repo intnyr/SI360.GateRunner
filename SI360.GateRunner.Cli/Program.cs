@@ -104,6 +104,7 @@ static async Task<int> RunAsync(IServiceProvider services)
     var progress = new Progress<string>(Console.WriteLine);
     var summary = await orchestrator.RunAsync(new GateRunRequest(), progress, CancellationToken.None);
     Console.WriteLine($"Decision: {Label(summary.Decision)}");
+    Console.WriteLine($"Quality issues: {summary.QualityIssues.Count} ({summary.QualityIssues.Count(i => i.Severity == QualityIssueSeverity.Error)} errors, {summary.QualityIssues.Count(i => i.Severity == QualityIssueSeverity.Warning)} warnings)");
     Console.WriteLine($"Markdown: {summary.ReportMarkdownPath}");
     Console.WriteLine($"JSON: {summary.ReportJsonPath}");
 

@@ -181,11 +181,57 @@ public sealed class ReportWriterTests
 
         using var doc = JsonDocument.Parse(await File.ReadAllTextAsync(jsonPath));
         var root = doc.RootElement;
-        Assert.Equal("2.1", root.GetProperty("schemaVersion").GetString());
+        Assert.Equal(ReportWriter.SchemaVersion, root.GetProperty("schemaVersion").GetString());
         Assert.Equal("Ready", root.GetProperty("runtimeReadiness").GetProperty("decision").GetString());
         Assert.Equal("SITE-001", root.GetProperty("deploymentMetadata").GetProperty("metadata").GetProperty("SiteId").GetString());
         Assert.Single(root.GetProperty("syntheticProbes").EnumerateArray());
         Assert.True(root.GetProperty("healthContracts").TryGetProperty("syncHealthHub", out _));
+    }
+
+    [Fact]
+    public async Task WriteAsync_IncludesQualityIssuesAndGradingImpacts()
+    {
+        using var dir = new TempDirectory();
+        var summary = new RunSummary
+        {
+            StartedAt = new DateTime(2026, 4, 30, 1, 2, 3, DateTimeKind.Utc),
+            Decision = DeployDecision.Hold,
+            DecisionPolicyName = "AllGatesAndScorecard",
+            DecisionPolicyVersion = "2026.05.01",
+            DecisionRationale = "HOLD: warning issue.",
+            Scorecard = new Scorecard
+            {
+                ScenarioScore = 100,
+                ProbabilisticScore = 100,
+                QualityPenalty = 2
+            }
+        };
+        var issue = new QualityIssue(
+            "build:warning:CS0618",
+            QualityIssueSeverity.Warning,
+            QualityIssueSource.Build,
+            "Build.cs:12",
+            "CS0618",
+            "Obsolete member.",
+            2,
+            "HOLD: build warning applies a strict quality penalty.");
+        summary.QualityIssues.Add(issue);
+        summary.DecisionImpacts.Add(issue);
+
+        var writer = new ReportWriter();
+        var (markdownPath, jsonPath) = await writer.WriteAsync(summary, dir.Path);
+
+        var markdown = await File.ReadAllTextAsync(markdownPath);
+        Assert.Contains("Quality Issues And Grading Impact", markdown);
+        Assert.Contains("CS0618", markdown);
+
+        using var doc = JsonDocument.Parse(await File.ReadAllTextAsync(jsonPath));
+        var root = doc.RootElement;
+        Assert.Equal(98, root.GetProperty("scorecard").GetProperty("overallScore").GetDouble());
+        Assert.Equal(2, root.GetProperty("scorecard").GetProperty("qualityPenalty").GetDouble());
+        Assert.Single(root.GetProperty("qualityIssues").EnumerateArray());
+        Assert.Single(root.GetProperty("gradingImpacts").EnumerateArray());
+        Assert.Single(root.GetProperty("decisionPolicy").GetProperty("impacts").EnumerateArray());
     }
 
     private sealed class TempDirectory : IDisposable

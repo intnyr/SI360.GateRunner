@@ -20,6 +20,7 @@ public sealed class RunSummary
     public TimeSpan Duration { get; set; }
     public RunEnvironment Environment { get; set; } = new();
     public List<BuildError> BuildErrors { get; } = new();
+    public List<QualityIssue> QualityIssues { get; } = new();
     public List<GateResult> GateResults { get; } = new();
     public List<GateCatalogWarning> GateCatalogWarnings { get; } = new();
     public DeploymentMetadataValidationResult DeploymentMetadata { get; set; } = new();
@@ -32,6 +33,7 @@ public sealed class RunSummary
     public string DecisionPolicyName { get; set; } = string.Empty;
     public string DecisionPolicyVersion { get; set; } = string.Empty;
     public string DecisionRationale { get; set; } = string.Empty;
+    public List<QualityIssue> DecisionImpacts { get; } = new();
     public ReportHistoryComparison History { get; set; } = new();
     public string? ReportMarkdownPath { get; set; }
     public string? ReportJsonPath { get; set; }
@@ -64,7 +66,9 @@ public sealed class Scorecard
 {
     public double ScenarioScore { get; set; }
     public double ProbabilisticScore { get; set; }
-    public double OverallScore => Math.Round(ScenarioScore * 0.6 + ProbabilisticScore * 0.4, 2);
+    public double QualityPenalty { get; set; }
+    public double BaseOverallScore => Math.Round(ScenarioScore * 0.6 + ProbabilisticScore * 0.4, 2);
+    public double OverallScore => Math.Round(Math.Max(0, BaseOverallScore - QualityPenalty), 2);
     public string Grade => OverallScore switch
     {
         >= 95 => "A+",

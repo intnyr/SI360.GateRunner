@@ -76,19 +76,25 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
 
         if (request.BuildFirst)
         {
+            if (!await EnsureSdkSupportsSolutionAsync(summary, runDir, log, cancellationToken).ConfigureAwait(false))
+            {
+                await FinalizeAsync(summary, startedAt).ConfigureAwait(false);
+                return summary;
+            }
+
             log?.Report("Restoring...");
             var restore = await _testRunner.RestoreAsync(log, cancellationToken, runDir).ConfigureAwait(false);
             if (restore.ExitCode != 0)
             {
-                summary.BuildErrors.Add(new BuildError(_settings.TestProjectPath, 0, 0, "RESTORE", "dotnet restore failed."));
+                QualityIssueAggregator.AddRestoreFailure(summary, _settings.TestProjectPath);
                 await FinalizeAsync(summary, startedAt).ConfigureAwait(false);
                 return summary;
             }
 
             log?.Report("Building...");
-            var (buildExit, errors) = await _buildErrorCollector.BuildAsync(log, cancellationToken, runDir).ConfigureAwait(false);
-            summary.BuildErrors.AddRange(errors);
-            if (buildExit != 0 || errors.Count > 0)
+            var (buildExit, issues) = await _buildErrorCollector.BuildAsync(log, cancellationToken, runDir).ConfigureAwait(false);
+            QualityIssueAggregator.AddBuildIssues(summary, issues);
+            if (buildExit != 0 || issues.Any(i => i.Severity == QualityIssueSeverity.Error))
             {
                 await FinalizeAsync(summary, startedAt).ConfigureAwait(false);
                 return summary;
@@ -131,11 +137,14 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
     private async Task FinalizeAsync(RunSummary summary, DateTime startedAt)
     {
         summary.Scorecard = _aggregator.Build(summary.GateResults);
+        QualityIssueAggregator.RefreshDerivedIssues(summary);
         var decision = _decisionPolicy.Decide(summary);
         summary.Decision = decision.Decision;
         summary.DecisionPolicyName = decision.PolicyName;
         summary.DecisionPolicyVersion = decision.PolicyVersion;
         summary.DecisionRationale = decision.Rationale;
+        summary.DecisionImpacts.Clear();
+        summary.DecisionImpacts.AddRange(decision.Impacts);
         summary.Duration = DateTime.UtcNow - startedAt;
         var (md, json) = await _reportWriter.WriteAsync(summary, _settings.ResultsDirectory).ConfigureAwait(false);
         ReportRetentionPruner.Prune(_settings.ResultsDirectory, _settings.ReportRetentionDays, DateTimeOffset.UtcNow);

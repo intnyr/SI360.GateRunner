@@ -252,12 +252,17 @@
                     <TabItem Header="Scorecard">
                         <views:ScorecardView DataContext="{Binding Scorecard}"/>
                     </TabItem>
-                    <TabItem Header="Build Errors">
-                        <DataGrid ItemsSource="{Binding BuildErrors}">
+                    <TabItem Header="Quality Issues">
+                        <DataGrid ItemsSource="{Binding QualityIssues}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="File" Binding="{Binding FilePath}" Width="*"/>
-                                <DataGridTextColumn Header="Line" Binding="{Binding Line}" Width="80"/>
+                                <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="100"/>
+                                <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="140"/>
+                                <DataGridTextColumn Header="Location" Binding="{Binding SourceLocation}" Width="*"/>
                                 <DataGridTextColumn Header="Code" Binding="{Binding Code}" Width="100"/>
+                                <DataGridTextColumn Header="Score Impact" Binding="{Binding ScoreImpact}" Width="110"/>
+                                <DataGridTextColumn Header="Decision Impact" Binding="{Binding DecisionImpact}" Width="2*"/>
                                 <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="2*"/>
                             </DataGrid.Columns>
                         </DataGrid>

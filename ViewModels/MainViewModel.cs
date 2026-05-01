@@ -89,6 +89,7 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<GateRunViewModel> Gates { get; } = new();
     public ObservableCollection<FailureItemViewModel> Failures { get; } = new();
     public ObservableCollection<BuildError> BuildErrors { get; } = new();
+    public ObservableCollection<QualityIssue> QualityIssues { get; } = new();
     public ObservableCollection<DeploymentMetadataIssue> MetadataIssues { get; } = new();
     public ObservableCollection<SyntheticProbeResult> ProbeResults { get; } = new();
     public ScorecardViewModel Scorecard { get; }
@@ -272,7 +273,8 @@ public partial class MainViewModel : ObservableObject
                 var restore = await _runner.RestoreAsync(log, _cts.Token, runDir);
                 if (restore.ExitCode != 0)
                 {
-                    summary.BuildErrors.Add(new BuildError(_settings.TestProjectPath, 0, 0, "RESTORE", "dotnet restore failed."));
+                    QualityIssueAggregator.AddRestoreFailure(summary, _settings.TestProjectPath);
+                    RefreshQualityIssues(summary);
                     StatusText = "Restore failed. Deploy decision = NO-GO.";
                     ApplyDecision(summary);
                     await FinalizeAsync(summary, startedAt);
@@ -281,16 +283,17 @@ public partial class MainViewModel : ObservableObject
                 }
 
                 StatusText = "Building (Release)...";
-                var (buildExit, errors) = await _build.BuildAsync(log, _cts.Token, runDir);
-                foreach (var e in errors) BuildErrors.Add(e);
-                summary.BuildErrors.AddRange(errors);
+                var (buildExit, issues) = await _build.BuildAsync(log, _cts.Token, runDir);
+                QualityIssueAggregator.AddBuildIssues(summary, issues);
+                RefreshQualityIssues(summary);
 
-                if (buildExit != 0 || errors.Count > 0)
+                var errorCount = issues.Count(i => i.Severity == QualityIssueSeverity.Error);
+                if (buildExit != 0 || errorCount > 0)
                 {
-                    StatusText = $"Build failed: {errors.Count} errors. Deploy decision = NO-GO.";
+                    StatusText = $"Build failed: {errorCount} errors. Deploy decision = NO-GO.";
                     ApplyDecision(summary);
                     await FinalizeAsync(summary, startedAt);
-                    _toast.Show("Gate Run - NO-GO", $"{errors.Count} build errors. Deploy blocked.", error: true);
+                    _toast.Show("Gate Run - NO-GO", $"{errorCount} build errors. Deploy blocked.", error: true);
                     return;
                 }
             }
@@ -344,6 +347,8 @@ public partial class MainViewModel : ObservableObject
             if (singleGate is null)
             {
                 summary.Scorecard = _aggregator.Build(summary.GateResults);
+                QualityIssueAggregator.RefreshDerivedIssues(summary);
+                RefreshQualityIssues(summary);
                 ApplyDecision(summary);
                 Scorecard.Apply(summary.Scorecard, summary.Decision);
 
@@ -415,6 +420,9 @@ public partial class MainViewModel : ObservableObject
         summary.DecisionPolicyName = decision.PolicyName;
         summary.DecisionPolicyVersion = decision.PolicyVersion;
         summary.DecisionRationale = decision.Rationale;
+        summary.DecisionImpacts.Clear();
+        summary.DecisionImpacts.AddRange(decision.Impacts);
+        RefreshQualityIssues(summary);
     }
 
     private async Task FinalizeAsync(RunSummary summary, DateTime startedAt)
@@ -558,6 +566,7 @@ public partial class MainViewModel : ObservableObject
         _latestSummary = null;
         MetadataIssues.Clear();
         ProbeResults.Clear();
+        QualityIssues.Clear();
         RuntimeReadinessText = "Runtime readiness: Unknown. Phase-1 probes are read-only.";
         OpenReportCommand.NotifyCanExecuteChanged();
         ExportSupportBundleCommand.NotifyCanExecuteChanged();
@@ -631,5 +640,15 @@ public partial class MainViewModel : ObservableObject
         }
 
         RuntimeReadinessText = $"Runtime readiness: {summary.RuntimeReadiness}. {summary.RuntimeReadinessRationale} Phase-1 probes are read-only.";
+    }
+
+    private void RefreshQualityIssues(RunSummary summary)
+    {
+        QualityIssues.Clear();
+        BuildErrors.Clear();
+        foreach (var issue in summary.QualityIssues)
+            QualityIssues.Add(issue);
+        foreach (var issue in summary.QualityIssues.Where(i => i.Severity == QualityIssueSeverity.Error && i.Source == QualityIssueSource.Build))
+            BuildErrors.Add(new BuildError(issue.SourceLocation, 0, 0, issue.Code, issue.Message));
     }
 }

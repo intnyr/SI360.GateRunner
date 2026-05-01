@@ -5,10 +5,10 @@ namespace SI360.GateRunner.Services;
 
 public sealed partial class BuildErrorCollector
 {
-    private static readonly Regex ErrorRegex = MakeErrorRegex();
+    private static readonly Regex IssueRegex = MakeIssueRegex();
 
-    [GeneratedRegex(@"^(?<file>.+?)\((?<line>\d+),(?<col>\d+)\):\s*error\s+(?<code>[A-Z]+\d+):\s*(?<msg>.+)$", RegexOptions.Compiled)]
-    private static partial Regex MakeErrorRegex();
+    [GeneratedRegex(@"^(?<file>.+?)\((?<line>\d+)(?:,(?<col>\d+))?\):\s*(?<severity>error|warning)\s+(?<code>[A-Z]+\d+):\s*(?<msg>.+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled)]
+    private static partial Regex MakeIssueRegex();
 
     private readonly RunnerSettings _settings;
     private readonly IProcessRunner _processRunner;
@@ -19,33 +19,45 @@ public sealed partial class BuildErrorCollector
         _processRunner = processRunner;
     }
 
-    public async Task<(int ExitCode, List<BuildError> Errors)> BuildAsync(
+    public async Task<(int ExitCode, List<QualityIssue> Issues)> BuildAsync(
         IProgress<string>? log,
         CancellationToken ct,
         string? artifactDirectory = null)
     {
-        var errors = new List<BuildError>();
+        var issues = new List<QualityIssue>();
 
         void Handle(string? data)
         {
             if (string.IsNullOrEmpty(data)) return;
             log?.Report(data);
-            var m = ErrorRegex.Match(data);
+            var m = IssueRegex.Match(data);
             if (m.Success)
             {
-                errors.Add(new BuildError(
-                    m.Groups["file"].Value.Trim(),
-                    int.Parse(m.Groups["line"].Value),
-                    int.Parse(m.Groups["col"].Value),
+                var severity = string.Equals(m.Groups["severity"].Value, "error", StringComparison.OrdinalIgnoreCase)
+                    ? QualityIssueSeverity.Error
+                    : QualityIssueSeverity.Warning;
+                var file = m.Groups["file"].Value.Trim();
+                var line = m.Groups["line"].Value;
+                var col = m.Groups["col"].Success ? m.Groups["col"].Value : "0";
+                var code = m.Groups["code"].Value;
+                issues.Add(new QualityIssue(
+                    $"build:{severity}:{code}:{file}:{line}:{col}",
+                    severity,
+                    QualityIssueSource.Build,
+                    $"{file}:{line}",
                     m.Groups["code"].Value,
-                    m.Groups["msg"].Value.Trim()));
+                    m.Groups["msg"].Value.Trim(),
+                    severity == QualityIssueSeverity.Warning ? 2.0 : 100.0,
+                    severity == QualityIssueSeverity.Warning
+                        ? "HOLD: build warning applies a strict quality penalty."
+                        : "NO-GO: build error fails the quality gate.",
+                    artifactDirectory is null ? null : Path.Combine(artifactDirectory, "build.stdout.log")));
             }
         }
 
-        var capture = new Progress<string>(Handle);
         var result = await _processRunner.RunAsync(
             GateRunnerCommands.Build(_settings, artifactDirectory),
-            capture,
+            new InlineProgress(Handle),
             ct).ConfigureAwait(false);
 
         if (result.TimedOut)
@@ -53,6 +65,18 @@ public sealed partial class BuildErrorCollector
         if (result.Canceled)
             log?.Report("[CANCELED] Build was canceled.");
 
-        return (result.ExitCode, errors);
+        return (result.ExitCode, issues);
+    }
+
+    private sealed class InlineProgress : IProgress<string>
+    {
+        private readonly Action<string?> _handler;
+
+        public InlineProgress(Action<string?> handler)
+        {
+            _handler = handler;
+        }
+
+        public void Report(string value) => _handler(value);
     }
 }

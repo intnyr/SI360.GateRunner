@@ -27,6 +27,8 @@ The JSON report includes `schemaVersion`. Additive fields are allowed in minor u
 - `healthContracts`
 - `deploymentMetadata`
 - `syntheticProbes`
+- `qualityIssues`
+- `gradingImpacts`
 - `scorecard`
 - `history`
 - `buildErrors`
@@ -50,15 +52,29 @@ GateRunner prunes old `GateRun_*` Markdown reports, JSON reports, and per-run ar
 
 ## Runtime Readiness Semantics
 
-`decision` remains the pre-deployment gate decision. `runtimeReadiness` is separate and summarizes deployment metadata plus synthetic probe readiness.
+`runtimeReadiness` summarizes deployment metadata plus synthetic probe readiness and is also folded into the pre-deployment `decision` through the quality issue ledger.
 
 - `Ready`: deployment metadata is valid and configured probes passed or were skipped.
-- `NotReady`: deployment metadata validation failed or one or more probes failed/errored.
-- `Unknown`: metadata was not configured or probes are disabled.
+- `NotReady`: deployment metadata validation failed or one or more probes failed/errored. This is an error quality issue and produces NO-GO.
+- `Unknown`: metadata was not configured or probes are disabled. This is a warning quality issue and produces HOLD unless a future release mode explicitly allows it.
 
 `deploymentMetadata` contains installer/deployment-tooling supplied values and validation issues. Secret values are not required and should not be present; API key state is represented as presence/validity only.
 
 `syntheticProbes` contains read-only phase-1 probe results with endpoint, status, duration, contract version, and redacted diagnostics.
+
+## Quality Issue And Grading Semantics
+
+Schema `2.2` adds a deployment-integrity ledger:
+
+- `qualityIssues`: every warning or error that affects GateRunner grading.
+- `gradingImpacts`: the same issue set shaped for consumers that need issue-to-score-to-decision traceability.
+- `decisionPolicy.impacts`: the subset of quality issues that directly caused the final GO/HOLD/NO-GO decision.
+
+Each quality issue includes severity, source, source location, code, message, numeric score impact, decision impact, and optional artifact path.
+
+Errors fail hard and produce NO-GO. Warnings apply a deterministic quality penalty of 2.00 points each and produce HOLD until resolved or formally approved. The scorecard includes `baseOverallScore`, `qualityPenalty`, and final `overallScore`.
+
+Build output must capture warnings and errors. Compiler/MSBuild warnings are not informational-only; they are quality issues with source locations and grading impact.
 
 ## Redaction Semantics
 

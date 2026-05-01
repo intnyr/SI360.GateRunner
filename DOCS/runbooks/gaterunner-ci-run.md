@@ -31,6 +31,8 @@ dotnet run --project D:\GateRunner\SI360.GateRunner.Cli\SI360.GateRunner.Cli.csp
 
 CI should publish artifacts for all outcomes. A HOLD or NO-GO from a gate run is a release decision signal, not an infrastructure failure by itself. Catalog validation warnings fail the validation step because unresolved drift means GateRunner metadata is not authoritative enough for release decisions.
 
+GateRunner treats compiler/MSBuild warnings, catalog warnings, runtime readiness unknown, metadata validation issues, and synthetic probe failures as deployment-grade quality issues. CI consumers should read `qualityIssues`, `gradingImpacts`, and `decisionPolicy.impacts` from the JSON report before approving HOLD outcomes.
+
 ## Artifact Handoff
 
 Publish:

@@ -1777,11 +1777,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\SI360.GateRunner\\SI360.GateRunner.csproj",
+      "projectUniqueName": "D:\\GateRunner\\SI360.GateRunner.csproj",
       "projectName": "SI360.GateRunner",
-      "projectPath": "D:\\SI360.GateRunner\\SI360.GateRunner.csproj",
+      "projectPath": "D:\\GateRunner\\SI360.GateRunner.csproj",
       "packagesPath": "C:\\Users\\Rolen\\.nuget\\packages\\",
-      "outputPath": "D:\\SI360.GateRunner\\obj\\",
+      "outputPath": "D:\\GateRunner\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Rolen\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,0 +1,335 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="79903a22-9586-4dba-b358-5a3e9bcc02bf" name="Rolen@DESKTOP-C1UO3FR 2026-05-01 03:33:19" runUser="DESKTOP-C1UO3FR\Rolen" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-05-01T03:33:20.0050296+08:00" queuing="2026-05-01T03:33:20.0050298+08:00" start="2026-05-01T03:33:15.4996476+08:00" finish="2026-05-01T03:33:23.2171823+08:00" />
+  <TestSettings name="default" id="1ec58c1e-b9dc-4a64-a6e4-92ef7d77a687">
+    <Deployment runDeploymentRoot="Rolen_DESKTOP-C1UO3FR_2026-05-01_03_33_19" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="66af2aeb-a01f-48e0-a8db-c3f26d45c0f9" testId="86a806c3-008c-3494-158c-33d60ef62ffc" testName="SI360.GateRunner.Tests.GateRunnerCommandsTests.Snapshot_MatchesCommandFactoryOutput" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0061158" startTime="2026-05-01T03:33:20.3333500+08:00" endTime="2026-05-01T03:33:20.3392884+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="66af2aeb-a01f-48e0-a8db-c3f26d45c0f9" />
+    <UnitTestResult executionId="b0f4d915-ca11-40ae-b606-704e6ca15b5d" testId="e17fca42-437a-68d1-0840-f851d75d6b14" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_ReportsMalformedEndpointsAndIds" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0008421" startTime="2026-05-01T03:33:19.9463404+08:00" endTime="2026-05-01T03:33:19.9464562+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b0f4d915-ca11-40ae-b606-704e6ca15b5d" />
+    <UnitTestResult executionId="43b26e01-a0f0-4e57-b43b-e17726b09d1e" testId="466bb025-5f29-c51c-5a36-4e140a2ce2cc" testName="SI360.GateRunner.Tests.RunnerSettingsTests.Validate_ReturnsActionableErrorsForInvalidConfiguration" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0034146" startTime="2026-05-01T03:33:20.1306792+08:00" endTime="2026-05-01T03:33:20.1343565+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="43b26e01-a0f0-4e57-b43b-e17726b09d1e" />
+    <UnitTestResult executionId="4757fae5-f4ec-4478-bc4d-24c5f2ccfa3a" testId="f75b1d4f-4e9b-9446-b76b-142d7f7137a2" testName="SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_ReportsTimeout" computerName="DESKTOP-C1UO3FR" duration="00:00:00.6536958" startTime="2026-05-01T03:33:19.6145184+08:00" endTime="2026-05-01T03:33:20.4036356+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4757fae5-f4ec-4478-bc4d-24c5f2ccfa3a" />
+    <UnitTestResult executionId="6853593d-5f9d-4511-b6d9-5d5d498c5e65" testId="a4c8932d-78f7-1711-ee84-337770195869" testName="SI360.GateRunner.Tests.GateRunnerCommandsTests.BuildAsync_BuildsSolutionWithoutRestore" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0051649" startTime="2026-05-01T03:33:20.3395743+08:00" endTime="2026-05-01T03:33:20.3445722+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6853593d-5f9d-4511-b6d9-5d5d498c5e65" />
+    <UnitTestResult executionId="a06cba47-a068-4f16-adbf-90e6c1096d97" testId="3af1a18d-e042-ff91-90ee-7632bc4d2055" testName="SI360.GateRunner.Tests.RunnerSettingsTests.Discover_FindsSolutionTestProjectAndResultsDirectoryFromCandidateRoot" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0062398" startTime="2026-05-01T03:33:20.1403675+08:00" endTime="2026-05-01T03:33:20.1466677+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a06cba47-a068-4f16-adbf-90e6c1096d97" />
+    <UnitTestResult executionId="87140df1-8d70-47f5-b080-20b65b94fd98" testId="bd5ad49f-a308-db5a-14b2-50eb08819930" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenScorePassesButAnyGateIsYellow" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0084319" startTime="2026-05-01T03:33:20.3159198+08:00" endTime="2026-05-01T03:33:20.3247393+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="87140df1-8d70-47f5-b080-20b65b94fd98" />
+    <UnitTestResult executionId="a74d497f-c86f-48d3-8974-9d252253dcea" testId="c1426626-f98b-4838-49b5-97cd2f2ae64d" testName="SI360.GateRunner.Tests.RunnerSettingsTests.ApplyEnvironmentVariables_OverridesNewConfigurationFields" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0044164" startTime="2026-05-01T03:33:20.1347724+08:00" endTime="2026-05-01T03:33:20.1398256+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a74d497f-c86f-48d3-8974-9d252253dcea" />
+    <UnitTestResult executionId="83b6dcac-f461-47b7-86fc-df22cb759882" testId="002d2d59-9e33-8304-f7f9-c80766298b80" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.LoadAndValidate_ReadsMetadataFile" computerName="DESKTOP-C1UO3FR" duration="00:00:00.2162017" startTime="2026-05-01T03:33:19.6191958+08:00" endTime="2026-05-01T03:33:19.8514184+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="83b6dcac-f461-47b7-86fc-df22cb759882" />
+    <UnitTestResult executionId="b8718c42-184e-489c-a7de-2e633579e88e" testId="a2bfa92d-2574-ce2e-6b44-8feb6afef1af" testName="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_ComparesNewRecurringAndResolvedFailures" computerName="DESKTOP-C1UO3FR" duration="00:00:00.2353049" startTime="2026-05-01T03:33:20.1885819+08:00" endTime="2026-05-01T03:33:21.1007691+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b8718c42-184e-489c-a7de-2e633579e88e">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : There is not enough space on the disk. : 'C:\Users\Rolen\AppData\Local\Temp\gaterunner-report-tests-5eab1e95bca14debb83c0ac59483da83\GateRun_20260430_010203.md'</Message>
+          <StackTrace>   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.File.OpenHandle(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)&#xD;
+   at System.IO.File.WriteToFileAsync(String path, FileMode mode, String contents, Encoding encoding, CancellationToken cancellationToken)&#xD;
+   at SI360.GateRunner.Services.ReportWriter.WriteAsync(RunSummary summary, String outputDir) in D:\GateRunner\SI360.GateRunner.Core\Services\ReportWriter.cs:line 44&#xD;
+   at SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_ComparesNewRecurringAndResolvedFailures() in D:\GateRunner\SI360.GateRunner.Tests\ReportWriterTests.cs:line 74&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="a1ec5865-5178-4f4a-b779-d9ea65d62a44" testId="29114be5-55cd-6aa0-9e64-7c18eb5130ca" testName="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;https://example.test/status?token=super-secret-tok&quot;···)" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0000597" startTime="2026-05-01T03:33:21.9807166+08:00" endTime="2026-05-01T03:33:21.9809708+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a1ec5865-5178-4f4a-b779-d9ea65d62a44" />
+    <UnitTestResult executionId="8791f8ac-e0a6-4196-8044-1f5fb4435b86" testId="8f1b24f5-0753-b595-10ac-0efcdcd844e4" testName="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests.DiscoverFromDirectory_FindsGateClassesAndCountsFactsAndTheories" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0123977" startTime="2026-05-01T03:33:20.1836548+08:00" endTime="2026-05-01T03:33:20.1881953+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8791f8ac-e0a6-4196-8044-1f5fb4435b86" />
+    <UnitTestResult executionId="3e3d08d1-6800-499f-b549-ff8396216527" testId="e5bcac40-2237-0d4e-c066-3acbc12fd55e" testName="SI360.GateRunner.Tests.SecretRedactorTests.ProcessRunner_RedactsLiveLogsAndArtifacts" computerName="DESKTOP-C1UO3FR" duration="00:00:01.6837453" startTime="2026-05-01T03:33:20.1363809+08:00" endTime="2026-05-01T03:33:21.9682913+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="3e3d08d1-6800-499f-b549-ff8396216527">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : There is not enough space on the disk. : 'C:\Users\Rolen\AppData\Local\Temp\gaterunner-redaction-tests-e5a70eeb8647458a84f77779454fb578\redaction-test.stdout.log'</Message>
+          <StackTrace>   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.File.WriteToFile(String path, FileMode mode, String contents, Encoding encoding)&#xD;
+   at System.IO.File.WriteAllText(String path, String contents)&#xD;
+   at SI360.GateRunner.Services.ProcessRunner.WriteArtifacts(ProcessCommand command, ProcessRunResult result, ISecretRedactor redactor) in D:\GateRunner\SI360.GateRunner.Core\Services\ProcessRunner.cs:line 140&#xD;
+   at SI360.GateRunner.Services.ProcessRunner.RunAsync(ProcessCommand command, IProgress`1 log, CancellationToken cancellationToken) in D:\GateRunner\SI360.GateRunner.Core\Services\ProcessRunner.cs:line 127&#xD;
+   at SI360.GateRunner.Tests.SecretRedactorTests.ProcessRunner_RedactsLiveLogsAndArtifacts() in D:\GateRunner\SI360.GateRunner.Tests\SecretRedactorTests.cs:line 34&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="df3892c1-cb8e-4f22-869f-e6623f5b0baf" testId="a69cfc93-9ed5-bed5-5e18-045cad126d18" testName="SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_WritesArtifactsForCompletedProcess" computerName="DESKTOP-C1UO3FR" duration="00:00:01.4727779" startTime="2026-05-01T03:33:20.4060897+08:00" endTime="2026-05-01T03:33:22.0926674+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="df3892c1-cb8e-4f22-869f-e6623f5b0baf">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : There is not enough space on the disk. : 'C:\Users\Rolen\AppData\Local\Temp\gaterunner-process-tests-6e228eaa38b549c089e598893ab71680\echo.stderr.log'</Message>
+          <StackTrace>   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+   at System.IO.File.WriteToFile(String path, FileMode mode, String contents, Encoding encoding)&#xD;
+   at System.IO.File.WriteAllText(String path, String contents)&#xD;
+   at SI360.GateRunner.Services.ProcessRunner.WriteArtifacts(ProcessCommand command, ProcessRunResult result, ISecretRedactor redactor) in D:\GateRunner\SI360.GateRunner.Core\Services\ProcessRunner.cs:line 141&#xD;
+   at SI360.GateRunner.Services.ProcessRunner.RunAsync(ProcessCommand command, IProgress`1 log, CancellationToken cancellationToken) in D:\GateRunner\SI360.GateRunner.Core\Services\ProcessRunner.cs:line 127&#xD;
+   at SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_WritesArtifactsForCompletedProcess() in D:\GateRunner\SI360.GateRunner.Tests\ProcessRunnerTests.cs:line 13&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="79730dc0-b206-4773-9544-cc79ca47ee39" testId="b29d39a7-da59-f918-7964-800b7b5188f1" testName="SI360.GateRunner.Tests.GateRunnerCommandsTests.RestoreAsync_RestoresSolutionPath" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0051278" startTime="2026-05-01T03:33:20.3304537+08:00" endTime="2026-05-01T03:33:20.3330375+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="79730dc0-b206-4773-9544-cc79ca47ee39" />
+    <UnitTestResult executionId="db876485-03ed-4495-9462-d5962bef95b5" testId="1b6b7928-b660-48f6-d5c7-ae81f2164e53" testName="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests.Validate_ReportsCountDriftAndMissingEntries" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0041274" startTime="2026-05-01T03:33:20.1830767+08:00" endTime="2026-05-01T03:33:20.1832125+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="db876485-03ed-4495-9462-d5962bef95b5" />
+    <UnitTestResult executionId="902d7e54-1aa4-49dc-b0d0-ad9a99a4d012" testId="d7dd4c99-154f-8ab6-56e0-8363e63caeb3" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenBuildErrorsExist" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0005263" startTime="2026-05-01T03:33:20.3272353+08:00" endTime="2026-05-01T03:33:20.3275655+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="902d7e54-1aa4-49dc-b0d0-ad9a99a4d012" />
+    <UnitTestResult executionId="9993e153-fdb7-4037-94e8-68891ea140f4" testId="25cf303c-61f7-2226-36d2-65731f09ebd4" testName="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;Server=db;Password=super-secret-token;Database=SI3&quot;···)" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0045418" startTime="2026-05-01T03:33:21.9730127+08:00" endTime="2026-05-01T03:33:21.9732432+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9993e153-fdb7-4037-94e8-68891ea140f4" />
+    <UnitTestResult executionId="674cdfdb-85ee-436f-b228-1dfd95ede433" testId="1db434c8-2f2a-9853-7f17-6b29859693db" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_ReportsMissingRequiredFields" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0046050" startTime="2026-05-01T03:33:19.9448780+08:00" endTime="2026-05-01T03:33:19.9450432+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="674cdfdb-85ee-436f-b228-1dfd95ede433" />
+    <UnitTestResult executionId="7512f14c-2954-4d1f-9ad2-08814fc7ff78" testId="1e09913d-1be4-ea6f-4da3-bb82404330a6" testName="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_RedactsSecretsFromMarkdownAndJson" computerName="DESKTOP-C1UO3FR" duration="00:00:00.6813137" startTime="2026-05-01T03:33:21.1163781+08:00" endTime="2026-05-01T03:33:21.9747394+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="7512f14c-2954-4d1f-9ad2-08814fc7ff78">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : There is not enough space on the disk.</Message>
+          <StackTrace>   at Microsoft.Win32.SafeHandles.SafeFileHandle.OverlappedValueTaskSource.GetResult(Int16 token)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.OverlappedValueTaskSource.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)&#xD;
+   at System.IO.File.WriteToFileAsync(String path, FileMode mode, String contents, Encoding encoding, CancellationToken cancellationToken)&#xD;
+   at SI360.GateRunner.Services.ReportWriter.WriteAsync(RunSummary summary, String outputDir) in D:\GateRunner\SI360.GateRunner.Core\Services\ReportWriter.cs:line 44&#xD;
+   at SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_RedactsSecretsFromMarkdownAndJson() in D:\GateRunner\SI360.GateRunner.Tests\ReportWriterTests.cs:line 127&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="962d2339-eb76-481f-9cb6-ebfc7246002c" testId="e00f6021-d598-de18-aede-4c9968af10d1" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenAnyGateIsRed" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0004597" startTime="2026-05-01T03:33:20.3266875+08:00" endTime="2026-05-01T03:33:20.3269595+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="962d2339-eb76-481f-9cb6-ebfc7246002c" />
+    <UnitTestResult executionId="5eaaf75f-5442-4583-bba3-44043c3cf088" testId="ef0c39ad-e05d-4e0f-b601-af34c65519dd" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsGo_WhenScoreMeetsThresholdAndAllGatesGreen" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0003948" startTime="2026-05-01T03:33:20.3254021+08:00" endTime="2026-05-01T03:33:20.3256254+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5eaaf75f-5442-4583-bba3-44043c3cf088" />
+    <UnitTestResult executionId="2da42077-8fc2-4b06-8699-db7a4415406e" testId="b770f71d-0d0a-bca3-46f0-1672ace75254" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_RejectsSecretValuesAndSecretLikeFields" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0103846" startTime="2026-05-01T03:33:19.9459961+08:00" endTime="2026-05-01T03:33:19.9460877+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2da42077-8fc2-4b06-8699-db7a4415406e" />
+    <UnitTestResult executionId="772b17a1-4c1b-4815-88e7-5dc3638b0b4b" testId="421d3f0a-c796-3398-1fa8-2b592e7d4f44" testName="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesDecisionPolicyAndCatalogWarnings" computerName="DESKTOP-C1UO3FR" duration="00:00:00.4456569" startTime="2026-05-01T03:33:21.9763543+08:00" endTime="2026-05-01T03:33:22.8156610+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="772b17a1-4c1b-4815-88e7-5dc3638b0b4b">
+      <Output>
+        <ErrorInfo>
+          <Message>System.IO.IOException : There is not enough space on the disk.</Message>
+          <StackTrace>   at Microsoft.Win32.SafeHandles.SafeFileHandle.OverlappedValueTaskSource.GetResult(Int16 token)&#xD;
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.OverlappedValueTaskSource.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)&#xD;
+   at System.IO.File.WriteToFileAsync(String path, FileMode mode, String contents, Encoding encoding, CancellationToken cancellationToken)&#xD;
+   at SI360.GateRunner.Services.ReportWriter.WriteAsync(RunSummary summary, String outputDir) in D:\GateRunner\SI360.GateRunner.Core\Services\ReportWriter.cs:line 44&#xD;
+   at SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesDecisionPolicyAndCatalogWarnings() in D:\GateRunner\SI360.GateRunner.Tests\ReportWriterTests.cs:line 30&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="170349bb-26af-419a-98bf-a24057744201" testId="f115d62a-bf7f-b4ad-9271-495c2d158814" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_AcceptsCompleteMetadata" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0022619" startTime="2026-05-01T03:33:19.9456123+08:00" endTime="2026-05-01T03:33:19.9457151+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="170349bb-26af-419a-98bf-a24057744201" />
+    <UnitTestResult executionId="dcd34652-5dcb-41dc-a47b-bde0ff826698" testId="bb197bcb-a685-15af-e079-6135eebd9628" testName="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.secret&quot;)" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0064158" startTime="2026-05-01T03:33:21.9735788+08:00" endTime="2026-05-01T03:33:21.9802668+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dcd34652-5dcb-41dc-a47b-bde0ff826698" />
+    <UnitTestResult executionId="b83a9340-3ef0-4b50-842d-3e90edccf17c" testId="28901983-af4e-1a8b-9905-8626dcfb5c69" testName="SI360.GateRunner.Tests.TrxResultParserTests.Parse_ReadsFailedTestDetailsFromTrx" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0246577" startTime="2026-05-01T03:33:20.1472477+08:00" endTime="2026-05-01T03:33:20.1720754+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b83a9340-3ef0-4b50-842d-3e90edccf17c" />
+    <UnitTestResult executionId="1bfc72a7-b8af-473c-87ad-749b53e588ac" testId="b99200d7-4624-dab8-0f77-52d1da46246f" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenCatalogWarningsExist" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0006592" startTime="2026-05-01T03:33:20.3258795+08:00" endTime="2026-05-01T03:33:20.3264087+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1bfc72a7-b8af-473c-87ad-749b53e588ac" />
+    <UnitTestResult executionId="9627c7d3-6fd8-4bf2-a5cc-f3ae55fd5abc" testId="3eced5d3-c4d0-10c3-4c77-64ca197d1417" testName="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;api_key=super-secret-token&quot;)" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0002628" startTime="2026-05-01T03:33:21.9726345+08:00" endTime="2026-05-01T03:33:21.9727551+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9627c7d3-6fd8-4bf2-a5cc-f3ae55fd5abc" />
+    <UnitTestResult executionId="315d6a14-cc94-48a8-8095-43dd15c5cbd6" testId="a9c81db0-9e6e-7165-c525-3e83dc3a9d57" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenAllGatesGreenButScoreIsBelowGoThreshold" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0003612" startTime="2026-05-01T03:33:20.3250432+08:00" endTime="2026-05-01T03:33:20.3251449+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="315d6a14-cc94-48a8-8095-43dd15c5cbd6" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="SI360.GateRunner.Tests.GateRunnerCommandsTests.RestoreAsync_RestoresSolutionPath" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="b29d39a7-da59-f918-7964-800b7b5188f1">
+      <Execution id="79730dc0-b206-4773-9544-cc79ca47ee39" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateRunnerCommandsTests" name="RestoreAsync_RestoresSolutionPath" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_ComparesNewRecurringAndResolvedFailures" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="a2bfa92d-2574-ce2e-6b44-8feb6afef1af">
+      <Execution id="b8718c42-184e-489c-a7de-2e633579e88e" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ReportWriterTests" name="WriteAsync_ComparesNewRecurringAndResolvedFailures" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.secret&quot;)" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="bb197bcb-a685-15af-e079-6135eebd9628">
+      <Execution id="dcd34652-5dcb-41dc-a47b-bde0ff826698" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="Redact_RemovesKnownSecretPatterns" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_AcceptsCompleteMetadata" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="f115d62a-bf7f-b4ad-9271-495c2d158814">
+      <Execution id="170349bb-26af-419a-98bf-a24057744201" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="Validate_AcceptsCompleteMetadata" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesDecisionPolicyAndCatalogWarnings" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="421d3f0a-c796-3398-1fa8-2b592e7d4f44">
+      <Execution id="772b17a1-4c1b-4815-88e7-5dc3638b0b4b" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ReportWriterTests" name="WriteAsync_IncludesDecisionPolicyAndCatalogWarnings" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_ReportsTimeout" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="f75b1d4f-4e9b-9446-b76b-142d7f7137a2">
+      <Execution id="4757fae5-f4ec-4478-bc4d-24c5f2ccfa3a" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ProcessRunnerTests" name="RunAsync_ReportsTimeout" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;https://example.test/status?token=super-secret-tok&quot;···)" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="29114be5-55cd-6aa0-9e64-7c18eb5130ca">
+      <Execution id="a1ec5865-5178-4f4a-b779-d9ea65d62a44" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="Redact_RemovesKnownSecretPatterns" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenBuildErrorsExist" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="d7dd4c99-154f-8ab6-56e0-8363e63caeb3">
+      <Execution id="902d7e54-1aa4-49dc-b0d0-ad9a99a4d012" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsNoGo_WhenBuildErrorsExist" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests.Validate_ReportsCountDriftAndMissingEntries" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="1b6b7928-b660-48f6-d5c7-ae81f2164e53">
+      <Execution id="db876485-03ed-4495-9462-d5962bef95b5" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests" name="Validate_ReportsCountDriftAndMissingEntries" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.RunnerSettingsTests.Discover_FindsSolutionTestProjectAndResultsDirectoryFromCandidateRoot" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="3af1a18d-e042-ff91-90ee-7632bc4d2055">
+      <Execution id="a06cba47-a068-4f16-adbf-90e6c1096d97" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.RunnerSettingsTests" name="Discover_FindsSolutionTestProjectAndResultsDirectoryFromCandidateRoot" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsGo_WhenScoreMeetsThresholdAndAllGatesGreen" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="ef0c39ad-e05d-4e0f-b601-af34c65519dd">
+      <Execution id="5eaaf75f-5442-4583-bba3-44043c3cf088" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsGo_WhenScoreMeetsThresholdAndAllGatesGreen" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_ReportsMalformedEndpointsAndIds" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="e17fca42-437a-68d1-0840-f851d75d6b14">
+      <Execution id="b0f4d915-ca11-40ae-b606-704e6ca15b5d" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="Validate_ReportsMalformedEndpointsAndIds" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests.DiscoverFromDirectory_FindsGateClassesAndCountsFactsAndTheories" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="8f1b24f5-0753-b595-10ac-0efcdcd844e4">
+      <Execution id="8791f8ac-e0a6-4196-8044-1f5fb4435b86" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests" name="DiscoverFromDirectory_FindsGateClassesAndCountsFactsAndTheories" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenAnyGateIsRed" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="e00f6021-d598-de18-aede-4c9968af10d1">
+      <Execution id="962d2339-eb76-481f-9cb6-ebfc7246002c" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsNoGo_WhenAnyGateIsRed" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;api_key=super-secret-token&quot;)" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="3eced5d3-c4d0-10c3-4c77-64ca197d1417">
+      <Execution id="9627c7d3-6fd8-4bf2-a5cc-f3ae55fd5abc" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="Redact_RemovesKnownSecretPatterns" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenAllGatesGreenButScoreIsBelowGoThreshold" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="a9c81db0-9e6e-7165-c525-3e83dc3a9d57">
+      <Execution id="315d6a14-cc94-48a8-8095-43dd15c5cbd6" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsHold_WhenAllGatesGreenButScoreIsBelowGoThreshold" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.RunnerSettingsTests.Validate_ReturnsActionableErrorsForInvalidConfiguration" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="466bb025-5f29-c51c-5a36-4e140a2ce2cc">
+      <Execution id="43b26e01-a0f0-4e57-b43b-e17726b09d1e" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.RunnerSettingsTests" name="Validate_ReturnsActionableErrorsForInvalidConfiguration" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.RunnerSettingsTests.ApplyEnvironmentVariables_OverridesNewConfigurationFields" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="c1426626-f98b-4838-49b5-97cd2f2ae64d">
+      <Execution id="a74d497f-c86f-48d3-8974-9d252253dcea" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.RunnerSettingsTests" name="ApplyEnvironmentVariables_OverridesNewConfigurationFields" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.TrxResultParserTests.Parse_ReadsFailedTestDetailsFromTrx" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="28901983-af4e-1a8b-9905-8626dcfb5c69">
+      <Execution id="b83a9340-3ef0-4b50-842d-3e90edccf17c" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.TrxResultParserTests" name="Parse_ReadsFailedTestDetailsFromTrx" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;Server=db;Password=super-secret-token;Database=SI3&quot;···)" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="25cf303c-61f7-2226-36d2-65731f09ebd4">
+      <Execution id="9993e153-fdb7-4037-94e8-68891ea140f4" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="Redact_RemovesKnownSecretPatterns" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_ReportsMissingRequiredFields" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="1db434c8-2f2a-9853-7f17-6b29859693db">
+      <Execution id="674cdfdb-85ee-436f-b228-1dfd95ede433" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="Validate_ReportsMissingRequiredFields" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenCatalogWarningsExist" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="b99200d7-4624-dab8-0f77-52d1da46246f">
+      <Execution id="1bfc72a7-b8af-473c-87ad-749b53e588ac" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsHold_WhenCatalogWarningsExist" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.ProcessRunner_RedactsLiveLogsAndArtifacts" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="e5bcac40-2237-0d4e-c066-3acbc12fd55e">
+      <Execution id="3e3d08d1-6800-499f-b549-ff8396216527" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="ProcessRunner_RedactsLiveLogsAndArtifacts" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_WritesArtifactsForCompletedProcess" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="a69cfc93-9ed5-bed5-5e18-045cad126d18">
+      <Execution id="df3892c1-cb8e-4f22-869f-e6623f5b0baf" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ProcessRunnerTests" name="RunAsync_WritesArtifactsForCompletedProcess" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_RedactsSecretsFromMarkdownAndJson" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="1e09913d-1be4-ea6f-4da3-bb82404330a6">
+      <Execution id="7512f14c-2954-4d1f-9ad2-08814fc7ff78" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ReportWriterTests" name="WriteAsync_RedactsSecretsFromMarkdownAndJson" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_RejectsSecretValuesAndSecretLikeFields" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="b770f71d-0d0a-bca3-46f0-1672ace75254">
+      <Execution id="2da42077-8fc2-4b06-8699-db7a4415406e" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="Validate_RejectsSecretValuesAndSecretLikeFields" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.LoadAndValidate_ReadsMetadataFile" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="002d2d59-9e33-8304-f7f9-c80766298b80">
+      <Execution id="83b6dcac-f461-47b7-86fc-df22cb759882" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="LoadAndValidate_ReadsMetadataFile" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenScorePassesButAnyGateIsYellow" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="bd5ad49f-a308-db5a-14b2-50eb08819930">
+      <Execution id="87140df1-8d70-47f5-b080-20b65b94fd98" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsHold_WhenScorePassesButAnyGateIsYellow" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateRunnerCommandsTests.BuildAsync_BuildsSolutionWithoutRestore" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="a4c8932d-78f7-1711-ee84-337770195869">
+      <Execution id="6853593d-5f9d-4511-b6d9-5d5d498c5e65" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateRunnerCommandsTests" name="BuildAsync_BuildsSolutionWithoutRestore" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateRunnerCommandsTests.Snapshot_MatchesCommandFactoryOutput" storage="d:\gaterunner\si360.gaterunner.tests\bin\debug\net8.0-windows\si360.gaterunner.tests.dll" id="86a806c3-008c-3494-158c-33d60ef62ffc">
+      <Execution id="66af2aeb-a01f-48e0-a8db-c3f26d45c0f9" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Debug\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateRunnerCommandsTests" name="Snapshot_MatchesCommandFactoryOutput" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="86a806c3-008c-3494-158c-33d60ef62ffc" executionId="66af2aeb-a01f-48e0-a8db-c3f26d45c0f9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e17fca42-437a-68d1-0840-f851d75d6b14" executionId="b0f4d915-ca11-40ae-b606-704e6ca15b5d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="466bb025-5f29-c51c-5a36-4e140a2ce2cc" executionId="43b26e01-a0f0-4e57-b43b-e17726b09d1e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f75b1d4f-4e9b-9446-b76b-142d7f7137a2" executionId="4757fae5-f4ec-4478-bc4d-24c5f2ccfa3a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a4c8932d-78f7-1711-ee84-337770195869" executionId="6853593d-5f9d-4511-b6d9-5d5d498c5e65" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3af1a18d-e042-ff91-90ee-7632bc4d2055" executionId="a06cba47-a068-4f16-adbf-90e6c1096d97" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bd5ad49f-a308-db5a-14b2-50eb08819930" executionId="87140df1-8d70-47f5-b080-20b65b94fd98" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c1426626-f98b-4838-49b5-97cd2f2ae64d" executionId="a74d497f-c86f-48d3-8974-9d252253dcea" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="002d2d59-9e33-8304-f7f9-c80766298b80" executionId="83b6dcac-f461-47b7-86fc-df22cb759882" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a2bfa92d-2574-ce2e-6b44-8feb6afef1af" executionId="b8718c42-184e-489c-a7de-2e633579e88e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="29114be5-55cd-6aa0-9e64-7c18eb5130ca" executionId="a1ec5865-5178-4f4a-b779-d9ea65d62a44" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8f1b24f5-0753-b595-10ac-0efcdcd844e4" executionId="8791f8ac-e0a6-4196-8044-1f5fb4435b86" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e5bcac40-2237-0d4e-c066-3acbc12fd55e" executionId="3e3d08d1-6800-499f-b549-ff8396216527" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a69cfc93-9ed5-bed5-5e18-045cad126d18" executionId="df3892c1-cb8e-4f22-869f-e6623f5b0baf" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b29d39a7-da59-f918-7964-800b7b5188f1" executionId="79730dc0-b206-4773-9544-cc79ca47ee39" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1b6b7928-b660-48f6-d5c7-ae81f2164e53" executionId="db876485-03ed-4495-9462-d5962bef95b5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d7dd4c99-154f-8ab6-56e0-8363e63caeb3" executionId="902d7e54-1aa4-49dc-b0d0-ad9a99a4d012" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="25cf303c-61f7-2226-36d2-65731f09ebd4" executionId="9993e153-fdb7-4037-94e8-68891ea140f4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1db434c8-2f2a-9853-7f17-6b29859693db" executionId="674cdfdb-85ee-436f-b228-1dfd95ede433" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1e09913d-1be4-ea6f-4da3-bb82404330a6" executionId="7512f14c-2954-4d1f-9ad2-08814fc7ff78" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e00f6021-d598-de18-aede-4c9968af10d1" executionId="962d2339-eb76-481f-9cb6-ebfc7246002c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ef0c39ad-e05d-4e0f-b601-af34c65519dd" executionId="5eaaf75f-5442-4583-bba3-44043c3cf088" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b770f71d-0d0a-bca3-46f0-1672ace75254" executionId="2da42077-8fc2-4b06-8699-db7a4415406e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="421d3f0a-c796-3398-1fa8-2b592e7d4f44" executionId="772b17a1-4c1b-4815-88e7-5dc3638b0b4b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f115d62a-bf7f-b4ad-9271-495c2d158814" executionId="170349bb-26af-419a-98bf-a24057744201" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bb197bcb-a685-15af-e079-6135eebd9628" executionId="dcd34652-5dcb-41dc-a47b-bde0ff826698" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="28901983-af4e-1a8b-9905-8626dcfb5c69" executionId="b83a9340-3ef0-4b50-842d-3e90edccf17c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b99200d7-4624-dab8-0f77-52d1da46246f" executionId="1bfc72a7-b8af-473c-87ad-749b53e588ac" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3eced5d3-c4d0-10c3-4c77-64ca197d1417" executionId="9627c7d3-6fd8-4bf2-a5cc-f3ae55fd5abc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a9c81db0-9e6e-7165-c525-3e83dc3a9d57" executionId="315d6a14-cc94-48a8-8095-43dd15c5cbd6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="30" executed="30" passed="25" failed="5" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (32-bit .NET 8.0.25)&#xD;
+[xUnit.net 00:00:00.33]   Discovering: SI360.GateRunner.Tests&#xD;
+[xUnit.net 00:00:00.76]   Discovered:  SI360.GateRunner.Tests&#xD;
+[xUnit.net 00:00:00.91]   Starting:    SI360.GateRunner.Tests&#xD;
+[xUnit.net 00:00:02.51]       System.IO.IOException : There is not enough space on the disk. : 'C:\Users\Rolen\AppData\Local\Temp\gaterunner-report-tests-5eab1e95bca14debb83c0ac59483da83\GateRun_20260430_010203.md'&#xD;
+[xUnit.net 00:00:02.51]       Stack Trace:&#xD;
+[xUnit.net 00:00:02.51]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:02.51]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:02.51]            at System.IO.File.OpenHandle(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize)&#xD;
+[xUnit.net 00:00:02.51]            at System.IO.File.WriteToFileAsync(String path, FileMode mode, String contents, Encoding encoding, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:02.51]         D:\GateRunner\SI360.GateRunner.Core\Services\ReportWriter.cs(44,0): at SI360.GateRunner.Services.ReportWriter.WriteAsync(RunSummary summary, String outputDir)&#xD;
+[xUnit.net 00:00:02.51]         D:\GateRunner\SI360.GateRunner.Tests\ReportWriterTests.cs(74,0): at SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_ComparesNewRecurringAndResolvedFailures()&#xD;
+[xUnit.net 00:00:02.51]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.37]       System.IO.IOException : There is not enough space on the disk. : 'C:\Users\Rolen\AppData\Local\Temp\gaterunner-redaction-tests-e5a70eeb8647458a84f77779454fb578\redaction-test.stdout.log'&#xD;
+[xUnit.net 00:00:03.37]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.37]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:03.37]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:03.37]            at System.IO.File.WriteToFile(String path, FileMode mode, String contents, Encoding encoding)&#xD;
+[xUnit.net 00:00:03.37]            at System.IO.File.WriteAllText(String path, String contents)&#xD;
+[xUnit.net 00:00:03.37]         D:\GateRunner\SI360.GateRunner.Core\Services\ProcessRunner.cs(140,0): at SI360.GateRunner.Services.ProcessRunner.WriteArtifacts(ProcessCommand command, ProcessRunResult result, ISecretRedactor redactor)&#xD;
+[xUnit.net 00:00:03.37]         D:\GateRunner\SI360.GateRunner.Core\Services\ProcessRunner.cs(127,0): at SI360.GateRunner.Services.ProcessRunner.RunAsync(ProcessCommand command, IProgress`1 log, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:03.37]         D:\GateRunner\SI360.GateRunner.Tests\SecretRedactorTests.cs(34,0): at SI360.GateRunner.Tests.SecretRedactorTests.ProcessRunner_RedactsLiveLogsAndArtifacts()&#xD;
+[xUnit.net 00:00:03.37]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.37]       System.IO.IOException : There is not enough space on the disk.&#xD;
+[xUnit.net 00:00:03.37]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.37]            at Microsoft.Win32.SafeHandles.SafeFileHandle.OverlappedValueTaskSource.GetResult(Int16 token)&#xD;
+[xUnit.net 00:00:03.37]            at Microsoft.Win32.SafeHandles.SafeFileHandle.OverlappedValueTaskSource.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)&#xD;
+[xUnit.net 00:00:03.37]            at System.IO.File.WriteToFileAsync(String path, FileMode mode, String contents, Encoding encoding, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:03.37]         D:\GateRunner\SI360.GateRunner.Core\Services\ReportWriter.cs(44,0): at SI360.GateRunner.Services.ReportWriter.WriteAsync(RunSummary summary, String outputDir)&#xD;
+[xUnit.net 00:00:03.37]         D:\GateRunner\SI360.GateRunner.Tests\ReportWriterTests.cs(127,0): at SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_RedactsSecretsFromMarkdownAndJson()&#xD;
+[xUnit.net 00:00:03.37]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:03.49]       System.IO.IOException : There is not enough space on the disk. : 'C:\Users\Rolen\AppData\Local\Temp\gaterunner-process-tests-6e228eaa38b549c089e598893ab71680\echo.stderr.log'&#xD;
+[xUnit.net 00:00:03.49]       Stack Trace:&#xD;
+[xUnit.net 00:00:03.49]            at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)&#xD;
+[xUnit.net 00:00:03.49]            at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)&#xD;
+[xUnit.net 00:00:03.49]            at System.IO.File.WriteToFile(String path, FileMode mode, String contents, Encoding encoding)&#xD;
+[xUnit.net 00:00:03.49]            at System.IO.File.WriteAllText(String path, String contents)&#xD;
+[xUnit.net 00:00:03.49]         D:\GateRunner\SI360.GateRunner.Core\Services\ProcessRunner.cs(141,0): at SI360.GateRunner.Services.ProcessRunner.WriteArtifacts(ProcessCommand command, ProcessRunResult result, ISecretRedactor redactor)&#xD;
+[xUnit.net 00:00:03.49]         D:\GateRunner\SI360.GateRunner.Core\Services\ProcessRunner.cs(127,0): at SI360.GateRunner.Services.ProcessRunner.RunAsync(ProcessCommand command, IProgress`1 log, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:03.49]         D:\GateRunner\SI360.GateRunner.Tests\ProcessRunnerTests.cs(13,0): at SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_WritesArtifactsForCompletedProcess()&#xD;
+[xUnit.net 00:00:03.49]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.21]       System.IO.IOException : There is not enough space on the disk.&#xD;
+[xUnit.net 00:00:04.21]       Stack Trace:&#xD;
+[xUnit.net 00:00:04.22]            at Microsoft.Win32.SafeHandles.SafeFileHandle.OverlappedValueTaskSource.GetResult(Int16 token)&#xD;
+[xUnit.net 00:00:04.22]            at Microsoft.Win32.SafeHandles.SafeFileHandle.OverlappedValueTaskSource.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)&#xD;
+[xUnit.net 00:00:04.22]            at System.IO.File.WriteToFileAsync(String path, FileMode mode, String contents, Encoding encoding, CancellationToken cancellationToken)&#xD;
+[xUnit.net 00:00:04.22]         D:\GateRunner\SI360.GateRunner.Core\Services\ReportWriter.cs(44,0): at SI360.GateRunner.Services.ReportWriter.WriteAsync(RunSummary summary, String outputDir)&#xD;
+[xUnit.net 00:00:04.22]         D:\GateRunner\SI360.GateRunner.Tests\ReportWriterTests.cs(30,0): at SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesDecisionPolicyAndCatalogWarnings()&#xD;
+[xUnit.net 00:00:04.22]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:04.23]   Finished:    SI360.GateRunner.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-C1UO3FR" outcome="Error" timestamp="2026-05-01T03:33:21.1091167+08:00">
+        <Text>[xUnit.net 00:00:02.51]     SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_ComparesNewRecurringAndResolvedFailures [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-C1UO3FR" outcome="Error" timestamp="2026-05-01T03:33:21.9691376+08:00">
+        <Text>[xUnit.net 00:00:03.37]     SI360.GateRunner.Tests.SecretRedactorTests.ProcessRunner_RedactsLiveLogsAndArtifacts [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-C1UO3FR" outcome="Error" timestamp="2026-05-01T03:33:21.9764980+08:00">
+        <Text>[xUnit.net 00:00:03.37]     SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_RedactsSecretsFromMarkdownAndJson [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-C1UO3FR" outcome="Error" timestamp="2026-05-01T03:33:22.0943881+08:00">
+        <Text>[xUnit.net 00:00:03.49]     SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_WritesArtifactsForCompletedProcess [FAIL]</Text>
+      </RunInfo>
+      <RunInfo computerName="DESKTOP-C1UO3FR" outcome="Error" timestamp="2026-05-01T03:33:22.8162081+08:00">
+        <Text>[xUnit.net 00:00:04.21]     SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesDecisionPolicyAndCatalogWarnings [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

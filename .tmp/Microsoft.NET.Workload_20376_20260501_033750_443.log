@@ -1,0 +1,14 @@
+[2026-05-01 03:37:50.540] [00004F98] === Logging started ===
+[2026-05-01 03:37:50.551] [00004F98] Executing: "C:\Program Files\dotnet\dotnet.exe" test .\SI360.GateRunner.Tests\SI360.GateRunner.Tests.csproj --no-build --logger trx, PID: 20376, PPID: 1992
+[2026-05-01 03:37:50.559] [00004F98] IsElevated: False
+[2026-05-01 03:37:50.559] [00004F98] Is64BitProcess: True
+[2026-05-01 03:37:50.559] [00004F98] RebootPending: False
+[2026-05-01 03:37:50.559] [00004F98] ProcessorArchitecture: amd64
+[2026-05-01 03:37:50.559] [00004F98] HostArchitecture: x64
+[2026-05-01 03:37:50.559] [00004F98] SdkDirectory: 8.0.414
+[2026-05-01 03:37:50.559] [00004F98] VerifySignatures: False
+[2026-05-01 03:37:50.559] [00004F98] SDK feature band: 8.0.400
+[2026-05-01 03:37:57.302] [00004F98] Shutting down
+[2026-05-01 03:37:57.302] [00004F98] Shutdown completed.
+[2026-05-01 03:37:57.302] [00004F98] Restart required: False
+[2026-05-01 03:37:57.302] [00004F98] === Logging ended ===

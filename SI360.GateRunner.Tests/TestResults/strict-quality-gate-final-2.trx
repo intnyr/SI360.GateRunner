@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="7b80700c-8cd3-46b1-880f-69a49c882d53" name="Rolen@DESKTOP-C1UO3FR 2026-05-01 19:54:35" runUser="DESKTOP-C1UO3FR\Rolen" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2026-05-01T19:54:35.3030165+08:00" queuing="2026-05-01T19:54:35.3030168+08:00" start="2026-05-01T19:54:32.4285310+08:00" finish="2026-05-01T19:54:36.4034115+08:00" />
+  <TestSettings name="default" id="5a9edb2a-3ef7-413f-b465-0ed497771e80">
+    <Deployment runDeploymentRoot="Rolen_DESKTOP-C1UO3FR_2026-05-01_19_54_35" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="91768c47-9963-46d4-a04b-6c7aa526fb53" testId="421d3f0a-c796-3398-1fa8-2b592e7d4f44" testName="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesDecisionPolicyAndCatalogWarnings" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0484362" startTime="2026-05-01T19:54:36.1993294+08:00" endTime="2026-05-01T19:54:36.2724490+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="91768c47-9963-46d4-a04b-6c7aa526fb53" />
+    <UnitTestResult executionId="25fb3ba3-ee92-46a4-a55d-608019072eba" testId="a9c81db0-9e6e-7165-c525-3e83dc3a9d57" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenAllGatesGreenButScoreIsBelowGoThreshold" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0003538" startTime="2026-05-01T19:54:35.1621712+08:00" endTime="2026-05-01T19:54:35.1624042+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="25fb3ba3-ee92-46a4-a55d-608019072eba" />
+    <UnitTestResult executionId="b5d30668-6322-45ef-85ee-1a66403ec1b1" testId="4b5ceb6d-89c0-a7f5-da1f-76566e0d3abd" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenRuntimeReadinessIsNotReady" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0020377" startTime="2026-05-01T19:54:35.1642741+08:00" endTime="2026-05-01T19:54:35.1643469+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b5d30668-6322-45ef-85ee-1a66403ec1b1" />
+    <UnitTestResult executionId="260d82cc-279d-4080-bd58-5c98e18a6144" testId="bb197bcb-a685-15af-e079-6135eebd9628" testName="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.secret&quot;)" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0034882" startTime="2026-05-01T19:54:36.0150089+08:00" endTime="2026-05-01T19:54:36.0183750+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="260d82cc-279d-4080-bd58-5c98e18a6144" />
+    <UnitTestResult executionId="5d743b36-c65b-4e52-902e-e5148703b8ca" testId="e17fca42-437a-68d1-0840-f851d75d6b14" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_ReportsMalformedEndpointsAndIds" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0007201" startTime="2026-05-01T19:54:35.6113018+08:00" endTime="2026-05-01T19:54:35.6118025+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5d743b36-c65b-4e52-902e-e5148703b8ca" />
+    <UnitTestResult executionId="c3ed6ff9-b9cc-4b57-8a5e-91ec7278a3f6" testId="3eced5d3-c4d0-10c3-4c77-64ca197d1417" testName="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;api_key=super-secret-token&quot;)" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0002148" startTime="2026-05-01T19:54:36.0059597+08:00" endTime="2026-05-01T19:54:36.0060563+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c3ed6ff9-b9cc-4b57-8a5e-91ec7278a3f6" />
+    <UnitTestResult executionId="4ea636fe-276e-4185-8370-b7997cdf6ce5" testId="8f1b24f5-0753-b595-10ac-0efcdcd844e4" testName="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests.DiscoverFromDirectory_FindsGateClassesAndCountsFactsAndTheories" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0238938" startTime="2026-05-01T19:54:35.2340643+08:00" endTime="2026-05-01T19:54:35.2341442+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4ea636fe-276e-4185-8370-b7997cdf6ce5" />
+    <UnitTestResult executionId="4a167b7c-41a4-401d-bdbd-9874e199c4e3" testId="e00f6021-d598-de18-aede-4c9968af10d1" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenAnyGateIsRed" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0004037" startTime="2026-05-01T19:54:35.1637177+08:00" endTime="2026-05-01T19:54:35.1637929+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4a167b7c-41a4-401d-bdbd-9874e199c4e3" />
+    <UnitTestResult executionId="d6397a7a-d6c5-476c-8133-a25eaa04dfba" testId="f115d62a-bf7f-b4ad-9271-495c2d158814" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_AcceptsCompleteMetadata" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0018583" startTime="2026-05-01T19:54:35.5882075+08:00" endTime="2026-05-01T19:54:35.5983733+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d6397a7a-d6c5-476c-8133-a25eaa04dfba" />
+    <UnitTestResult executionId="9ce56867-c54f-4bd3-b9d2-1b7e938c6172" testId="25cf303c-61f7-2226-36d2-65731f09ebd4" testName="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;Server=db;Password=super-secret-token;Database=SI3&quot;···)" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0087392" startTime="2026-05-01T19:54:36.0074278+08:00" endTime="2026-05-01T19:54:36.0147857+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9ce56867-c54f-4bd3-b9d2-1b7e938c6172" />
+    <UnitTestResult executionId="1e92e91a-26b7-459c-8608-3e6f0c32a4f0" testId="9e57d6eb-82a9-dc35-1243-4147386ed772" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenRuntimeReadinessIsUnknown" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0003524" startTime="2026-05-01T19:54:35.2304809+08:00" endTime="2026-05-01T19:54:35.2305891+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1e92e91a-26b7-459c-8608-3e6f0c32a4f0" />
+    <UnitTestResult executionId="66b2ca96-c106-45d1-8c95-463eb73f2b41" testId="aefb7d5f-9507-8f36-af3a-192a4452d88b" testName="SI360.GateRunner.Tests.SyntheticProbeRunnerTests.RunAsync_ReportsProbeStatusAndRedactsEndpointDiagnostics" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0106084" startTime="2026-05-01T19:54:35.9801428+08:00" endTime="2026-05-01T19:54:35.9905739+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="66b2ca96-c106-45d1-8c95-463eb73f2b41" />
+    <UnitTestResult executionId="6917369b-8ddb-4277-bb25-61d322b3b31e" testId="f75b1d4f-4e9b-9446-b76b-142d7f7137a2" testName="SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_ReportsTimeout" computerName="DESKTOP-C1UO3FR" duration="00:00:00.4351803" startTime="2026-05-01T19:54:35.0794077+08:00" endTime="2026-05-01T19:54:35.7121973+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6917369b-8ddb-4277-bb25-61d322b3b31e" />
+    <UnitTestResult executionId="e1819ef7-f5d4-4672-8674-ad97a0abde06" testId="b29d39a7-da59-f918-7964-800b7b5188f1" testName="SI360.GateRunner.Tests.GateRunnerCommandsTests.RestoreAsync_RestoresSolutionPath" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0033624" startTime="2026-05-01T19:54:35.4939093+08:00" endTime="2026-05-01T19:54:35.4940459+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e1819ef7-f5d4-4672-8674-ad97a0abde06" />
+    <UnitTestResult executionId="4f114ed4-6129-4b86-a742-70f258ab9fd5" testId="94da6005-2a68-71ff-fd76-cc8a31df085f" testName="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesRuntimeReadinessMetadataAndProbes" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0512135" startTime="2026-05-01T19:54:36.0388736+08:00" endTime="2026-05-01T19:54:36.1119898+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4f114ed4-6129-4b86-a742-70f258ab9fd5" />
+    <UnitTestResult executionId="8c0fbdd1-1b13-4e1f-90f7-c9f0bc4a06b2" testId="002d2d59-9e33-8304-f7f9-c80766298b80" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.LoadAndValidate_ReadsMetadataFile" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0440513" startTime="2026-05-01T19:54:35.5415818+08:00" endTime="2026-05-01T19:54:35.5859676+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8c0fbdd1-1b13-4e1f-90f7-c9f0bc4a06b2" />
+    <UnitTestResult executionId="1ceec78a-d45a-4932-b131-6abb07a39fe6" testId="1db434c8-2f2a-9853-7f17-6b29859693db" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_ReportsMissingRequiredFields" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0016813" startTime="2026-05-01T19:54:35.5863179+08:00" endTime="2026-05-01T19:54:35.5878527+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="1ceec78a-d45a-4932-b131-6abb07a39fe6" />
+    <UnitTestResult executionId="8bf9df85-b5bd-4146-b0db-3627a9915019" testId="cbbe7d7d-5063-35a5-ac3b-41d2f786657e" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenBuildWarningExists" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0087090" startTime="2026-05-01T19:54:35.1628650+08:00" endTime="2026-05-01T19:54:35.1629592+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8bf9df85-b5bd-4146-b0db-3627a9915019" />
+    <UnitTestResult executionId="08d09f46-aadc-4534-92e8-6bf1f62f1c98" testId="28901983-af4e-1a8b-9905-8626dcfb5c69" testName="SI360.GateRunner.Tests.TrxResultParserTests.Parse_ReadsFailedTestDetailsFromTrx" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0364494" startTime="2026-05-01T19:54:35.9188119+08:00" endTime="2026-05-01T19:54:35.9552948+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="08d09f46-aadc-4534-92e8-6bf1f62f1c98" />
+    <UnitTestResult executionId="b0fd02bc-7ab1-4ecf-8190-3a8802bd3858" testId="3af1a18d-e042-ff91-90ee-7632bc4d2055" testName="SI360.GateRunner.Tests.RunnerSettingsTests.Discover_FindsSolutionTestProjectAndResultsDirectoryFromCandidateRoot" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0073854" startTime="2026-05-01T19:54:35.9953892+08:00" endTime="2026-05-01T19:54:36.0026162+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b0fd02bc-7ab1-4ecf-8190-3a8802bd3858" />
+    <UnitTestResult executionId="eb8c12a0-b33f-4170-b614-bde752dbbe0f" testId="1e09913d-1be4-ea6f-4da3-bb82404330a6" testName="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_RedactsSecretsFromMarkdownAndJson" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0755456" startTime="2026-05-01T19:54:36.1123096+08:00" endTime="2026-05-01T19:54:36.1990565+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eb8c12a0-b33f-4170-b614-bde752dbbe0f" />
+    <UnitTestResult executionId="6945616e-ff2b-45f9-a004-f038ddf85a03" testId="c1426626-f98b-4838-49b5-97cd2f2ae64d" testName="SI360.GateRunner.Tests.RunnerSettingsTests.ApplyEnvironmentVariables_OverridesNewConfigurationFields" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0016350" startTime="2026-05-01T19:54:35.9936361+08:00" endTime="2026-05-01T19:54:35.9951049+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6945616e-ff2b-45f9-a004-f038ddf85a03" />
+    <UnitTestResult executionId="ebac1bd3-8bcd-4886-ab06-70b149d6935b" testId="ef0c39ad-e05d-4e0f-b601-af34c65519dd" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsGo_WhenScoreMeetsThresholdAndAllGatesGreen" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0036433" startTime="2026-05-01T19:54:35.1631640+08:00" endTime="2026-05-01T19:54:35.1632471+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ebac1bd3-8bcd-4886-ab06-70b149d6935b" />
+    <UnitTestResult executionId="8df9c74f-c7eb-4628-805e-9efaa70f076d" testId="1b6b7928-b660-48f6-d5c7-ae81f2164e53" testName="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests.Validate_ReportsCountDriftAndMissingEntries" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0071450" startTime="2026-05-01T19:54:35.2337461+08:00" endTime="2026-05-01T19:54:35.2338388+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8df9c74f-c7eb-4628-805e-9efaa70f076d" />
+    <UnitTestResult executionId="6ffe7b47-8b45-4500-b1b5-135fafb4c9f2" testId="a69cfc93-9ed5-bed5-5e18-045cad126d18" testName="SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_WritesArtifactsForCompletedProcess" computerName="DESKTOP-C1UO3FR" duration="00:00:00.2972271" startTime="2026-05-01T19:54:35.7147714+08:00" endTime="2026-05-01T19:54:36.0312491+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6ffe7b47-8b45-4500-b1b5-135fafb4c9f2" />
+    <UnitTestResult executionId="c751f4b6-b16c-4f71-a64c-17c639585a43" testId="466bb025-5f29-c51c-5a36-4e140a2ce2cc" testName="SI360.GateRunner.Tests.RunnerSettingsTests.Validate_ReturnsActionableErrorsForInvalidConfiguration" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0020689" startTime="2026-05-01T19:54:35.9912567+08:00" endTime="2026-05-01T19:54:35.9933675+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c751f4b6-b16c-4f71-a64c-17c639585a43" />
+    <UnitTestResult executionId="81ff5d31-72ac-4c69-8e01-3fde30f461f0" testId="701eb8fd-0932-a6c0-aadb-5097e702b514" testName="SI360.GateRunner.Tests.SyntheticProbeRunnerTests.RunAsync_SkipsWhenMetadataInvalid" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0105141" startTime="2026-05-01T19:54:35.9694993+08:00" endTime="2026-05-01T19:54:35.9798421+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="81ff5d31-72ac-4c69-8e01-3fde30f461f0" />
+    <UnitTestResult executionId="c2773f53-d739-459c-a0d7-8ae1c3cd725f" testId="f27e3ab1-0bbe-4813-716c-f16b8f2b553d" testName="SI360.GateRunner.Tests.GateRunnerCommandsTests.BuildAsync_CapturesWarningsAndErrorsAsQualityIssues" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0498500" startTime="2026-05-01T19:54:35.4079637+08:00" endTime="2026-05-01T19:54:35.4793735+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c2773f53-d739-459c-a0d7-8ae1c3cd725f">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: 2&#xD;
+Actual:   0</Message>
+          <StackTrace>   at SI360.GateRunner.Tests.GateRunnerCommandsTests.BuildAsync_CapturesWarningsAndErrorsAsQualityIssues() in D:\GateRunner\SI360.GateRunner.Tests\GateRunnerCommandsTests.cs:line 48&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="863315f7-d190-4847-bb95-45b6b876c253" testId="29114be5-55cd-6aa0-9e64-7c18eb5130ca" testName="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;https://example.test/status?token=super-secret-tok&quot;···)" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0000372" startTime="2026-05-01T19:54:36.0186236+08:00" endTime="2026-05-01T19:54:36.0187126+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="863315f7-d190-4847-bb95-45b6b876c253" />
+    <UnitTestResult executionId="b82f7e2c-08e4-4fe2-a0fb-66eecda5ad20" testId="b99200d7-4624-dab8-0f77-52d1da46246f" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenCatalogWarningsExist" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0007921" startTime="2026-05-01T19:54:35.1634462+08:00" endTime="2026-05-01T19:54:35.1635221+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b82f7e2c-08e4-4fe2-a0fb-66eecda5ad20" />
+    <UnitTestResult executionId="ed2fcdf4-7f58-4ec5-888a-0ab4c969ef19" testId="d7dd4c99-154f-8ab6-56e0-8363e63caeb3" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenBuildErrorsExist" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0005629" startTime="2026-05-01T19:54:35.1639908+08:00" endTime="2026-05-01T19:54:35.1640823+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ed2fcdf4-7f58-4ec5-888a-0ab4c969ef19" />
+    <UnitTestResult executionId="d74520a4-0a47-4fb7-b5b5-63ee0b52822b" testId="e5bcac40-2237-0d4e-c066-3acbc12fd55e" testName="SI360.GateRunner.Tests.SecretRedactorTests.ProcessRunner_RedactsLiveLogsAndArtifacts" computerName="DESKTOP-C1UO3FR" duration="00:00:00.4762125" startTime="2026-05-01T19:54:35.4689746+08:00" endTime="2026-05-01T19:54:36.0056520+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d74520a4-0a47-4fb7-b5b5-63ee0b52822b" />
+    <UnitTestResult executionId="dcdaf06d-000f-4e1d-bb12-8892ee44808b" testId="63acd814-0e94-b4cc-5bb0-4081f5c634fb" testName="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesQualityIssuesAndGradingImpacts" computerName="DESKTOP-C1UO3FR" duration="00:00:00.1237486" startTime="2026-05-01T19:54:35.9059171+08:00" endTime="2026-05-01T19:54:36.0384351+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="dcdaf06d-000f-4e1d-bb12-8892ee44808b" />
+    <UnitTestResult executionId="fd1d4ba6-66a6-4d49-b57d-449a890a9333" testId="7a41f742-79a2-96e4-4e20-d599b64304a6" testName="SI360.GateRunner.Tests.ReportRetentionPrunerTests.Prune_DeletesOnlyExpiredGateRunEntries" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0187172" startTime="2026-05-01T19:54:35.2332823+08:00" endTime="2026-05-01T19:54:35.2333666+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fd1d4ba6-66a6-4d49-b57d-449a890a9333" />
+    <UnitTestResult executionId="606b93c3-c004-44e5-bfff-481bb96e0a23" testId="a2bfa92d-2574-ce2e-6b44-8feb6afef1af" testName="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_ComparesNewRecurringAndResolvedFailures" computerName="DESKTOP-C1UO3FR" duration="00:00:00.3730305" startTime="2026-05-01T19:54:35.4989557+08:00" endTime="2026-05-01T19:54:35.9044740+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="606b93c3-c004-44e5-bfff-481bb96e0a23" />
+    <UnitTestResult executionId="6c8588a9-7344-4365-afe1-a8c20576cb57" testId="7ff8e1e4-de77-331f-5ef6-5c1ae0a069cd" testName="SI360.GateRunner.Tests.SupportBundleExporterTests.Export_PackagesReportsArtifactsMetadataAndProbes" computerName="DESKTOP-C1UO3FR" duration="00:00:00.1615159" startTime="2026-05-01T19:54:35.2344303+08:00" endTime="2026-05-01T19:54:35.3749196+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6c8588a9-7344-4365-afe1-a8c20576cb57" />
+    <UnitTestResult executionId="2a290433-fdf4-450e-8d93-22abfb7b7086" testId="65e32a25-058a-279e-02e5-30ebeed7e422" testName="SI360.GateRunner.Tests.SyntheticProbeRunnerTests.RunAsync_SkipsWhenProbeModeDisabled" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0128398" startTime="2026-05-01T19:54:35.9563050+08:00" endTime="2026-05-01T19:54:35.9691857+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="2a290433-fdf4-450e-8d93-22abfb7b7086" />
+    <UnitTestResult executionId="f39ab19a-f2c4-4578-92c7-e11263b70d13" testId="a4c8932d-78f7-1711-ee84-337770195869" testName="SI360.GateRunner.Tests.GateRunnerCommandsTests.BuildAsync_BuildsSolutionWithoutRestore" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0018128" startTime="2026-05-01T19:54:35.4982266+08:00" endTime="2026-05-01T19:54:35.4983713+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f39ab19a-f2c4-4578-92c7-e11263b70d13" />
+    <UnitTestResult executionId="e475ee27-acaa-46e2-a9b8-cae8ac9f5299" testId="bd5ad49f-a308-db5a-14b2-50eb08819930" testName="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenScorePassesButAnyGateIsYellow" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0430901" startTime="2026-05-01T19:54:35.0756068+08:00" endTime="2026-05-01T19:54:35.1368167+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e475ee27-acaa-46e2-a9b8-cae8ac9f5299" />
+    <UnitTestResult executionId="5570a93a-add0-425a-8297-073cdab5f997" testId="86a806c3-008c-3494-158c-33d60ef62ffc" testName="SI360.GateRunner.Tests.GateRunnerCommandsTests.Snapshot_MatchesCommandFactoryOutput" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0017980" startTime="2026-05-01T19:54:35.4943472+08:00" endTime="2026-05-01T19:54:35.4944476+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5570a93a-add0-425a-8297-073cdab5f997" />
+    <UnitTestResult executionId="5a78af15-0258-4381-aa3c-a7edd5ff9e3c" testId="b770f71d-0d0a-bca3-46f0-1672ace75254" testName="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_RejectsSecretValuesAndSecretLikeFields" computerName="DESKTOP-C1UO3FR" duration="00:00:00.0210506" startTime="2026-05-01T19:54:35.5986682+08:00" endTime="2026-05-01T19:54:35.6109948+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5a78af15-0258-4381-aa3c-a7edd5ff9e3c" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="SI360.GateRunner.Tests.SupportBundleExporterTests.Export_PackagesReportsArtifactsMetadataAndProbes" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="7ff8e1e4-de77-331f-5ef6-5c1ae0a069cd">
+      <Execution id="6c8588a9-7344-4365-afe1-a8c20576cb57" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SupportBundleExporterTests" name="Export_PackagesReportsArtifactsMetadataAndProbes" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateRunnerCommandsTests.BuildAsync_CapturesWarningsAndErrorsAsQualityIssues" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="f27e3ab1-0bbe-4813-716c-f16b8f2b553d">
+      <Execution id="c2773f53-d739-459c-a0d7-8ae1c3cd725f" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateRunnerCommandsTests" name="BuildAsync_CapturesWarningsAndErrorsAsQualityIssues" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateRunnerCommandsTests.RestoreAsync_RestoresSolutionPath" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="b29d39a7-da59-f918-7964-800b7b5188f1">
+      <Execution id="e1819ef7-f5d4-4672-8674-ad97a0abde06" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateRunnerCommandsTests" name="RestoreAsync_RestoresSolutionPath" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.secret&quot;)" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="bb197bcb-a685-15af-e079-6135eebd9628">
+      <Execution id="260d82cc-279d-4080-bd58-5c98e18a6144" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="Redact_RemovesKnownSecretPatterns" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_ComparesNewRecurringAndResolvedFailures" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="a2bfa92d-2574-ce2e-6b44-8feb6afef1af">
+      <Execution id="606b93c3-c004-44e5-bfff-481bb96e0a23" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ReportWriterTests" name="WriteAsync_ComparesNewRecurringAndResolvedFailures" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenRuntimeReadinessIsNotReady" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="4b5ceb6d-89c0-a7f5-da1f-76566e0d3abd">
+      <Execution id="b5d30668-6322-45ef-85ee-1a66403ec1b1" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsNoGo_WhenRuntimeReadinessIsNotReady" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_AcceptsCompleteMetadata" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="f115d62a-bf7f-b4ad-9271-495c2d158814">
+      <Execution id="d6397a7a-d6c5-476c-8133-a25eaa04dfba" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="Validate_AcceptsCompleteMetadata" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesDecisionPolicyAndCatalogWarnings" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="421d3f0a-c796-3398-1fa8-2b592e7d4f44">
+      <Execution id="91768c47-9963-46d4-a04b-6c7aa526fb53" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ReportWriterTests" name="WriteAsync_IncludesDecisionPolicyAndCatalogWarnings" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ReportRetentionPrunerTests.Prune_DeletesOnlyExpiredGateRunEntries" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="7a41f742-79a2-96e4-4e20-d599b64304a6">
+      <Execution id="fd1d4ba6-66a6-4d49-b57d-449a890a9333" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ReportRetentionPrunerTests" name="Prune_DeletesOnlyExpiredGateRunEntries" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SyntheticProbeRunnerTests.RunAsync_SkipsWhenProbeModeDisabled" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="65e32a25-058a-279e-02e5-30ebeed7e422">
+      <Execution id="2a290433-fdf4-450e-8d93-22abfb7b7086" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SyntheticProbeRunnerTests" name="RunAsync_SkipsWhenProbeModeDisabled" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_ReportsTimeout" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="f75b1d4f-4e9b-9446-b76b-142d7f7137a2">
+      <Execution id="6917369b-8ddb-4277-bb25-61d322b3b31e" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ProcessRunnerTests" name="RunAsync_ReportsTimeout" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;https://example.test/status?token=super-secret-tok&quot;···)" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="29114be5-55cd-6aa0-9e64-7c18eb5130ca">
+      <Execution id="863315f7-d190-4847-bb95-45b6b876c253" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="Redact_RemovesKnownSecretPatterns" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenBuildErrorsExist" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="d7dd4c99-154f-8ab6-56e0-8363e63caeb3">
+      <Execution id="ed2fcdf4-7f58-4ec5-888a-0ab4c969ef19" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsNoGo_WhenBuildErrorsExist" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SyntheticProbeRunnerTests.RunAsync_ReportsProbeStatusAndRedactsEndpointDiagnostics" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="aefb7d5f-9507-8f36-af3a-192a4452d88b">
+      <Execution id="66b2ca96-c106-45d1-8c95-463eb73f2b41" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SyntheticProbeRunnerTests" name="RunAsync_ReportsProbeStatusAndRedactsEndpointDiagnostics" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests.Validate_ReportsCountDriftAndMissingEntries" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="1b6b7928-b660-48f6-d5c7-ae81f2164e53">
+      <Execution id="8df9c74f-c7eb-4628-805e-9efaa70f076d" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests" name="Validate_ReportsCountDriftAndMissingEntries" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenRuntimeReadinessIsUnknown" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="9e57d6eb-82a9-dc35-1243-4147386ed772">
+      <Execution id="1e92e91a-26b7-459c-8608-3e6f0c32a4f0" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsHold_WhenRuntimeReadinessIsUnknown" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.RunnerSettingsTests.Discover_FindsSolutionTestProjectAndResultsDirectoryFromCandidateRoot" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="3af1a18d-e042-ff91-90ee-7632bc4d2055">
+      <Execution id="b0fd02bc-7ab1-4ecf-8190-3a8802bd3858" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.RunnerSettingsTests" name="Discover_FindsSolutionTestProjectAndResultsDirectoryFromCandidateRoot" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenBuildWarningExists" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="cbbe7d7d-5063-35a5-ac3b-41d2f786657e">
+      <Execution id="8bf9df85-b5bd-4146-b0db-3627a9915019" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsHold_WhenBuildWarningExists" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsGo_WhenScoreMeetsThresholdAndAllGatesGreen" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="ef0c39ad-e05d-4e0f-b601-af34c65519dd">
+      <Execution id="ebac1bd3-8bcd-4886-ab06-70b149d6935b" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsGo_WhenScoreMeetsThresholdAndAllGatesGreen" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_ReportsMalformedEndpointsAndIds" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="e17fca42-437a-68d1-0840-f851d75d6b14">
+      <Execution id="5d743b36-c65b-4e52-902e-e5148703b8ca" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="Validate_ReportsMalformedEndpointsAndIds" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests.DiscoverFromDirectory_FindsGateClassesAndCountsFactsAndTheories" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="8f1b24f5-0753-b595-10ac-0efcdcd844e4">
+      <Execution id="4ea636fe-276e-4185-8370-b7997cdf6ce5" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateCatalogDriftAnalyzerTests" name="DiscoverFromDirectory_FindsGateClassesAndCountsFactsAndTheories" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsNoGo_WhenAnyGateIsRed" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="e00f6021-d598-de18-aede-4c9968af10d1">
+      <Execution id="4a167b7c-41a4-401d-bdbd-9874e199c4e3" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsNoGo_WhenAnyGateIsRed" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;api_key=super-secret-token&quot;)" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="3eced5d3-c4d0-10c3-4c77-64ca197d1417">
+      <Execution id="c3ed6ff9-b9cc-4b57-8a5e-91ec7278a3f6" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="Redact_RemovesKnownSecretPatterns" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenAllGatesGreenButScoreIsBelowGoThreshold" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="a9c81db0-9e6e-7165-c525-3e83dc3a9d57">
+      <Execution id="25fb3ba3-ee92-46a4-a55d-608019072eba" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsHold_WhenAllGatesGreenButScoreIsBelowGoThreshold" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.RunnerSettingsTests.Validate_ReturnsActionableErrorsForInvalidConfiguration" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="466bb025-5f29-c51c-5a36-4e140a2ce2cc">
+      <Execution id="c751f4b6-b16c-4f71-a64c-17c639585a43" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.RunnerSettingsTests" name="Validate_ReturnsActionableErrorsForInvalidConfiguration" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.RunnerSettingsTests.ApplyEnvironmentVariables_OverridesNewConfigurationFields" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="c1426626-f98b-4838-49b5-97cd2f2ae64d">
+      <Execution id="6945616e-ff2b-45f9-a004-f038ddf85a03" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.RunnerSettingsTests" name="ApplyEnvironmentVariables_OverridesNewConfigurationFields" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.TrxResultParserTests.Parse_ReadsFailedTestDetailsFromTrx" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="28901983-af4e-1a8b-9905-8626dcfb5c69">
+      <Execution id="08d09f46-aadc-4534-92e8-6bf1f62f1c98" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.TrxResultParserTests" name="Parse_ReadsFailedTestDetailsFromTrx" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SyntheticProbeRunnerTests.RunAsync_SkipsWhenMetadataInvalid" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="701eb8fd-0932-a6c0-aadb-5097e702b514">
+      <Execution id="81ff5d31-72ac-4c69-8e01-3fde30f461f0" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SyntheticProbeRunnerTests" name="RunAsync_SkipsWhenMetadataInvalid" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesQualityIssuesAndGradingImpacts" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="63acd814-0e94-b4cc-5bb0-4081f5c634fb">
+      <Execution id="dcdaf06d-000f-4e1d-bb12-8892ee44808b" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ReportWriterTests" name="WriteAsync_IncludesQualityIssuesAndGradingImpacts" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.Redact_RemovesKnownSecretPatterns(input: &quot;Server=db;Password=super-secret-token;Database=SI3&quot;···)" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="25cf303c-61f7-2226-36d2-65731f09ebd4">
+      <Execution id="9ce56867-c54f-4bd3-b9d2-1b7e938c6172" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="Redact_RemovesKnownSecretPatterns" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_ReportsMissingRequiredFields" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="1db434c8-2f2a-9853-7f17-6b29859693db">
+      <Execution id="1ceec78a-d45a-4932-b131-6abb07a39fe6" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="Validate_ReportsMissingRequiredFields" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenCatalogWarningsExist" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="b99200d7-4624-dab8-0f77-52d1da46246f">
+      <Execution id="b82f7e2c-08e4-4fe2-a0fb-66eecda5ad20" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsHold_WhenCatalogWarningsExist" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.SecretRedactorTests.ProcessRunner_RedactsLiveLogsAndArtifacts" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="e5bcac40-2237-0d4e-c066-3acbc12fd55e">
+      <Execution id="d74520a4-0a47-4fb7-b5b5-63ee0b52822b" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.SecretRedactorTests" name="ProcessRunner_RedactsLiveLogsAndArtifacts" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_IncludesRuntimeReadinessMetadataAndProbes" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="94da6005-2a68-71ff-fd76-cc8a31df085f">
+      <Execution id="4f114ed4-6129-4b86-a742-70f258ab9fd5" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ReportWriterTests" name="WriteAsync_IncludesRuntimeReadinessMetadataAndProbes" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ProcessRunnerTests.RunAsync_WritesArtifactsForCompletedProcess" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="a69cfc93-9ed5-bed5-5e18-045cad126d18">
+      <Execution id="6ffe7b47-8b45-4500-b1b5-135fafb4c9f2" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ProcessRunnerTests" name="RunAsync_WritesArtifactsForCompletedProcess" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.ReportWriterTests.WriteAsync_RedactsSecretsFromMarkdownAndJson" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="1e09913d-1be4-ea6f-4da3-bb82404330a6">
+      <Execution id="eb8c12a0-b33f-4170-b614-bde752dbbe0f" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.ReportWriterTests" name="WriteAsync_RedactsSecretsFromMarkdownAndJson" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.Validate_RejectsSecretValuesAndSecretLikeFields" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="b770f71d-0d0a-bca3-46f0-1672ace75254">
+      <Execution id="5a78af15-0258-4381-aa3c-a7edd5ff9e3c" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="Validate_RejectsSecretValuesAndSecretLikeFields" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests.LoadAndValidate_ReadsMetadataFile" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="002d2d59-9e33-8304-f7f9-c80766298b80">
+      <Execution id="8c0fbdd1-1b13-4e1f-90f7-c9f0bc4a06b2" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DeploymentMetadataValidatorTests" name="LoadAndValidate_ReadsMetadataFile" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.DecisionPolicyTests.Decide_ReturnsHold_WhenScorePassesButAnyGateIsYellow" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="bd5ad49f-a308-db5a-14b2-50eb08819930">
+      <Execution id="e475ee27-acaa-46e2-a9b8-cae8ac9f5299" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.DecisionPolicyTests" name="Decide_ReturnsHold_WhenScorePassesButAnyGateIsYellow" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateRunnerCommandsTests.BuildAsync_BuildsSolutionWithoutRestore" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="a4c8932d-78f7-1711-ee84-337770195869">
+      <Execution id="f39ab19a-f2c4-4578-92c7-e11263b70d13" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateRunnerCommandsTests" name="BuildAsync_BuildsSolutionWithoutRestore" />
+    </UnitTest>
+    <UnitTest name="SI360.GateRunner.Tests.GateRunnerCommandsTests.Snapshot_MatchesCommandFactoryOutput" storage="d:\gaterunner\si360.gaterunner.tests\bin\release\net8.0-windows\si360.gaterunner.tests.dll" id="86a806c3-008c-3494-158c-33d60ef62ffc">
+      <Execution id="5570a93a-add0-425a-8297-073cdab5f997" />
+      <TestMethod codeBase="D:\GateRunner\SI360.GateRunner.Tests\bin\Release\net8.0-windows\SI360.GateRunner.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="SI360.GateRunner.Tests.GateRunnerCommandsTests" name="Snapshot_MatchesCommandFactoryOutput" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="421d3f0a-c796-3398-1fa8-2b592e7d4f44" executionId="91768c47-9963-46d4-a04b-6c7aa526fb53" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a9c81db0-9e6e-7165-c525-3e83dc3a9d57" executionId="25fb3ba3-ee92-46a4-a55d-608019072eba" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="4b5ceb6d-89c0-a7f5-da1f-76566e0d3abd" executionId="b5d30668-6322-45ef-85ee-1a66403ec1b1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bb197bcb-a685-15af-e079-6135eebd9628" executionId="260d82cc-279d-4080-bd58-5c98e18a6144" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e17fca42-437a-68d1-0840-f851d75d6b14" executionId="5d743b36-c65b-4e52-902e-e5148703b8ca" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3eced5d3-c4d0-10c3-4c77-64ca197d1417" executionId="c3ed6ff9-b9cc-4b57-8a5e-91ec7278a3f6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8f1b24f5-0753-b595-10ac-0efcdcd844e4" executionId="4ea636fe-276e-4185-8370-b7997cdf6ce5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e00f6021-d598-de18-aede-4c9968af10d1" executionId="4a167b7c-41a4-401d-bdbd-9874e199c4e3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f115d62a-bf7f-b4ad-9271-495c2d158814" executionId="d6397a7a-d6c5-476c-8133-a25eaa04dfba" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="25cf303c-61f7-2226-36d2-65731f09ebd4" executionId="9ce56867-c54f-4bd3-b9d2-1b7e938c6172" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9e57d6eb-82a9-dc35-1243-4147386ed772" executionId="1e92e91a-26b7-459c-8608-3e6f0c32a4f0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="aefb7d5f-9507-8f36-af3a-192a4452d88b" executionId="66b2ca96-c106-45d1-8c95-463eb73f2b41" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f75b1d4f-4e9b-9446-b76b-142d7f7137a2" executionId="6917369b-8ddb-4277-bb25-61d322b3b31e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b29d39a7-da59-f918-7964-800b7b5188f1" executionId="e1819ef7-f5d4-4672-8674-ad97a0abde06" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="94da6005-2a68-71ff-fd76-cc8a31df085f" executionId="4f114ed4-6129-4b86-a742-70f258ab9fd5" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="002d2d59-9e33-8304-f7f9-c80766298b80" executionId="8c0fbdd1-1b13-4e1f-90f7-c9f0bc4a06b2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1db434c8-2f2a-9853-7f17-6b29859693db" executionId="1ceec78a-d45a-4932-b131-6abb07a39fe6" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="cbbe7d7d-5063-35a5-ac3b-41d2f786657e" executionId="8bf9df85-b5bd-4146-b0db-3627a9915019" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="28901983-af4e-1a8b-9905-8626dcfb5c69" executionId="08d09f46-aadc-4534-92e8-6bf1f62f1c98" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="3af1a18d-e042-ff91-90ee-7632bc4d2055" executionId="b0fd02bc-7ab1-4ecf-8190-3a8802bd3858" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1e09913d-1be4-ea6f-4da3-bb82404330a6" executionId="eb8c12a0-b33f-4170-b614-bde752dbbe0f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c1426626-f98b-4838-49b5-97cd2f2ae64d" executionId="6945616e-ff2b-45f9-a004-f038ddf85a03" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="ef0c39ad-e05d-4e0f-b601-af34c65519dd" executionId="ebac1bd3-8bcd-4886-ab06-70b149d6935b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="1b6b7928-b660-48f6-d5c7-ae81f2164e53" executionId="8df9c74f-c7eb-4628-805e-9efaa70f076d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a69cfc93-9ed5-bed5-5e18-045cad126d18" executionId="6ffe7b47-8b45-4500-b1b5-135fafb4c9f2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="466bb025-5f29-c51c-5a36-4e140a2ce2cc" executionId="c751f4b6-b16c-4f71-a64c-17c639585a43" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="701eb8fd-0932-a6c0-aadb-5097e702b514" executionId="81ff5d31-72ac-4c69-8e01-3fde30f461f0" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f27e3ab1-0bbe-4813-716c-f16b8f2b553d" executionId="c2773f53-d739-459c-a0d7-8ae1c3cd725f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="29114be5-55cd-6aa0-9e64-7c18eb5130ca" executionId="863315f7-d190-4847-bb95-45b6b876c253" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b99200d7-4624-dab8-0f77-52d1da46246f" executionId="b82f7e2c-08e4-4fe2-a0fb-66eecda5ad20" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d7dd4c99-154f-8ab6-56e0-8363e63caeb3" executionId="ed2fcdf4-7f58-4ec5-888a-0ab4c969ef19" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e5bcac40-2237-0d4e-c066-3acbc12fd55e" executionId="d74520a4-0a47-4fb7-b5b5-63ee0b52822b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="63acd814-0e94-b4cc-5bb0-4081f5c634fb" executionId="dcdaf06d-000f-4e1d-bb12-8892ee44808b" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7a41f742-79a2-96e4-4e20-d599b64304a6" executionId="fd1d4ba6-66a6-4d49-b57d-449a890a9333" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a2bfa92d-2574-ce2e-6b44-8feb6afef1af" executionId="606b93c3-c004-44e5-bfff-481bb96e0a23" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7ff8e1e4-de77-331f-5ef6-5c1ae0a069cd" executionId="6c8588a9-7344-4365-afe1-a8c20576cb57" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="65e32a25-058a-279e-02e5-30ebeed7e422" executionId="2a290433-fdf4-450e-8d93-22abfb7b7086" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a4c8932d-78f7-1711-ee84-337770195869" executionId="f39ab19a-f2c4-4578-92c7-e11263b70d13" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bd5ad49f-a308-db5a-14b2-50eb08819930" executionId="e475ee27-acaa-46e2-a9b8-cae8ac9f5299" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="86a806c3-008c-3494-158c-33d60ef62ffc" executionId="5570a93a-add0-425a-8297-073cdab5f997" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b770f71d-0d0a-bca3-46f0-1672ace75254" executionId="5a78af15-0258-4381-aa3c-a7edd5ff9e3c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="41" executed="41" passed="40" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.5+1b188a7b0a (32-bit .NET 8.0.25)&#xD;
+[xUnit.net 00:00:00.30]   Discovering: SI360.GateRunner.Tests&#xD;
+[xUnit.net 00:00:00.48]   Discovered:  SI360.GateRunner.Tests&#xD;
+[xUnit.net 00:00:00.57]   Starting:    SI360.GateRunner.Tests&#xD;
+[xUnit.net 00:00:01.04]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:01.04]       Expected: 2&#xD;
+[xUnit.net 00:00:01.04]       Actual:   0&#xD;
+[xUnit.net 00:00:01.04]       Stack Trace:&#xD;
+[xUnit.net 00:00:01.04]         D:\GateRunner\SI360.GateRunner.Tests\GateRunnerCommandsTests.cs(48,0): at SI360.GateRunner.Tests.GateRunnerCommandsTests.BuildAsync_CapturesWarningsAndErrorsAsQualityIssues()&#xD;
+[xUnit.net 00:00:01.04]         --- End of stack trace from previous location ---&#xD;
+[xUnit.net 00:00:01.84]   Finished:    SI360.GateRunner.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="DESKTOP-C1UO3FR" outcome="Error" timestamp="2026-05-01T19:54:35.4876837+08:00">
+        <Text>[xUnit.net 00:00:01.04]     SI360.GateRunner.Tests.GateRunnerCommandsTests.BuildAsync_CapturesWarningsAndErrorsAsQualityIssues [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

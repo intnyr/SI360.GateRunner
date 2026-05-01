@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "T0DR+GTwZ4c=",
+  "dgSpecHash": "oIl+nTiJBnU=",
   "success": true,
-  "projectFilePath": "D:\\SI360.GateRunner\\SI360.GateRunner.csproj",
+  "projectFilePath": "D:\\GateRunner\\SI360.GateRunner.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Rolen\\.nuget\\packages\\communitytoolkit.mvvm\\8.2.2\\communitytoolkit.mvvm.8.2.2.nupkg.sha512",
     "C:\\Users\\Rolen\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.9\\microsoft.extensions.configuration.9.0.9.nupkg.sha512",

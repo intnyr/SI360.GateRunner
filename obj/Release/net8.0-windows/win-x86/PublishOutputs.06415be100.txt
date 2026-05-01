@@ -1,0 +1,4 @@
+d:\GateRunner\artifacts\GateRunner\1.0.5\wpf\SI360.GateRunner.pdb
+d:\GateRunner\artifacts\GateRunner\1.0.5\wpf\appsettings.json
+d:\GateRunner\artifacts\GateRunner\1.0.5\wpf\SI360.GateRunner.Core.pdb
+d:\GateRunner\artifacts\GateRunner\1.0.5\wpf\SI360.GateRunner.exe

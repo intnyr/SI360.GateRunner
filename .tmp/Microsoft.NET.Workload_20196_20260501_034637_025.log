@@ -1,0 +1,14 @@
+[2026-05-01 03:46:37.161] [00004EE4] === Logging started ===
+[2026-05-01 03:46:37.191] [00004EE4] Executing: "C:\Program Files\dotnet\dotnet.exe" build .\SI360.GateRunner.sln --no-restore, PID: 20196, PPID: 14764
+[2026-05-01 03:46:37.191] [00004EE4] IsElevated: False
+[2026-05-01 03:46:37.191] [00004EE4] Is64BitProcess: True
+[2026-05-01 03:46:37.191] [00004EE4] RebootPending: False
+[2026-05-01 03:46:37.191] [00004EE4] ProcessorArchitecture: amd64
+[2026-05-01 03:46:37.191] [00004EE4] HostArchitecture: x64
+[2026-05-01 03:46:37.191] [00004EE4] SdkDirectory: 8.0.414
+[2026-05-01 03:46:37.191] [00004EE4] VerifySignatures: False
+[2026-05-01 03:46:37.191] [00004EE4] SDK feature band: 8.0.400
+[2026-05-01 03:46:43.668] [00004EE4] Shutting down
+[2026-05-01 03:46:43.673] [00004EE4] Shutdown completed.
+[2026-05-01 03:46:43.673] [00004EE4] Restart required: False
+[2026-05-01 03:46:43.673] [00004EE4] === Logging ended ===

@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SI360.GateRunner.Models;
 using SI360.GateRunner.Services;
+using SI360.GateRunner.Views;
 
 namespace SI360.GateRunner.ViewModels;
 
@@ -21,7 +22,13 @@ public partial class MainViewModel : ObservableObject
     private readonly BuildErrorCollector _build;
     private readonly TrxResultParser _parser;
     private readonly ScorecardAggregator _aggregator;
-    private readonly ReportWriter _reportWriter;
+    private readonly IDecisionPolicy _decisionPolicy;
+    private readonly GateCatalogDriftAnalyzer _catalogDriftAnalyzer;
+    private readonly IReportWriter _reportWriter;
+    private readonly IProcessRunner _processRunner;
+    private readonly IDeploymentMetadataValidator _metadataValidator;
+    private readonly ISyntheticProbeRunner _probeRunner;
+    private readonly ISupportBundleExporter _supportBundleExporter;
     private readonly ThemeManager _themeManager;
     private readonly ToastNotifier _toast;
     private CancellationTokenSource? _cts;
@@ -29,6 +36,7 @@ public partial class MainViewModel : ObservableObject
     private readonly object _logLock = new();
     private const int MaxLogChars = 512 * 1024;
     private DateTime _runStartedAt;
+    private RunSummary? _latestSummary;
     private readonly System.Windows.Threading.DispatcherTimer _etaTimer;
 
     public MainViewModel(
@@ -37,7 +45,13 @@ public partial class MainViewModel : ObservableObject
         BuildErrorCollector build,
         TrxResultParser parser,
         ScorecardAggregator aggregator,
-        ReportWriter reportWriter,
+        IDecisionPolicy decisionPolicy,
+        GateCatalogDriftAnalyzer catalogDriftAnalyzer,
+        IReportWriter reportWriter,
+        IProcessRunner processRunner,
+        IDeploymentMetadataValidator metadataValidator,
+        ISyntheticProbeRunner probeRunner,
+        ISupportBundleExporter supportBundleExporter,
         ThemeManager themeManager,
         ToastNotifier toast)
     {
@@ -46,7 +60,13 @@ public partial class MainViewModel : ObservableObject
         _build = build;
         _parser = parser;
         _aggregator = aggregator;
+        _decisionPolicy = decisionPolicy;
+        _catalogDriftAnalyzer = catalogDriftAnalyzer;
         _reportWriter = reportWriter;
+        _processRunner = processRunner;
+        _metadataValidator = metadataValidator;
+        _probeRunner = probeRunner;
+        _supportBundleExporter = supportBundleExporter;
         _themeManager = themeManager;
         _toast = toast;
 
@@ -69,6 +89,9 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<GateRunViewModel> Gates { get; } = new();
     public ObservableCollection<FailureItemViewModel> Failures { get; } = new();
     public ObservableCollection<BuildError> BuildErrors { get; } = new();
+    public ObservableCollection<QualityIssue> QualityIssues { get; } = new();
+    public ObservableCollection<DeploymentMetadataIssue> MetadataIssues { get; } = new();
+    public ObservableCollection<SyntheticProbeResult> ProbeResults { get; } = new();
     public ScorecardViewModel Scorecard { get; }
     public ICollectionView GatesView { get; }
     public ICollectionView FailuresView { get; }
@@ -82,6 +105,12 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private GateRunViewModel? selectedGate;
     [ObservableProperty] private string solutionPath = string.Empty;
     [ObservableProperty] private string testProjectPath = string.Empty;
+    [ObservableProperty] private string settingsWarningText = string.Empty;
+    [ObservableProperty] private bool hasSettingsWarnings;
+    [ObservableProperty] private string catalogWarningText = string.Empty;
+    [ObservableProperty] private bool hasCatalogWarnings;
+    [ObservableProperty] private string runtimeReadinessText = "Runtime readiness: Unknown. Phase-1 probes are read-only.";
+    [ObservableProperty] private string supportBundlePath = string.Empty;
 
     // Filter chips
     [ObservableProperty] private bool showRed = true;
@@ -100,10 +129,10 @@ public partial class MainViewModel : ObservableObject
     public int GreenCount => Gates.Count(g => g.Status == GateStatus.Green);
     public int PendingCount => Gates.Count(g => g.Status is GateStatus.Pending or GateStatus.Running);
 
-    public string RedChipLabel => $"● Red ({RedCount})";
-    public string YellowChipLabel => $"● Yellow ({YellowCount})";
-    public string GreenChipLabel => $"● Green ({GreenCount})";
-    public string PendingChipLabel => $"○ Pending ({PendingCount})";
+    public string RedChipLabel => $"Red ({RedCount})";
+    public string YellowChipLabel => $"Yellow ({YellowCount})";
+    public string GreenChipLabel => $"Green ({GreenCount})";
+    public string PendingChipLabel => $"Pending ({PendingCount})";
 
     private void RefreshChipCounts()
     {
@@ -132,13 +161,34 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private string etaText = string.Empty;
 
     // Theme (#9)
-    [ObservableProperty] private string themeToggleText = "☀ Light";
+    [ObservableProperty] private string themeToggleText = "Light";
 
     public void RefreshSettings()
     {
         SolutionPath = _settings.SolutionPath;
         TestProjectPath = _settings.TestProjectPath;
+        RefreshWarnings();
         LoadPreviousRun();
+    }
+
+    private void RefreshWarnings()
+    {
+        var warnings = new List<string>();
+        if (string.IsNullOrWhiteSpace(_settings.SolutionPath) || !File.Exists(_settings.SolutionPath))
+            warnings.Add("Solution path is missing or invalid.");
+        if (string.IsNullOrWhiteSpace(_settings.TestProjectPath) || !File.Exists(_settings.TestProjectPath))
+            warnings.Add("Test project path is missing or invalid.");
+        if (_settings.GateTimeoutSeconds <= 0 || _settings.BuildTimeoutSeconds <= 0 || _settings.RestoreTimeoutSeconds <= 0)
+            warnings.Add("Timeout values must be greater than zero.");
+
+        SettingsWarningText = string.Join(" ", warnings);
+        HasSettingsWarnings = warnings.Count > 0;
+
+        var catalogWarnings = _catalogDriftAnalyzer.Validate(_settings);
+        CatalogWarningText = catalogWarnings.Count == 0
+            ? string.Empty
+            : string.Join(" ", catalogWarnings.Select(w => $"{w.Code}: {w.Message}"));
+        HasCatalogWarnings = catalogWarnings.Count > 0;
     }
 
     private void LoadPreviousRun()
@@ -150,7 +200,7 @@ public partial class MainViewModel : ObservableObject
             ScoreDeltaText = string.Empty;
             return;
         }
-        PreviousRunText = $"Last run {prev.StartedAt:yyyy-MM-dd HH:mm} → {prev.OverallScore:0.0} ({prev.Grade}, {prev.Decision})";
+        PreviousRunText = $"Last run {prev.StartedAt:yyyy-MM-dd HH:mm} -> {prev.OverallScore:0.0} ({prev.Grade}, {prev.Decision})";
     }
 
     private bool FilterGate(object obj)
@@ -184,7 +234,7 @@ public partial class MainViewModel : ObservableObject
         _cts = new CancellationTokenSource();
         var log = new Progress<string>(AppendLog);
 
-        _runStartedAt = DateTime.Now;
+        _runStartedAt = DateTime.UtcNow;
         _etaTimer.Start();
 
         try
@@ -192,7 +242,21 @@ public partial class MainViewModel : ObservableObject
             ClearPreviousRun(singleGate);
             LoadPreviousRun();
             var startedAt = _runStartedAt;
-            var summary = new RunSummary { StartedAt = startedAt };
+            var runDir = Path.Combine(_settings.ResultsDirectory, $"GateRun_{startedAt:yyyyMMdd_HHmmss}Z");
+            Directory.CreateDirectory(runDir);
+            var summary = new RunSummary
+            {
+                StartedAt = startedAt,
+                Environment = await RunEnvironmentCollector
+                    .CollectAsync(_settings, _processRunner, runDir, _cts.Token)
+                    .ConfigureAwait(true)
+            };
+            foreach (var warning in _catalogDriftAnalyzer.Validate(_settings))
+            {
+                summary.GateCatalogWarnings.Add(warning);
+                AppendLog($"[CATALOG] {warning.Code}: {warning.Message}");
+            }
+            await CollectRuntimeReadinessAsync(summary, _cts.Token).ConfigureAwait(true);
 
             if (string.IsNullOrWhiteSpace(_settings.SolutionPath) || !File.Exists(_settings.SolutionPath))
             {
@@ -205,30 +269,38 @@ public partial class MainViewModel : ObservableObject
 
             if (singleGate is null)
             {
-                StatusText = "Restoring…";
-                await _runner.RestoreAsync(log, _cts.Token);
-
-                StatusText = "Building (Release)…";
-                var (buildExit, errors) = await _build.BuildAsync(log, _cts.Token);
-                foreach (var e in errors) BuildErrors.Add(e);
-                summary.BuildErrors.AddRange(errors);
-
-                if (buildExit != 0 || errors.Count > 0)
+                StatusText = "Restoring...";
+                var restore = await _runner.RestoreAsync(log, _cts.Token, runDir);
+                if (restore.ExitCode != 0)
                 {
-                    StatusText = $"Build failed: {errors.Count} errors. Deploy decision = NO-GO.";
-                    summary.Decision = DeployDecision.NoGo;
+                    QualityIssueAggregator.AddRestoreFailure(summary, _settings.TestProjectPath);
+                    RefreshQualityIssues(summary);
+                    StatusText = "Restore failed. Deploy decision = NO-GO.";
+                    ApplyDecision(summary);
                     await FinalizeAsync(summary, startedAt);
-                    _toast.Show("Gate Run — NO-GO", $"{errors.Count} build errors. Deploy blocked.", error: true);
+                    _toast.Show("Gate Run - NO-GO", "Restore failed. Deploy blocked.", error: true);
+                    return;
+                }
+
+                StatusText = "Building (Release)...";
+                var (buildExit, issues) = await _build.BuildAsync(log, _cts.Token, runDir);
+                QualityIssueAggregator.AddBuildIssues(summary, issues);
+                RefreshQualityIssues(summary);
+
+                var errorCount = issues.Count(i => i.Severity == QualityIssueSeverity.Error);
+                if (buildExit != 0 || errorCount > 0)
+                {
+                    StatusText = $"Build failed: {errorCount} errors. Deploy decision = NO-GO.";
+                    ApplyDecision(summary);
+                    await FinalizeAsync(summary, startedAt);
+                    _toast.Show("Gate Run - NO-GO", $"{errorCount} build errors. Deploy blocked.", error: true);
                     return;
                 }
             }
             else
             {
-                StatusText = $"Re-running {singleGate.DisplayName}…";
+                StatusText = $"Re-running {singleGate.DisplayName}...";
             }
-
-            var runDir = Path.Combine(_settings.ResultsDirectory, $"GateRun_{startedAt:yyyyMMdd_HHmmss}");
-            Directory.CreateDirectory(runDir);
 
             foreach (var gateVm in gatesToRun)
             {
@@ -236,7 +308,7 @@ public partial class MainViewModel : ObservableObject
                 gateVm.IsRunning = true;
                 gateVm.Status = GateStatus.Running;
                 GatesView.Refresh();
-                StatusText = $"Running {gateVm.DisplayName} ({CompletedGates + 1}/{TotalGates})…";
+                StatusText = $"Running {gateVm.DisplayName} ({CompletedGates + 1}/{TotalGates})...";
 
                 var sw = Stopwatch.StartNew();
                 var (exit, trxPath, stdOut) = await _runner.RunGateAsync(
@@ -275,7 +347,9 @@ public partial class MainViewModel : ObservableObject
             if (singleGate is null)
             {
                 summary.Scorecard = _aggregator.Build(summary.GateResults);
-                summary.Decision = _aggregator.Decide(summary);
+                QualityIssueAggregator.RefreshDerivedIssues(summary);
+                RefreshQualityIssues(summary);
+                ApplyDecision(summary);
                 Scorecard.Apply(summary.Scorecard, summary.Decision);
 
                 var prev = PreviousRunLoader.LoadLatest(_settings.ResultsDirectory);
@@ -284,7 +358,7 @@ public partial class MainViewModel : ObservableObject
 
                 StatusText = $"Done. Decision: {Scorecard.DecisionText}. Score {summary.Scorecard.OverallScore:0.0} ({summary.Scorecard.Grade}).";
                 _toast.Show(
-                    $"Gate Run — {Scorecard.DecisionText}",
+                    $"Gate Run - {Scorecard.DecisionText}",
                     $"Overall {summary.Scorecard.OverallScore:0.0} ({summary.Scorecard.Grade}). {Failures.Count} failures.",
                     error: summary.Decision != DeployDecision.Go);
             }
@@ -320,18 +394,18 @@ public partial class MainViewModel : ObservableObject
         if (prev is null) { ScoreDeltaText = string.Empty; return; }
         var delta = Math.Round(current - prev.OverallScore, 2);
         ScoreDelta = delta;
-        var sign = delta > 0 ? "▲ +" : delta < 0 ? "▼ " : "= ";
+        var sign = delta > 0 ? "+ " : delta < 0 ? "- " : "= ";
         ScoreDeltaText = $"{sign}{delta:0.00} since {prev.StartedAt:yyyy-MM-dd HH:mm}";
     }
 
     private void RecomputeEta()
     {
-        if (!IsRunning || CompletedGates == 0) { EtaText = "…"; return; }
-        var elapsed = DateTime.Now - _runStartedAt;
+        if (!IsRunning || CompletedGates == 0) { EtaText = "..."; return; }
+        var elapsed = DateTime.UtcNow - _runStartedAt;
         var avgPerGate = elapsed.TotalSeconds / CompletedGates;
         var remaining = Math.Max(0, TotalGates - CompletedGates);
         var etaSec = avgPerGate * remaining;
-        EtaText = $"ETA ~{FormatDuration(TimeSpan.FromSeconds(etaSec))} · elapsed {FormatDuration(elapsed)}";
+        EtaText = $"ETA ~{FormatDuration(TimeSpan.FromSeconds(etaSec))} / elapsed {FormatDuration(elapsed)}";
     }
 
     private static string FormatDuration(TimeSpan t)
@@ -339,25 +413,41 @@ public partial class MainViewModel : ObservableObject
            t.TotalMinutes >= 1 ? $"{t.Minutes}m{t.Seconds:D2}s" :
            $"{t.Seconds}s";
 
+    private void ApplyDecision(RunSummary summary)
+    {
+        var decision = _decisionPolicy.Decide(summary);
+        summary.Decision = decision.Decision;
+        summary.DecisionPolicyName = decision.PolicyName;
+        summary.DecisionPolicyVersion = decision.PolicyVersion;
+        summary.DecisionRationale = decision.Rationale;
+        summary.DecisionImpacts.Clear();
+        summary.DecisionImpacts.AddRange(decision.Impacts);
+        RefreshQualityIssues(summary);
+    }
+
     private async Task FinalizeAsync(RunSummary summary, DateTime startedAt)
     {
-        summary.Duration = DateTime.Now - startedAt;
+        summary.Duration = DateTime.UtcNow - startedAt;
         var (md, json) = await _reportWriter.WriteAsync(summary, _settings.ResultsDirectory);
+        ReportRetentionPruner.Prune(_settings.ResultsDirectory, _settings.ReportRetentionDays, DateTimeOffset.UtcNow);
         summary.ReportMarkdownPath = md;
         summary.ReportJsonPath = json;
         LatestReportPath = md;
+        _latestSummary = summary;
         OpenReportCommand.NotifyCanExecuteChanged();
+        ExportSupportBundleCommand.NotifyCanExecuteChanged();
     }
 
     private bool CanRun() => !IsRunning;
     private bool CanCancel() => IsRunning;
     private bool CanOpenReport() => !string.IsNullOrEmpty(LatestReportPath) && File.Exists(LatestReportPath);
+    private bool CanExportSupportBundle() => _latestSummary is not null;
 
     [RelayCommand(CanExecute = nameof(CanCancel))]
     private void Cancel()
     {
         _cts?.Cancel();
-        StatusText = "Cancelling…";
+        StatusText = "Cancelling...";
     }
 
     [RelayCommand(CanExecute = nameof(CanOpenReport))]
@@ -365,22 +455,167 @@ public partial class MainViewModel : ObservableObject
     {
         if (string.IsNullOrEmpty(LatestReportPath)) return;
         var path = LatestReportPath;
-        if (path.Contains(' '))
+        if (!File.Exists(path))
         {
-            var confirm = MessageBox.Show(
-                $"Open report?\n\n{path}",
-                "SI360 Gate Runner",
-                MessageBoxButton.OKCancel,
-                MessageBoxImage.Question);
-            if (confirm != MessageBoxResult.OK) return;
+            StatusText = $"Open failed: report not found at {path}";
+            MessageBox.Show($"Report not found:\n\n{path}", "SI360 Gate Runner", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
         }
+
+        if (TryOpenWithShell(path, out var shellError))
+        {
+            StatusText = $"Opened report: {path}";
+            return;
+        }
+
+        if (TryOpenInBrowser(path, out var browserError))
+        {
+            StatusText = $"No {Path.GetExtension(path)} handler; opened in browser. ({shellError})";
+            return;
+        }
+
+        if (TryOpenInNotepad(path, out var notepadError))
+        {
+            StatusText = $"No {Path.GetExtension(path)} handler; opened in Notepad. ({shellError})";
+            return;
+        }
+
+        TryRevealInExplorer(path, out var revealError);
+        StatusText = $"Open failed: {shellError}";
+        MessageBox.Show(
+            $"Could not open report.\n\nPath: {path}\nShell: {shellError}\nBrowser: {browserError}\nNotepad: {notepadError}\nExplorer: {revealError}",
+            "SI360 Gate Runner",
+            MessageBoxButton.OK,
+            MessageBoxImage.Error);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanExportSupportBundle))]
+    private void ExportSupportBundle()
+    {
+        if (_latestSummary is null) return;
         try
         {
-            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+            SupportBundlePath = _supportBundleExporter.Export(_latestSummary, _settings);
         }
         catch (Exception ex)
         {
-            StatusText = $"Open failed: {ex.Message}";
+            StatusText = $"Support bundle export failed: {ex.Message}";
+            MessageBox.Show($"Support bundle export failed:\n\n{ex.Message}", "SI360 Gate Runner", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(SupportBundlePath) || !File.Exists(SupportBundlePath))
+        {
+            StatusText = $"Support bundle export reported success but file not found: {SupportBundlePath}";
+            MessageBox.Show($"Support bundle file not found after export:\n\n{SupportBundlePath}", "SI360 Gate Runner", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        StatusText = $"Support bundle exported: {SupportBundlePath}";
+        if (!TryRevealInExplorer(SupportBundlePath, out var revealError))
+            StatusText = $"Support bundle exported (explorer reveal failed: {revealError}): {SupportBundlePath}";
+    }
+
+    private static bool TryOpenWithShell(string path, out string error)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo(path) { UseShellExecute = true };
+            using var proc = Process.Start(psi);
+            error = string.Empty;
+            return proc is not null || true;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            return false;
+        }
+    }
+
+    private static bool TryRevealInExplorer(string path, out string error)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo("explorer.exe", $"/select,\"{path}\"")
+            {
+                UseShellExecute = true
+            };
+            using var proc = Process.Start(psi);
+            error = string.Empty;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            return false;
+        }
+    }
+
+    private static bool TryOpenInBrowser(string path, out string error)
+    {
+        try
+        {
+            var uri = new Uri(path).AbsoluteUri;
+            var browser = ResolveDefaultBrowser();
+            ProcessStartInfo psi;
+            if (!string.IsNullOrWhiteSpace(browser))
+                psi = new ProcessStartInfo(browser, $"\"{uri}\"") { UseShellExecute = false };
+            else
+                psi = new ProcessStartInfo(uri) { UseShellExecute = true };
+            using var proc = Process.Start(psi);
+            error = string.Empty;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            return false;
+        }
+    }
+
+    private static bool TryOpenInNotepad(string path, out string error)
+    {
+        try
+        {
+            var notepad = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.System),
+                "notepad.exe");
+            var psi = new ProcessStartInfo(File.Exists(notepad) ? notepad : "notepad.exe", $"\"{path}\"")
+            {
+                UseShellExecute = false
+            };
+            using var proc = Process.Start(psi);
+            error = string.Empty;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            return false;
+        }
+    }
+
+    private static string? ResolveDefaultBrowser()
+    {
+        try
+        {
+            using var userChoice = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice");
+            var progId = userChoice?.GetValue("ProgId") as string;
+            if (string.IsNullOrWhiteSpace(progId)) return null;
+
+            using var command = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey($@"{progId}\shell\open\command");
+            var raw = command?.GetValue(string.Empty) as string;
+            if (string.IsNullOrWhiteSpace(raw)) return null;
+
+            var exe = raw.StartsWith('"')
+                ? raw.Substring(1, raw.IndexOf('"', 1) - 1)
+                : raw.Split(' ')[0];
+            return File.Exists(exe) ? exe : null;
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -412,7 +647,23 @@ public partial class MainViewModel : ObservableObject
     private void ToggleTheme()
     {
         _themeManager.Toggle();
-        ThemeToggleText = _themeManager.Current == AppTheme.Dark ? "☀ Light" : "🌙 Dark";
+        ThemeToggleText = _themeManager.Current == AppTheme.Dark ? "Light" : "Dark";
+    }
+
+    [RelayCommand]
+    private void OpenSettings()
+    {
+        var dialog = new SettingsWindow(_settings)
+        {
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            _settings.Save();
+            RefreshSettings();
+            StatusText = "Settings saved.";
+        }
     }
 
     [RelayCommand]
@@ -442,7 +693,13 @@ public partial class MainViewModel : ObservableObject
         }
         lock (_logLock) { _logBuffer.Clear(); LogTail = string.Empty; }
         LatestReportPath = null;
+        _latestSummary = null;
+        MetadataIssues.Clear();
+        ProbeResults.Clear();
+        QualityIssues.Clear();
+        RuntimeReadinessText = "Runtime readiness: Unknown. Phase-1 probes are read-only.";
         OpenReportCommand.NotifyCanExecuteChanged();
+        ExportSupportBundleCommand.NotifyCanExecuteChanged();
         GatesView.Refresh();
         RefreshChipCounts();
     }
@@ -468,5 +725,60 @@ public partial class MainViewModel : ObservableObject
                 _logBuffer.Remove(0, _logBuffer.Length - MaxLogChars);
             LogTail = _logBuffer.ToString();
         }
+    }
+
+    private async Task CollectRuntimeReadinessAsync(RunSummary summary, CancellationToken cancellationToken)
+    {
+        MetadataIssues.Clear();
+        ProbeResults.Clear();
+        if (string.IsNullOrWhiteSpace(_settings.DeploymentMetadataPath))
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.Unknown;
+            summary.RuntimeReadinessRationale = "Deployment metadata was not configured.";
+            RuntimeReadinessText = "Runtime readiness: Unknown. Deployment metadata not configured. Phase-1 probes are read-only.";
+            return;
+        }
+
+        summary.DeploymentMetadata = _metadataValidator.LoadAndValidate(_settings.DeploymentMetadataPath);
+        foreach (var issue in summary.DeploymentMetadata.Issues)
+            MetadataIssues.Add(issue);
+
+        var probes = await _probeRunner.RunAsync(_settings, summary.DeploymentMetadata, cancellationToken).ConfigureAwait(true);
+        summary.SyntheticProbes.AddRange(probes);
+        foreach (var probe in probes)
+            ProbeResults.Add(probe);
+
+        if (!summary.DeploymentMetadata.IsValid)
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.NotReady;
+            summary.RuntimeReadinessRationale = "Deployment metadata validation failed.";
+        }
+        else if (string.Equals(_settings.ProbeMode, "Disabled", StringComparison.OrdinalIgnoreCase))
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.Unknown;
+            summary.RuntimeReadinessRationale = "Synthetic probes are disabled.";
+        }
+        else if (summary.SyntheticProbes.Any(p => p.Status is SyntheticProbeStatus.Failed or SyntheticProbeStatus.Error))
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.NotReady;
+            summary.RuntimeReadinessRationale = "One or more synthetic probes failed.";
+        }
+        else
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.Ready;
+            summary.RuntimeReadinessRationale = "Deployment metadata is valid and synthetic probes passed or were skipped.";
+        }
+
+        RuntimeReadinessText = $"Runtime readiness: {summary.RuntimeReadiness}. {summary.RuntimeReadinessRationale} Phase-1 probes are read-only.";
+    }
+
+    private void RefreshQualityIssues(RunSummary summary)
+    {
+        QualityIssues.Clear();
+        BuildErrors.Clear();
+        foreach (var issue in summary.QualityIssues)
+            QualityIssues.Add(issue);
+        foreach (var issue in summary.QualityIssues.Where(i => i.Severity == QualityIssueSeverity.Error && i.Source == QualityIssueSource.Build))
+            BuildErrors.Add(new BuildError(issue.SourceLocation, 0, 0, issue.Code, issue.Message));
     }
 }

@@ -12,7 +12,7 @@ public sealed record FailureItemViewModel(
     int? LineNumber,
     string ComponentHint)
 {
-    public string Location => FilePath is null ? "—" : $"{System.IO.Path.GetFileName(FilePath)}:{LineNumber?.ToString() ?? "?"}";
+    public string Location => FilePath is null ? "-" : $"{System.IO.Path.GetFileName(FilePath)}:{LineNumber?.ToString() ?? "?"}";
 
     // Lower = more severe (sort ascending).
     public int SeverityRank => FailureType switch
@@ -29,12 +29,12 @@ public sealed record FailureItemViewModel(
 
     public string ToMarkdown()
     {
-        var loc = FilePath is null ? "—" : $"`{FilePath}:{LineNumber}`";
+        var loc = FilePath is null ? "-" : $"`{FilePath}:{LineNumber}`";
         return $"### `{TestName}`\n" +
                $"- **Gate:** {GateName}\n" +
                $"- **Failure Type:** {FailureType}\n" +
                $"- **Error Message:** `{ErrorMessage}`\n" +
-               $"- **File/Component:** {loc} → `{ComponentHint}`\n";
+               $"- **File/Component:** {loc} -> `{ComponentHint}`\n";
     }
 
     public static FailureItemViewModel From(TestOutcome o)

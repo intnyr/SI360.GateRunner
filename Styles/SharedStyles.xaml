@@ -23,7 +23,7 @@
         <Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>
     </Style>
 
-    <!-- Buttons — 64px min, padded 28, rounded 10 -->
+    <!-- Buttons: 64px min, padded 28, rounded 10 -->
     <Style TargetType="Button" x:Key="PrimaryButtonStyle">
         <Setter Property="MinHeight" Value="64"/>
         <Setter Property="MinWidth" Value="160"/>
@@ -118,7 +118,7 @@
 
     <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}"/>
 
-    <!-- Chip toggle button — rectangular, for gate filter chips -->
+    <!-- Chip toggle button: rectangular, for gate filter chips -->
     <Style x:Key="ChipToggleStyle" TargetType="ToggleButton">
         <Setter Property="MinHeight" Value="34"/>
         <Setter Property="Padding" Value="10,5"/>
@@ -144,7 +144,7 @@
                             <ScaleTransform ScaleX="1" ScaleY="1"/>
                         </Border.RenderTransform>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock x:Name="check" Text="✓ " Visibility="Collapsed"
+                            <TextBlock x:Name="check" Text="OK " Visibility="Collapsed"
                                        Foreground="{DynamicResource ForegroundBrush}"
                                        FontWeight="Bold"/>
                             <TextBlock x:Name="label" Text="{TemplateBinding Content}"

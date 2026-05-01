@@ -19,6 +19,7 @@
         <KeyBinding Key="F5" Command="{Binding RunGatesCommand}"/>
         <KeyBinding Key="Escape" Command="{Binding CancelCommand}"/>
         <KeyBinding Modifiers="Control" Key="R" Command="{Binding OpenReportCommand}"/>
+        <KeyBinding Modifiers="Control" Key="B" Command="{Binding ExportSupportBundleCommand}"/>
         <KeyBinding Modifiers="Control" Key="T" Command="{Binding ToggleThemeCommand}"/>
         <KeyBinding Modifiers="Control" Key="D1" Command="{Binding SwitchTabCommand}" CommandParameter="0"/>
         <KeyBinding Modifiers="Control" Key="D2" Command="{Binding SwitchTabCommand}" CommandParameter="1"/>
@@ -47,26 +48,33 @@
                         CornerRadius="12"
                         Padding="3">
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="▶  _Run Gates  (F5)"
+                        <Button Content="_Run Gates  (F5)"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 MinWidth="220"
                                 Command="{Binding RunGatesCommand}"
                                 AutomationProperties.Name="Run all gates"
                                 AutomationProperties.AutomationId="RunGatesButton"/>
-                        <Button Content="■  _Cancel  (Esc)"
+                        <Button Content="_Cancel  (Esc)"
                                 Margin="4,0,0,0"
                                 MinWidth="180"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Command="{Binding CancelCommand}"
                                 AutomationProperties.Name="Cancel current run"
                                 AutomationProperties.AutomationId="CancelButton"/>
-                        <Button Content="📄  _Open Report  (Ctrl+R)"
+                        <Button Content="_Open Report  (Ctrl+R)"
                                 Margin="4,0,0,0"
                                 MinWidth="240"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Command="{Binding OpenReportCommand}"
                                 AutomationProperties.Name="Open last report"
                                 AutomationProperties.AutomationId="OpenReportButton"/>
+                        <Button Content="Export _Bundle  (Ctrl+B)"
+                                Margin="4,0,0,0"
+                                MinWidth="230"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Command="{Binding ExportSupportBundleCommand}"
+                                AutomationProperties.Name="Export redacted support bundle"
+                                AutomationProperties.AutomationId="ExportSupportBundleButton"/>
                     </StackPanel>
                 </Border>
                 <Button DockPanel.Dock="Right"
@@ -77,6 +85,15 @@
                         Command="{Binding ToggleThemeCommand}"
                         ToolTip="Toggle theme (Ctrl+T)"
                         AutomationProperties.Name="Toggle theme"/>
+                <Button DockPanel.Dock="Right"
+                        Content="_Settings"
+                        Margin="14,0,0,0"
+                        MinWidth="130"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{Binding OpenSettingsCommand}"
+                        ToolTip="Configure paths and timeouts"
+                        AutomationProperties.Name="Open settings"
+                        AutomationProperties.AutomationId="SettingsButton"/>
                 <StackPanel Orientation="Vertical" Margin="28,0,14,0" VerticalAlignment="Center">
                     <TextBlock Text="{Binding StatusText}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
                     <StackPanel Orientation="Horizontal">
@@ -104,6 +121,43 @@
                             </TextBlock.Style>
                         </TextBlock>
                     </StackPanel>
+                    <TextBlock Text="{Binding SettingsWarningText}"
+                               FontSize="12"
+                               Foreground="{DynamicResource DangerRedBrush}"
+                               TextWrapping="Wrap"
+                               AutomationProperties.Name="Settings warning">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasSettingsWarnings}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock Text="{Binding RuntimeReadinessText}"
+                               FontSize="12"
+                               Foreground="{DynamicResource MutedForegroundBrush}"
+                               TextWrapping="Wrap"
+                               AutomationProperties.Name="Runtime readiness status"/>
+                    <TextBlock Text="{Binding CatalogWarningText}"
+                               FontSize="12"
+                               Foreground="{DynamicResource WarningAmberBrush}"
+                               TextWrapping="Wrap"
+                               AutomationProperties.Name="Catalog warning">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasCatalogWarnings}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                 </StackPanel>
             </DockPanel>
         </Border>
@@ -198,13 +252,46 @@
                     <TabItem Header="Scorecard">
                         <views:ScorecardView DataContext="{Binding Scorecard}"/>
                     </TabItem>
-                    <TabItem Header="Build Errors">
-                        <DataGrid ItemsSource="{Binding BuildErrors}">
+                    <TabItem Header="Quality Issues">
+                        <DataGrid ItemsSource="{Binding QualityIssues}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="File" Binding="{Binding FilePath}" Width="*"/>
-                                <DataGridTextColumn Header="Line" Binding="{Binding Line}" Width="80"/>
+                                <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="100"/>
+                                <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="140"/>
+                                <DataGridTextColumn Header="Location" Binding="{Binding SourceLocation}" Width="*"/>
                                 <DataGridTextColumn Header="Code" Binding="{Binding Code}" Width="100"/>
+                                <DataGridTextColumn Header="Score Impact" Binding="{Binding ScoreImpact}" Width="110"/>
+                                <DataGridTextColumn Header="Decision Impact" Binding="{Binding DecisionImpact}" Width="2*"/>
                                 <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="2*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Metadata">
+                        <DataGrid ItemsSource="{Binding MetadataIssues}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  AutomationProperties.Name="Deployment metadata validation issues">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="110"/>
+                                <DataGridTextColumn Header="Code" Binding="{Binding Code}" Width="180"/>
+                                <DataGridTextColumn Header="Field" Binding="{Binding Field}" Width="220"/>
+                                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Probes">
+                        <DataGrid ItemsSource="{Binding ProbeResults}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  AutomationProperties.Name="Synthetic probe results">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="110"/>
+                                <DataGridTextColumn Header="Probe" Binding="{Binding Name}" Width="260"/>
+                                <DataGridTextColumn Header="Duration (ms)" Binding="{Binding DurationMs, StringFormat=0.0}" Width="120"/>
+                                <DataGridTextColumn Header="Contract" Binding="{Binding ContractVersion}" Width="160"/>
+                                <DataGridTextColumn Header="Endpoint" Binding="{Binding Endpoint}" Width="260"/>
+                                <DataGridTextColumn Header="Diagnostics" Binding="{Binding Diagnostics}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </TabItem>

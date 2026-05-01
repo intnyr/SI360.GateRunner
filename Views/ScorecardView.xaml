@@ -52,7 +52,7 @@
                 </StackPanel>
             </Border>
         </StackPanel>
-        <TextBlock Grid.Row="1" Text="Formula: Overall = Scenario × 0.6 + Probabilistic × 0.4. Decision: ≥95 GO, ≥85 HOLD, else NO-GO."
+        <TextBlock Grid.Row="1" Text="Formula: Overall = Scenario x 0.6 + Probabilistic x 0.4. Decision: >=95 GO, >=85 HOLD, else NO-GO."
                    Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"/>
     </Grid>
 </UserControl>

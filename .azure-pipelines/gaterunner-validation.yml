@@ -1,0 +1,40 @@
+trigger:
+  branches:
+    include:
+      - main
+      - master
+      - develop
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  buildConfiguration: Release
+  artifactName: GateRunnerReports
+
+steps:
+  - task: UseDotNet@2
+    displayName: Use pinned .NET SDK
+    inputs:
+      packageType: sdk
+      useGlobalJson: true
+
+  - script: dotnet restore SI360.GateRunner.sln
+    displayName: Restore GateRunner
+
+  - script: dotnet build SI360.GateRunner.sln -c $(buildConfiguration) --no-restore
+    displayName: Build GateRunner
+
+  - script: dotnet test SI360.GateRunner.Tests\SI360.GateRunner.Tests.csproj -c $(buildConfiguration) --no-build --logger trx --results-directory $(Build.ArtifactStagingDirectory)\TestResults
+    displayName: Test GateRunner
+
+  - script: dotnet run --project SI360.GateRunner.Cli\SI360.GateRunner.Cli.csproj -c $(buildConfiguration) -- validate-catalog --results $(Build.ArtifactStagingDirectory)\GateReports
+    displayName: Validate gate catalog
+
+  - task: PublishBuildArtifacts@1
+    displayName: Publish GateRunner artifacts
+    condition: always()
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)
+      ArtifactName: $(artifactName)
+      publishLocation: Container

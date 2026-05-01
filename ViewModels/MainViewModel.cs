@@ -455,23 +455,38 @@ public partial class MainViewModel : ObservableObject
     {
         if (string.IsNullOrEmpty(LatestReportPath)) return;
         var path = LatestReportPath;
-        if (path.Contains(' '))
+        if (!File.Exists(path))
         {
-            var confirm = MessageBox.Show(
-                $"Open report?\n\n{path}",
-                "SI360 Gate Runner",
-                MessageBoxButton.OKCancel,
-                MessageBoxImage.Question);
-            if (confirm != MessageBoxResult.OK) return;
+            StatusText = $"Open failed: report not found at {path}";
+            MessageBox.Show($"Report not found:\n\n{path}", "SI360 Gate Runner", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
         }
-        try
+
+        if (TryOpenWithShell(path, out var shellError))
         {
-            Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+            StatusText = $"Opened report: {path}";
+            return;
         }
-        catch (Exception ex)
+
+        if (TryOpenInBrowser(path, out var browserError))
         {
-            StatusText = $"Open failed: {ex.Message}";
+            StatusText = $"No {Path.GetExtension(path)} handler; opened in browser. ({shellError})";
+            return;
         }
+
+        if (TryOpenInNotepad(path, out var notepadError))
+        {
+            StatusText = $"No {Path.GetExtension(path)} handler; opened in Notepad. ({shellError})";
+            return;
+        }
+
+        TryRevealInExplorer(path, out var revealError);
+        StatusText = $"Open failed: {shellError}";
+        MessageBox.Show(
+            $"Could not open report.\n\nPath: {path}\nShell: {shellError}\nBrowser: {browserError}\nNotepad: {notepadError}\nExplorer: {revealError}",
+            "SI360 Gate Runner",
+            MessageBoxButton.OK,
+            MessageBoxImage.Error);
     }
 
     [RelayCommand(CanExecute = nameof(CanExportSupportBundle))]
@@ -481,11 +496,126 @@ public partial class MainViewModel : ObservableObject
         try
         {
             SupportBundlePath = _supportBundleExporter.Export(_latestSummary, _settings);
-            StatusText = $"Support bundle exported: {SupportBundlePath}";
         }
         catch (Exception ex)
         {
             StatusText = $"Support bundle export failed: {ex.Message}";
+            MessageBox.Show($"Support bundle export failed:\n\n{ex.Message}", "SI360 Gate Runner", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(SupportBundlePath) || !File.Exists(SupportBundlePath))
+        {
+            StatusText = $"Support bundle export reported success but file not found: {SupportBundlePath}";
+            MessageBox.Show($"Support bundle file not found after export:\n\n{SupportBundlePath}", "SI360 Gate Runner", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        StatusText = $"Support bundle exported: {SupportBundlePath}";
+        if (!TryRevealInExplorer(SupportBundlePath, out var revealError))
+            StatusText = $"Support bundle exported (explorer reveal failed: {revealError}): {SupportBundlePath}";
+    }
+
+    private static bool TryOpenWithShell(string path, out string error)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo(path) { UseShellExecute = true };
+            using var proc = Process.Start(psi);
+            error = string.Empty;
+            return proc is not null || true;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            return false;
+        }
+    }
+
+    private static bool TryRevealInExplorer(string path, out string error)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo("explorer.exe", $"/select,\"{path}\"")
+            {
+                UseShellExecute = true
+            };
+            using var proc = Process.Start(psi);
+            error = string.Empty;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            return false;
+        }
+    }
+
+    private static bool TryOpenInBrowser(string path, out string error)
+    {
+        try
+        {
+            var uri = new Uri(path).AbsoluteUri;
+            var browser = ResolveDefaultBrowser();
+            ProcessStartInfo psi;
+            if (!string.IsNullOrWhiteSpace(browser))
+                psi = new ProcessStartInfo(browser, $"\"{uri}\"") { UseShellExecute = false };
+            else
+                psi = new ProcessStartInfo(uri) { UseShellExecute = true };
+            using var proc = Process.Start(psi);
+            error = string.Empty;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            return false;
+        }
+    }
+
+    private static bool TryOpenInNotepad(string path, out string error)
+    {
+        try
+        {
+            var notepad = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.System),
+                "notepad.exe");
+            var psi = new ProcessStartInfo(File.Exists(notepad) ? notepad : "notepad.exe", $"\"{path}\"")
+            {
+                UseShellExecute = false
+            };
+            using var proc = Process.Start(psi);
+            error = string.Empty;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+            return false;
+        }
+    }
+
+    private static string? ResolveDefaultBrowser()
+    {
+        try
+        {
+            using var userChoice = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice");
+            var progId = userChoice?.GetValue("ProgId") as string;
+            if (string.IsNullOrWhiteSpace(progId)) return null;
+
+            using var command = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey($@"{progId}\shell\open\command");
+            var raw = command?.GetValue(string.Empty) as string;
+            if (string.IsNullOrWhiteSpace(raw)) return null;
+
+            var exe = raw.StartsWith('"')
+                ? raw.Substring(1, raw.IndexOf('"', 1) - 1)
+                : raw.Split(' ')[0];
+            return File.Exists(exe) ? exe : null;
+        }
+        catch
+        {
+            return null;
         }
     }
 

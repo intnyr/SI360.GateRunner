@@ -152,6 +152,100 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
         summary.ReportJsonPath = json;
     }
 
+    private static readonly Version SlnxMinimumSdk = new(9, 0, 200);
+
+    private async Task<bool> EnsureSdkSupportsSolutionAsync(
+        RunSummary summary,
+        string runDir,
+        IProgress<string>? log,
+        CancellationToken cancellationToken)
+    {
+        var solutionPath = _settings.SolutionPath;
+        if (string.IsNullOrWhiteSpace(solutionPath) ||
+            !string.Equals(Path.GetExtension(solutionPath), ".slnx", StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        var workingDir = Path.GetDirectoryName(solutionPath);
+        if (string.IsNullOrWhiteSpace(workingDir) || !Directory.Exists(workingDir))
+            return true;
+
+        var probeDir = Path.Combine(runDir, "sdk-probe");
+        var result = await _processRunner.RunAsync(
+            new ProcessCommand(
+                "dotnet",
+                "--version",
+                workingDir,
+                TimeSpan.FromSeconds(15),
+                probeDir,
+                "sdk-probe"),
+            log,
+            cancellationToken).ConfigureAwait(false);
+
+        if (result.ExitCode != 0 || string.IsNullOrWhiteSpace(result.StdOut))
+        {
+            QualityIssueAggregator.AddBuildIssues(summary, new[]
+            {
+                new QualityIssue(
+                    "build:SDK_PROBE_FAILED",
+                    QualityIssueSeverity.Error,
+                    QualityIssueSource.Build,
+                    workingDir,
+                    "SDK_PROBE_FAILED",
+                    $"Failed to determine .NET SDK from '{workingDir}' (exit {result.ExitCode}). Install .NET SDK 9.0.200+ on PATH or pin a 9.x SDK in {Path.Combine(workingDir, "global.json")}.",
+                    summary.Scorecard.BaseOverallScore,
+                    "NO-GO: cannot resolve a .NET SDK for the target solution.")
+            });
+            return false;
+        }
+
+        var resolved = ParseVersion(result.StdOut);
+        if (resolved is null)
+        {
+            QualityIssueAggregator.AddBuildIssues(summary, new[]
+            {
+                new QualityIssue(
+                    "build:SDK_PROBE_PARSE",
+                    QualityIssueSeverity.Error,
+                    QualityIssueSource.Build,
+                    workingDir,
+                    "SDK_PROBE_PARSE",
+                    $"Could not parse 'dotnet --version' output: '{result.StdOut.Trim()}'.",
+                    summary.Scorecard.BaseOverallScore,
+                    "NO-GO: cannot validate .NET SDK for the target solution.")
+            });
+            return false;
+        }
+
+        if (resolved < SlnxMinimumSdk)
+        {
+            QualityIssueAggregator.AddBuildIssues(summary, new[]
+            {
+                new QualityIssue(
+                    "build:SLNX_REQUIRES_NET9",
+                    QualityIssueSeverity.Error,
+                    QualityIssueSource.Build,
+                    solutionPath,
+                    "SLNX_REQUIRES_NET9",
+                    $"Solution '{Path.GetFileName(solutionPath)}' uses the .slnx XML format which requires .NET SDK {SlnxMinimumSdk}+. Resolved SDK in '{workingDir}' is {resolved}. Install .NET SDK {SlnxMinimumSdk}+ or pin a 9.x SDK in '{Path.Combine(workingDir, "global.json")}'.",
+                    summary.Scorecard.BaseOverallScore,
+                    $"NO-GO: .slnx solution requires .NET SDK {SlnxMinimumSdk}+; resolved {resolved}.")
+            });
+            return false;
+        }
+
+        return true;
+    }
+
+    private static Version? ParseVersion(string output)
+    {
+        var line = output
+            .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .FirstOrDefault(s => char.IsDigit(s.FirstOrDefault()));
+        if (line is null) return null;
+        var core = line.Split('-', '+')[0];
+        return Version.TryParse(core, out var v) ? v : null;
+    }
+
     private async Task CollectRuntimeReadinessAsync(RunSummary summary, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(_settings.DeploymentMetadataPath))

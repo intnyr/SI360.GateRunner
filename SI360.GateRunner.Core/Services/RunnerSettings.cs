@@ -25,8 +25,11 @@ public sealed class RunnerSettings
         "SI360.GateRunner",
         "settings.json");
 
+    public static string? LastLoadError { get; private set; }
+
     public static RunnerSettings LoadOrDiscover()
     {
+        LastLoadError = null;
         if (File.Exists(SettingsFile))
         {
             try
@@ -34,8 +37,13 @@ public sealed class RunnerSettings
                 var json = File.ReadAllText(SettingsFile);
                 var parsed = JsonSerializer.Deserialize<RunnerSettings>(json);
                 if (parsed is not null && File.Exists(parsed.SolutionPath)) return parsed;
+                if (parsed is not null && !string.IsNullOrWhiteSpace(parsed.SolutionPath))
+                    LastLoadError = $"Saved SolutionPath '{parsed.SolutionPath}' not found; falling back to discovery.";
             }
-            catch { }
+            catch (Exception ex)
+            {
+                LastLoadError = $"Failed to load {SettingsFile}: {ex.Message}";
+            }
         }
         return Discover();
     }

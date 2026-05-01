@@ -80,15 +80,6 @@ public sealed partial class ScorecardAggregator
         return card;
     }
 
-    public DeployDecision Decide(RunSummary summary)
-    {
-        if (summary.BuildErrors.Count > 0) return DeployDecision.NoGo;
-        var s = summary.Scorecard.OverallScore;
-        if (s >= 95) return DeployDecision.Go;
-        if (s >= 85) return DeployDecision.Hold;
-        return DeployDecision.NoGo;
-    }
-
     private static int ScoreProb(double ratePct) => ratePct switch
     {
         >= 99 => 100,

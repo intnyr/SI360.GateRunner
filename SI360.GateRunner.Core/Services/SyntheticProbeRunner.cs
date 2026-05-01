@@ -39,6 +39,14 @@ public sealed class SyntheticProbeRunner : ISyntheticProbeRunner
         if (!metadataResult.IsValid || metadataResult.Metadata is null)
             return new[] { Skipped("metadata-invalid", "Deployment metadata invalid", string.Empty, "Valid deployment metadata is required before probes can run.") };
 
+        var results = new List<SyntheticProbeResult>();
+        if (string.Equals(settings.ProbeMode, "Active", StringComparison.OrdinalIgnoreCase))
+            results.Add(Skipped(
+                "active-mode-not-implemented",
+                "Active probe mode requested",
+                string.Empty,
+                "ProbeMode is Active, but mutating probes are not implemented. Falling back to read-only checks."));
+
         using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(Math.Max(1, settings.ProbeTimeoutSeconds)));
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
         var metadata = metadataResult.Metadata;
@@ -55,7 +63,6 @@ public sealed class SyntheticProbeRunner : ISyntheticProbeRunner
             ("alert-provider-config", "Alert provider configuration presence", Combine(metadata.SyncHealthHubEndpoint, "/health/alert-provider"))
         };
 
-        var results = new List<SyntheticProbeResult>();
         foreach (var (id, name, endpoint) in probes)
             results.Add(await ProbeAsync(id, name, endpoint, linkedCts.Token).ConfigureAwait(false));
 

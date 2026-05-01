@@ -6,6 +6,8 @@ It is intentionally out-of-tree from `SI360.slnx`: GateRunner reads build output
 
 ## Quick Start
 
+GateRunner is pinned to the .NET 8 SDK in `global.json`. Install .NET SDK 8.0.414 or a later .NET 8 feature band compatible with the configured roll-forward policy.
+
 ```powershell
 dotnet restore SI360.GateRunner.sln
 dotnet build SI360.GateRunner.sln -c Release
@@ -25,6 +27,7 @@ powershell -ExecutionPolicy Bypass -File .\Scripts\Publish-GateRunner.ps1 -Versi
 ```
 
 The publish script restores, builds, tests, and publishes framework-dependent `win-x86` WPF output plus CLI output under `artifacts\GateRunner\<version>`.
+Generated build, test, and publish output is intentionally ignored by source control. Keep release-ready files in CI artifacts or the ignored local `artifacts\` directory.
 
 ## Settings
 
@@ -34,13 +37,14 @@ GateRunner auto-discovers `SI360.slnx` by probing from the app directory and kno
 - SI360 test project path
 - results directory
 - restore, build, and gate timeouts
+- build configuration, deployment metadata path, probe mode/timeout, retention days, and support bundle path
 
 Settings are saved to `%APPDATA%\SI360.GateRunner\settings.json`.
 
-Environment variables prefixed with `GATERUNNER_` can override configuration for automation. The CLI also supports:
+Environment variables prefixed with `GATERUNNER_` can override configuration for automation, for example `GATERUNNER_BuildConfiguration`, `GATERUNNER_DeploymentMetadataPath`, `GATERUNNER_ProbeMode`, `GATERUNNER_ProbeTimeoutSeconds`, `GATERUNNER_ReportRetentionDays`, and `GATERUNNER_SupportBundleOutputPath`. The CLI also supports:
 
 ```powershell
-dotnet run --project .\SI360.GateRunner.Cli -- run --solution D:\SI36020WPF\SI360.slnx --test-project D:\SI36020WPF\SI360.Tests\SI360.Tests.csproj --results D:\SI36020WPF\TestResults
+dotnet run --project .\SI360.GateRunner.Cli -- run --solution D:\SI36020WPF\SI360.slnx --test-project D:\SI36020WPF\SI360.Tests\SI360.Tests.csproj --results D:\SI36020WPF\TestResults --configuration Release --probe-mode ReadOnly
 ```
 
 ## Commands
@@ -48,25 +52,34 @@ dotnet run --project .\SI360.GateRunner.Cli -- run --solution D:\SI36020WPF\SI36
 ```text
 discover                         List discovered pre-deployment gates.
 validate-catalog                 Validate catalog expectations against SI360.Tests source.
+validate-metadata                Validate installer-supplied deployment metadata JSON.
+run-probes                       Run phase-1 read-only synthetic health probes.
 run                              Restore, build, run all gates, and emit reports.
 summarize [--report <path>]      Print a JSON report.
 ```
+
+Deployment metadata is owned by installer/deployment tooling and supplied to GateRunner through `DeploymentMetadataPath`, `GATERUNNER_DeploymentMetadataPath`, or `--metadata <path>`. GateRunner validates the versioned contract and records API key presence without requiring secret values.
+Synthetic probes are phase-1 read-only checks by default. They use deployment metadata endpoints, bounded timeouts, and redacted diagnostics; any mutating registration workflow must be explicitly added under a non-production mode.
 
 ## Report Contract
 
 Each run writes:
 
-- `<ResultsDirectory>\GateRun_<yyyyMMdd_HHmmss>.md`
-- `<ResultsDirectory>\GateRun_<yyyyMMdd_HHmmss>.json`
-- per-command and per-gate artifacts under `<ResultsDirectory>\GateRun_<yyyyMMdd_HHmmss>\`
+- `<ResultsDirectory>\GateRun_<yyyyMMdd_HHmmssZ>.md`
+- `<ResultsDirectory>\GateRun_<yyyyMMdd_HHmmssZ>.json`
+- per-command and per-gate artifacts under `<ResultsDirectory>\GateRun_<yyyyMMdd_HHmmssZ>\`
 
 The JSON report includes:
 
-- `schemaVersion`: current contract version, currently `2.0`
-- `startedAt` and `durationSeconds`
+- `schemaVersion`: current contract version, currently `2.1`
+- `startedAt` in UTC, `durationSeconds`, and environment `LocalUtcOffset`
 - `decision`
 - `environment`: tool version, machine, OS, runtime, SDK, repo path, branch, commit, artifact directory, command snapshots
 - `decisionPolicy`: policy name, version, and rationale
+- `runtimeReadiness`: runtime readiness decision and rationale, separate from pre-deployment GO/HOLD/NO-GO
+- `healthContracts`: phase-1 contract version labels for SI360, SyncHealthHub, and third-party KDS
+- `deploymentMetadata`: installer-supplied metadata plus validation issues
+- `syntheticProbes`: read-only probe status, duration, endpoint, contract version, and redacted diagnostics
 - `gateCatalogWarnings`
 - `scorecard`
 - `history`: prior report path plus new, recurring, and resolved failures
@@ -74,6 +87,8 @@ The JSON report includes:
 - `gates`: status, counts, duration, TRX path, and per-test failures
 
 The Markdown report is for human triage. JSON is the stable input for CI, trend analysis, dashboards, and future tooling.
+Known secret patterns are redacted before GateRunner writes live process output, command artifacts, Markdown reports, or JSON reports. Redacted fields keep their structure and replace detected values with `[REDACTED]`.
+Report retention defaults to 30 days and prunes old `GateRun_*` reports and per-run artifact directories after each completed report write.
 
 ## Decisions
 
@@ -87,7 +102,7 @@ score >= 85                -> HOLD
 otherwise                 -> NO-GO
 ```
 
-Catalog drift warnings do not automatically block a run, but release owners should treat unresolved drift as a triage item before relying on the decision.
+Catalog drift warnings produce a HOLD decision in reports and fail catalog validation in CI until the GateRunner catalog is reconciled with SI360.Tests.
 
 ## UI
 
@@ -111,6 +126,20 @@ Operational runbooks:
 - [Deployment Runbook](DOCS/runbooks/gaterunner-deployment.md)
 
 Implementation plan: [PreDeploymentGate-Runner-Plan.md](PreDeploymentGate-Runner-Plan.md)
+
+Document ownership:
+
+- `GateRunner.md` is the roadmap and repository-specific requirements tracker.
+- `README.md` is the current user guide.
+- `DOCS/runbooks/*` are operations procedures.
+- Linear issues track implementation execution and should be referenced in `GateRunner.md` when roadmap items ship.
+
+Docs checklist for user-visible changes:
+
+- Update README commands/settings/report contract when behavior changes.
+- Update the relevant runbook when operations workflow changes.
+- Update `DOCS/runbooks/gaterunner-report-schema.md` for schema additions or compatibility changes.
+- Update `GateRunner.md` status and open assumptions for SyncHealthHub roadmap items.
 
 ## Project Layout
 

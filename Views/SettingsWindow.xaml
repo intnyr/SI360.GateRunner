@@ -3,13 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="GateRunner Settings"
         Width="760"
-        Height="470"
+        Height="680"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Style="{StaticResource AppWindowStyle}"
         KeyboardNavigation.TabNavigation="Cycle">
     <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -53,14 +58,41 @@
             <TextBox x:Name="GateTimeoutBox" Width="120" AutomationProperties.Name="Gate timeout seconds"/>
         </StackPanel>
 
+        <TextBlock Grid.Row="6" Text="Build configuration" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <TextBox x:Name="BuildConfigurationBox" Grid.Row="6" Grid.Column="1" Width="160" HorizontalAlignment="Left" Margin="0,0,0,10"
+                 AutomationProperties.Name="Build configuration"/>
+
+        <TextBlock Grid.Row="7" Text="Metadata path" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <TextBox x:Name="DeploymentMetadataPathBox" Grid.Row="7" Grid.Column="1" Margin="0,0,0,10"
+                 AutomationProperties.Name="Deployment metadata path"/>
+
+        <TextBlock Grid.Row="8" Text="Probe settings" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <ComboBox x:Name="ProbeModeBox" Width="160" AutomationProperties.Name="Probe mode">
+                <ComboBoxItem Content="Disabled"/>
+                <ComboBoxItem Content="ReadOnly"/>
+                <ComboBoxItem Content="Active"/>
+            </ComboBox>
+            <TextBlock Text="Timeout" VerticalAlignment="Center" Margin="24,0,12,0"/>
+            <TextBox x:Name="ProbeTimeoutBox" Width="120" AutomationProperties.Name="Probe timeout seconds"/>
+        </StackPanel>
+
+        <TextBlock Grid.Row="9" Text="Retention days" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <TextBox x:Name="RetentionDaysBox" Grid.Row="9" Grid.Column="1" Width="120" HorizontalAlignment="Left" Margin="0,0,0,10"
+                 AutomationProperties.Name="Report retention days"/>
+
+        <TextBlock Grid.Row="10" Text="Support bundle path" VerticalAlignment="Center" Margin="0,0,12,10"/>
+        <TextBox x:Name="SupportBundleOutputPathBox" Grid.Row="10" Grid.Column="1" Margin="0,0,0,10"
+                 AutomationProperties.Name="Support bundle output path"/>
+
         <TextBlock x:Name="ValidationText"
-                   Grid.Row="6"
+                   Grid.Row="11"
                    Grid.ColumnSpan="2"
                    Foreground="{DynamicResource DangerRedBrush}"
                    TextWrapping="Wrap"
                    Margin="0,8,0,0"/>
 
-        <StackPanel Grid.Row="7" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="12" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="_Cancel" MinWidth="120" Style="{StaticResource SecondaryButtonStyle}" IsCancel="True"
                     AutomationProperties.Name="Cancel settings"/>
             <Button Content="_Save" MinWidth="120" Margin="8,0,0,0" Style="{StaticResource PrimaryButtonStyle}"

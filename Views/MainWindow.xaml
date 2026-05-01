@@ -19,6 +19,7 @@
         <KeyBinding Key="F5" Command="{Binding RunGatesCommand}"/>
         <KeyBinding Key="Escape" Command="{Binding CancelCommand}"/>
         <KeyBinding Modifiers="Control" Key="R" Command="{Binding OpenReportCommand}"/>
+        <KeyBinding Modifiers="Control" Key="B" Command="{Binding ExportSupportBundleCommand}"/>
         <KeyBinding Modifiers="Control" Key="T" Command="{Binding ToggleThemeCommand}"/>
         <KeyBinding Modifiers="Control" Key="D1" Command="{Binding SwitchTabCommand}" CommandParameter="0"/>
         <KeyBinding Modifiers="Control" Key="D2" Command="{Binding SwitchTabCommand}" CommandParameter="1"/>
@@ -67,6 +68,13 @@
                                 Command="{Binding OpenReportCommand}"
                                 AutomationProperties.Name="Open last report"
                                 AutomationProperties.AutomationId="OpenReportButton"/>
+                        <Button Content="Export _Bundle  (Ctrl+B)"
+                                Margin="4,0,0,0"
+                                MinWidth="230"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Command="{Binding ExportSupportBundleCommand}"
+                                AutomationProperties.Name="Export redacted support bundle"
+                                AutomationProperties.AutomationId="ExportSupportBundleButton"/>
                     </StackPanel>
                 </Border>
                 <Button DockPanel.Dock="Right"
@@ -129,6 +137,11 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
+                    <TextBlock Text="{Binding RuntimeReadinessText}"
+                               FontSize="12"
+                               Foreground="{DynamicResource MutedForegroundBrush}"
+                               TextWrapping="Wrap"
+                               AutomationProperties.Name="Runtime readiness status"/>
                     <TextBlock Text="{Binding CatalogWarningText}"
                                FontSize="12"
                                Foreground="{DynamicResource WarningAmberBrush}"
@@ -246,6 +259,34 @@
                                 <DataGridTextColumn Header="Line" Binding="{Binding Line}" Width="80"/>
                                 <DataGridTextColumn Header="Code" Binding="{Binding Code}" Width="100"/>
                                 <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="2*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Metadata">
+                        <DataGrid ItemsSource="{Binding MetadataIssues}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  AutomationProperties.Name="Deployment metadata validation issues">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="110"/>
+                                <DataGridTextColumn Header="Code" Binding="{Binding Code}" Width="180"/>
+                                <DataGridTextColumn Header="Field" Binding="{Binding Field}" Width="220"/>
+                                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                    <TabItem Header="Probes">
+                        <DataGrid ItemsSource="{Binding ProbeResults}"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  AutomationProperties.Name="Synthetic probe results">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="110"/>
+                                <DataGridTextColumn Header="Probe" Binding="{Binding Name}" Width="260"/>
+                                <DataGridTextColumn Header="Duration (ms)" Binding="{Binding DurationMs, StringFormat=0.0}" Width="120"/>
+                                <DataGridTextColumn Header="Contract" Binding="{Binding ContractVersion}" Width="160"/>
+                                <DataGridTextColumn Header="Endpoint" Binding="{Binding Endpoint}" Width="260"/>
+                                <DataGridTextColumn Header="Diagnostics" Binding="{Binding Diagnostics}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </TabItem>

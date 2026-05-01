@@ -14,10 +14,10 @@ variables:
 
 steps:
   - task: UseDotNet@2
-    displayName: Use .NET 8 SDK
+    displayName: Use pinned .NET SDK
     inputs:
       packageType: sdk
-      version: 8.x
+      useGlobalJson: true
 
   - script: dotnet restore SI360.GateRunner.sln
     displayName: Restore GateRunner
@@ -30,7 +30,6 @@ steps:
 
   - script: dotnet run --project SI360.GateRunner.Cli\SI360.GateRunner.Cli.csproj -c $(buildConfiguration) -- validate-catalog --results $(Build.ArtifactStagingDirectory)\GateReports
     displayName: Validate gate catalog
-    continueOnError: true
 
   - task: PublishBuildArtifacts@1
     displayName: Publish GateRunner artifacts

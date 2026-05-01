@@ -48,6 +48,20 @@ public sealed class DecisionPolicyTests
     }
 
     [Fact]
+    public void Decide_ReturnsHold_WhenCatalogWarningsExist()
+    {
+        var summary = SummaryWithScore(100, 100);
+        summary.GateResults.Add(Gate("BuildGate", GateStatus.Green));
+        summary.GateCatalogWarnings.Add(new GateCatalogWarning("GATE_TEST_COUNT_DRIFT", "Count changed."));
+
+        var result = _policy.Decide(summary);
+
+        Assert.Equal(DeployDecision.Hold, result.Decision);
+        Assert.Contains("gate catalog warning", result.Rationale);
+        Assert.Contains("GATE_TEST_COUNT_DRIFT", result.Rationale);
+    }
+
+    [Fact]
     public void Decide_ReturnsNoGo_WhenBuildErrorsExist()
     {
         var summary = SummaryWithScore(100, 100);

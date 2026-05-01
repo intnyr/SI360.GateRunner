@@ -24,11 +24,7 @@ public sealed partial class BuildErrorCollector
         CancellationToken ct,
         string? artifactDirectory = null)
     {
-        if (string.IsNullOrWhiteSpace(_settings.SolutionPath))
-            throw new InvalidOperationException("SolutionPath not configured.");
-
         var errors = new List<BuildError>();
-        var args = $"build \"{_settings.SolutionPath}\" -c Release -p:GenerateFullPaths=true -nologo -clp:ErrorsOnly";
 
         void Handle(string? data)
         {
@@ -48,13 +44,7 @@ public sealed partial class BuildErrorCollector
 
         var capture = new Progress<string>(Handle);
         var result = await _processRunner.RunAsync(
-            new ProcessCommand(
-                "dotnet",
-                args,
-                Path.GetDirectoryName(_settings.SolutionPath) ?? Environment.CurrentDirectory,
-                TimeSpan.FromSeconds(Math.Max(1, _settings.BuildTimeoutSeconds)),
-                artifactDirectory,
-                "build"),
+            GateRunnerCommands.Build(_settings, artifactDirectory),
             capture,
             ct).ConfigureAwait(false);
 

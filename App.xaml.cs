@@ -49,6 +49,7 @@ public partial class App : Application
             {
                 var settings = RunnerSettings.LoadOrDiscover();
                 context.Configuration.GetSection("RunnerSettings").Bind(settings);
+                settings.ApplyEnvironmentVariables();
                 ValidateSettings(settings);
                 services.AddSingleton(settings);
                 services.AddGateRunnerCore();
@@ -99,5 +100,13 @@ public partial class App : Application
             settings.BuildTimeoutSeconds = 600;
         if (settings.RestoreTimeoutSeconds <= 0)
             settings.RestoreTimeoutSeconds = 300;
+        if (settings.ProbeTimeoutSeconds <= 0)
+            settings.ProbeTimeoutSeconds = 30;
+        if (settings.ReportRetentionDays <= 0)
+            settings.ReportRetentionDays = 30;
+        if (string.IsNullOrWhiteSpace(settings.BuildConfiguration))
+            settings.BuildConfiguration = "Release";
+        if (string.IsNullOrWhiteSpace(settings.ProbeMode))
+            settings.ProbeMode = "ReadOnly";
     }
 }

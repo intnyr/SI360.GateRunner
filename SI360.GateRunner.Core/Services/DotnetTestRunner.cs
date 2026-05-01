@@ -17,17 +17,8 @@ public sealed class DotnetTestRunner
 
     public async Task<ProcessRunResult> RestoreAsync(IProgress<string>? log, CancellationToken ct, string? artifactDirectory = null)
     {
-        if (string.IsNullOrWhiteSpace(_settings.TestProjectPath))
-            throw new InvalidOperationException("TestProjectPath not configured.");
-        var args = $"restore \"{_settings.TestProjectPath}\" -nologo";
         return await _processRunner.RunAsync(
-            new ProcessCommand(
-                "dotnet",
-                args,
-                Path.GetDirectoryName(_settings.TestProjectPath) ?? Environment.CurrentDirectory,
-                TimeSpan.FromSeconds(Math.Max(1, _settings.RestoreTimeoutSeconds)),
-                artifactDirectory,
-                "restore"),
+            GateRunnerCommands.Restore(_settings, artifactDirectory),
             log,
             ct).ConfigureAwait(false);
     }
@@ -40,7 +31,7 @@ public sealed class DotnetTestRunner
         CancellationToken ct)
     {
         Directory.CreateDirectory(runDir);
-        var trxName = $"{gateId}_{DateTime.Now:yyyyMMdd_HHmmss}.trx";
+        var trxName = $"{gateId}_{DateTime.UtcNow:yyyyMMdd_HHmmss}Z.trx";
         var trxPath = Path.Combine(runDir, trxName);
 
         var sb = new StringBuilder();
@@ -50,22 +41,8 @@ public sealed class DotnetTestRunner
             log?.Report(line);
         });
 
-        var args = new StringBuilder();
-        args.Append($"test \"{_settings.TestProjectPath}\"");
-        args.Append(" --no-build --nologo");
-        args.Append($" --filter \"{filter}\"");
-        args.Append($" --logger \"trx;LogFileName={trxName}\"");
-        args.Append($" --results-directory \"{runDir}\"");
-        args.Append(" -v normal");
-
         var result = await _processRunner.RunAsync(
-            new ProcessCommand(
-                "dotnet",
-                args.ToString(),
-                Path.GetDirectoryName(_settings.TestProjectPath) ?? Environment.CurrentDirectory,
-                TimeSpan.FromSeconds(Math.Max(1, _settings.GateTimeoutSeconds)),
-                runDir,
-                $"gate-{gateId}"),
+            GateRunnerCommands.Gate(_settings, gateId, filter, runDir, trxName),
             capture,
             ct).ConfigureAwait(false);
 

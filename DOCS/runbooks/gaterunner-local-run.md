@@ -6,7 +6,7 @@ Use this runbook when an engineer or QA owner needs a local pre-deployment gate 
 
 ## Assumptions
 
-- .NET 8 SDK is installed.
+- The .NET SDK pinned by `global.json` is installed.
 - The SI360 repository is available locally.
 - GateRunner can find `SI360.slnx`, or the user can set paths in the WPF Settings dialog.
 - Gate metadata and decision policy are owned by the SI360 release engineering owner.

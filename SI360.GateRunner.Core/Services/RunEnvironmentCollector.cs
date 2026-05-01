@@ -14,7 +14,8 @@ public static class RunEnvironmentCollector
         var env = new RunEnvironment
         {
             RepositoryPath = repoPath,
-            ArtifactDirectory = artifactDirectory
+            ArtifactDirectory = artifactDirectory,
+            Configuration = settings.ToConfigurationSummary()
         };
 
         env.DotnetSdkVersion = (await CaptureAsync(processRunner, "dotnet", "--version", repoPath, artifactDirectory, "dotnet-version", cancellationToken)
@@ -24,9 +25,9 @@ public static class RunEnvironmentCollector
         env.Commit = (await CaptureAsync(processRunner, "git", "rev-parse HEAD", repoPath, artifactDirectory, "git-commit", cancellationToken)
             .ConfigureAwait(false)).Trim();
 
-        env.Commands.Add(new ProcessCommandSnapshot("restore", $"dotnet restore \"{settings.SolutionPath}\"", settings.RestoreTimeoutSeconds));
-        env.Commands.Add(new ProcessCommandSnapshot("build", $"dotnet build \"{settings.SolutionPath}\" -c Release --no-restore", settings.BuildTimeoutSeconds));
-        env.Commands.Add(new ProcessCommandSnapshot("gate", $"dotnet test \"{settings.TestProjectPath}\" -c Release --no-build --filter <gate>", settings.GateTimeoutSeconds));
+        env.Commands.Add(GateRunnerCommands.Snapshot("restore", GateRunnerCommands.Restore(settings, artifactDirectory)));
+        env.Commands.Add(GateRunnerCommands.Snapshot("build", GateRunnerCommands.Build(settings, artifactDirectory)));
+        env.Commands.Add(GateRunnerCommands.GateSnapshot(settings, artifactDirectory));
 
         return env;
     }

@@ -6,7 +6,7 @@ Use this runbook to run GateRunner headlessly in CI and publish the report artif
 
 ## Recommended Pipeline Flow
 
-1. Install .NET 8 SDK.
+1. Install the .NET SDK pinned by `global.json`.
 2. Restore `SI360.GateRunner.sln`.
 3. Build GateRunner in Release.
 4. Run `SI360.GateRunner.Tests`.
@@ -29,7 +29,7 @@ dotnet run --project D:\GateRunner\SI360.GateRunner.Cli\SI360.GateRunner.Cli.csp
 - `4`: canceled
 - `5`: command or configuration failure
 
-CI should publish artifacts for all outcomes. A HOLD or NO-GO is a release decision signal, not an infrastructure failure by itself.
+CI should publish artifacts for all outcomes. A HOLD or NO-GO from a gate run is a release decision signal, not an infrastructure failure by itself. Catalog validation warnings fail the validation step because unresolved drift means GateRunner metadata is not authoritative enough for release decisions.
 
 ## Artifact Handoff
 

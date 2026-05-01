@@ -6,6 +6,10 @@ public static class GateRunnerCoreServices
 {
     public static IServiceCollection AddGateRunnerCore(this IServiceCollection services)
     {
+        services.AddSingleton<ISecretRedactor>(SecretRedactor.Instance);
+        services.AddSingleton<IDeploymentMetadataValidator, DeploymentMetadataValidator>();
+        services.AddSingleton<ISyntheticProbeRunner, SyntheticProbeRunner>();
+        services.AddSingleton<ISupportBundleExporter, SupportBundleExporter>();
         services.AddSingleton<IProcessRunner, ProcessRunner>();
         services.AddSingleton<DotnetTestRunner>();
         services.AddSingleton<BuildErrorCollector>();

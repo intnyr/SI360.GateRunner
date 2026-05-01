@@ -7,6 +7,13 @@ public enum DeployDecision
     NoGo
 }
 
+public enum RuntimeReadinessDecision
+{
+    Ready,
+    NotReady,
+    Unknown
+}
+
 public sealed class RunSummary
 {
     public required DateTime StartedAt { get; init; }
@@ -15,6 +22,11 @@ public sealed class RunSummary
     public List<BuildError> BuildErrors { get; } = new();
     public List<GateResult> GateResults { get; } = new();
     public List<GateCatalogWarning> GateCatalogWarnings { get; } = new();
+    public DeploymentMetadataValidationResult DeploymentMetadata { get; set; } = new();
+    public List<SyntheticProbeResult> SyntheticProbes { get; } = new();
+    public HealthContractVersions HealthContracts { get; set; } = new();
+    public RuntimeReadinessDecision RuntimeReadiness { get; set; } = RuntimeReadinessDecision.Unknown;
+    public string RuntimeReadinessRationale { get; set; } = "Deployment metadata was not configured.";
     public Scorecard Scorecard { get; set; } = new();
     public DeployDecision Decision { get; set; } = DeployDecision.NoGo;
     public string DecisionPolicyName { get; set; } = string.Empty;
@@ -23,6 +35,13 @@ public sealed class RunSummary
     public ReportHistoryComparison History { get; set; } = new();
     public string? ReportMarkdownPath { get; set; }
     public string? ReportJsonPath { get; set; }
+}
+
+public sealed class HealthContractVersions
+{
+    public string Si360HealthApi { get; set; } = "phase-1-readonly";
+    public string SyncHealthHub { get; set; } = "phase-1-readonly";
+    public string ThirdPartyKds { get; set; } = "phase-1-readonly";
 }
 
 public sealed class ReportHistoryComparison
@@ -77,12 +96,34 @@ public sealed class RunEnvironment
     public string MachineName { get; set; } = System.Environment.MachineName;
     public string OSVersion { get; set; } = System.Environment.OSVersion.VersionString;
     public string RuntimeVersion { get; set; } = System.Environment.Version.ToString();
+    public string LocalUtcOffset { get; set; } = DateTimeOffset.Now.Offset.ToString();
     public string DotnetSdkVersion { get; set; } = string.Empty;
     public string RepositoryPath { get; set; } = string.Empty;
     public string Branch { get; set; } = string.Empty;
     public string Commit { get; set; } = string.Empty;
     public string ArtifactDirectory { get; set; } = string.Empty;
+    public RunnerConfigurationSummary Configuration { get; set; } = new(
+        "Release",
+        null,
+        "ReadOnly",
+        30,
+        30,
+        null);
     public List<ProcessCommandSnapshot> Commands { get; } = new();
 }
 
-public sealed record ProcessCommandSnapshot(string Name, string CommandLine, double TimeoutSeconds);
+public sealed record RunnerConfigurationSummary(
+    string BuildConfiguration,
+    string? DeploymentMetadataPath,
+    string ProbeMode,
+    int ProbeTimeoutSeconds,
+    int ReportRetentionDays,
+    string? SupportBundleOutputPath);
+
+public sealed record ProcessCommandSnapshot(
+    string Name,
+    string CommandLine,
+    string WorkingDirectory,
+    double TimeoutSeconds,
+    string? ArtifactDirectory,
+    string? ArtifactName);

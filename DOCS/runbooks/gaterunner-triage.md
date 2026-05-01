@@ -7,7 +7,7 @@ Use this runbook when GateRunner returns HOLD or NO-GO.
 ## Decision Interpretation
 
 - GO: gates and scorecard meet release policy.
-- HOLD: release may proceed only with explicit owner approval.
+- HOLD: release may proceed only with explicit owner approval. Catalog drift is a HOLD condition until reconciled.
 - NO-GO: deployment is blocked until failures are fixed or policy is formally overridden.
 
 ## Triage Steps
@@ -33,7 +33,7 @@ Use this runbook when GateRunner returns HOLD or NO-GO.
 
 ## Catalog Drift Handling
 
-Catalog drift usually means a test class was renamed, moved, added, or deleted. The release engineering owner should update GateRunner metadata and contract tests before relying on trend comparisons.
+Catalog drift usually means a test class was renamed, moved, added, or deleted. GateRunner treats unresolved drift as HOLD in reports and as a failed catalog validation step in CI. The release engineering owner should update GateRunner metadata and contract tests before relying on trend comparisons.
 
 ## Override Guidance
 

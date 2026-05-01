@@ -1,0 +1,36 @@
+# Build output
+bin/
+obj/
+artifacts/
+
+# IDE state
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*_wpftmp.csproj
+
+# Test and diagnostic artifacts
+TestResults/
+**/TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# Local dependency/cache folders
+.dotnet-cli-home/
+.nuget/
+
+# GateRunner runtime output
+GateRun_*/
+GateRun_*.json
+GateRun_*.md
+
+# Logs and temporary files
+*.log
+.tmp/
+*.tmp
+*.cache
+*.bak

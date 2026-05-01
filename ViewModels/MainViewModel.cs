@@ -26,6 +26,9 @@ public partial class MainViewModel : ObservableObject
     private readonly GateCatalogDriftAnalyzer _catalogDriftAnalyzer;
     private readonly IReportWriter _reportWriter;
     private readonly IProcessRunner _processRunner;
+    private readonly IDeploymentMetadataValidator _metadataValidator;
+    private readonly ISyntheticProbeRunner _probeRunner;
+    private readonly ISupportBundleExporter _supportBundleExporter;
     private readonly ThemeManager _themeManager;
     private readonly ToastNotifier _toast;
     private CancellationTokenSource? _cts;
@@ -33,6 +36,7 @@ public partial class MainViewModel : ObservableObject
     private readonly object _logLock = new();
     private const int MaxLogChars = 512 * 1024;
     private DateTime _runStartedAt;
+    private RunSummary? _latestSummary;
     private readonly System.Windows.Threading.DispatcherTimer _etaTimer;
 
     public MainViewModel(
@@ -45,6 +49,9 @@ public partial class MainViewModel : ObservableObject
         GateCatalogDriftAnalyzer catalogDriftAnalyzer,
         IReportWriter reportWriter,
         IProcessRunner processRunner,
+        IDeploymentMetadataValidator metadataValidator,
+        ISyntheticProbeRunner probeRunner,
+        ISupportBundleExporter supportBundleExporter,
         ThemeManager themeManager,
         ToastNotifier toast)
     {
@@ -57,6 +64,9 @@ public partial class MainViewModel : ObservableObject
         _catalogDriftAnalyzer = catalogDriftAnalyzer;
         _reportWriter = reportWriter;
         _processRunner = processRunner;
+        _metadataValidator = metadataValidator;
+        _probeRunner = probeRunner;
+        _supportBundleExporter = supportBundleExporter;
         _themeManager = themeManager;
         _toast = toast;
 
@@ -79,6 +89,8 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<GateRunViewModel> Gates { get; } = new();
     public ObservableCollection<FailureItemViewModel> Failures { get; } = new();
     public ObservableCollection<BuildError> BuildErrors { get; } = new();
+    public ObservableCollection<DeploymentMetadataIssue> MetadataIssues { get; } = new();
+    public ObservableCollection<SyntheticProbeResult> ProbeResults { get; } = new();
     public ScorecardViewModel Scorecard { get; }
     public ICollectionView GatesView { get; }
     public ICollectionView FailuresView { get; }
@@ -96,6 +108,8 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool hasSettingsWarnings;
     [ObservableProperty] private string catalogWarningText = string.Empty;
     [ObservableProperty] private bool hasCatalogWarnings;
+    [ObservableProperty] private string runtimeReadinessText = "Runtime readiness: Unknown. Phase-1 probes are read-only.";
+    [ObservableProperty] private string supportBundlePath = string.Empty;
 
     // Filter chips
     [ObservableProperty] private bool showRed = true;
@@ -219,7 +233,7 @@ public partial class MainViewModel : ObservableObject
         _cts = new CancellationTokenSource();
         var log = new Progress<string>(AppendLog);
 
-        _runStartedAt = DateTime.Now;
+        _runStartedAt = DateTime.UtcNow;
         _etaTimer.Start();
 
         try
@@ -227,7 +241,7 @@ public partial class MainViewModel : ObservableObject
             ClearPreviousRun(singleGate);
             LoadPreviousRun();
             var startedAt = _runStartedAt;
-            var runDir = Path.Combine(_settings.ResultsDirectory, $"GateRun_{startedAt:yyyyMMdd_HHmmss}");
+            var runDir = Path.Combine(_settings.ResultsDirectory, $"GateRun_{startedAt:yyyyMMdd_HHmmss}Z");
             Directory.CreateDirectory(runDir);
             var summary = new RunSummary
             {
@@ -241,6 +255,7 @@ public partial class MainViewModel : ObservableObject
                 summary.GateCatalogWarnings.Add(warning);
                 AppendLog($"[CATALOG] {warning.Code}: {warning.Message}");
             }
+            await CollectRuntimeReadinessAsync(summary, _cts.Token).ConfigureAwait(true);
 
             if (string.IsNullOrWhiteSpace(_settings.SolutionPath) || !File.Exists(_settings.SolutionPath))
             {
@@ -381,7 +396,7 @@ public partial class MainViewModel : ObservableObject
     private void RecomputeEta()
     {
         if (!IsRunning || CompletedGates == 0) { EtaText = "..."; return; }
-        var elapsed = DateTime.Now - _runStartedAt;
+        var elapsed = DateTime.UtcNow - _runStartedAt;
         var avgPerGate = elapsed.TotalSeconds / CompletedGates;
         var remaining = Math.Max(0, TotalGates - CompletedGates);
         var etaSec = avgPerGate * remaining;
@@ -404,17 +419,21 @@ public partial class MainViewModel : ObservableObject
 
     private async Task FinalizeAsync(RunSummary summary, DateTime startedAt)
     {
-        summary.Duration = DateTime.Now - startedAt;
+        summary.Duration = DateTime.UtcNow - startedAt;
         var (md, json) = await _reportWriter.WriteAsync(summary, _settings.ResultsDirectory);
+        ReportRetentionPruner.Prune(_settings.ResultsDirectory, _settings.ReportRetentionDays, DateTimeOffset.UtcNow);
         summary.ReportMarkdownPath = md;
         summary.ReportJsonPath = json;
         LatestReportPath = md;
+        _latestSummary = summary;
         OpenReportCommand.NotifyCanExecuteChanged();
+        ExportSupportBundleCommand.NotifyCanExecuteChanged();
     }
 
     private bool CanRun() => !IsRunning;
     private bool CanCancel() => IsRunning;
     private bool CanOpenReport() => !string.IsNullOrEmpty(LatestReportPath) && File.Exists(LatestReportPath);
+    private bool CanExportSupportBundle() => _latestSummary is not null;
 
     [RelayCommand(CanExecute = nameof(CanCancel))]
     private void Cancel()
@@ -444,6 +463,21 @@ public partial class MainViewModel : ObservableObject
         catch (Exception ex)
         {
             StatusText = $"Open failed: {ex.Message}";
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanExportSupportBundle))]
+    private void ExportSupportBundle()
+    {
+        if (_latestSummary is null) return;
+        try
+        {
+            SupportBundlePath = _supportBundleExporter.Export(_latestSummary, _settings);
+            StatusText = $"Support bundle exported: {SupportBundlePath}";
+        }
+        catch (Exception ex)
+        {
+            StatusText = $"Support bundle export failed: {ex.Message}";
         }
     }
 
@@ -521,7 +555,12 @@ public partial class MainViewModel : ObservableObject
         }
         lock (_logLock) { _logBuffer.Clear(); LogTail = string.Empty; }
         LatestReportPath = null;
+        _latestSummary = null;
+        MetadataIssues.Clear();
+        ProbeResults.Clear();
+        RuntimeReadinessText = "Runtime readiness: Unknown. Phase-1 probes are read-only.";
         OpenReportCommand.NotifyCanExecuteChanged();
+        ExportSupportBundleCommand.NotifyCanExecuteChanged();
         GatesView.Refresh();
         RefreshChipCounts();
     }
@@ -547,5 +586,50 @@ public partial class MainViewModel : ObservableObject
                 _logBuffer.Remove(0, _logBuffer.Length - MaxLogChars);
             LogTail = _logBuffer.ToString();
         }
+    }
+
+    private async Task CollectRuntimeReadinessAsync(RunSummary summary, CancellationToken cancellationToken)
+    {
+        MetadataIssues.Clear();
+        ProbeResults.Clear();
+        if (string.IsNullOrWhiteSpace(_settings.DeploymentMetadataPath))
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.Unknown;
+            summary.RuntimeReadinessRationale = "Deployment metadata was not configured.";
+            RuntimeReadinessText = "Runtime readiness: Unknown. Deployment metadata not configured. Phase-1 probes are read-only.";
+            return;
+        }
+
+        summary.DeploymentMetadata = _metadataValidator.LoadAndValidate(_settings.DeploymentMetadataPath);
+        foreach (var issue in summary.DeploymentMetadata.Issues)
+            MetadataIssues.Add(issue);
+
+        var probes = await _probeRunner.RunAsync(_settings, summary.DeploymentMetadata, cancellationToken).ConfigureAwait(true);
+        summary.SyntheticProbes.AddRange(probes);
+        foreach (var probe in probes)
+            ProbeResults.Add(probe);
+
+        if (!summary.DeploymentMetadata.IsValid)
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.NotReady;
+            summary.RuntimeReadinessRationale = "Deployment metadata validation failed.";
+        }
+        else if (string.Equals(_settings.ProbeMode, "Disabled", StringComparison.OrdinalIgnoreCase))
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.Unknown;
+            summary.RuntimeReadinessRationale = "Synthetic probes are disabled.";
+        }
+        else if (summary.SyntheticProbes.Any(p => p.Status is SyntheticProbeStatus.Failed or SyntheticProbeStatus.Error))
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.NotReady;
+            summary.RuntimeReadinessRationale = "One or more synthetic probes failed.";
+        }
+        else
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.Ready;
+            summary.RuntimeReadinessRationale = "Deployment metadata is valid and synthetic probes passed or were skipped.";
+        }
+
+        RuntimeReadinessText = $"Runtime readiness: {summary.RuntimeReadiness}. {summary.RuntimeReadinessRationale} Phase-1 probes are read-only.";
     }
 }

@@ -29,6 +29,18 @@ public interface IProcessRunner
 
 public sealed class ProcessRunner : IProcessRunner
 {
+    private readonly ISecretRedactor _redactor;
+
+    public ProcessRunner()
+        : this(SecretRedactor.Instance)
+    {
+    }
+
+    public ProcessRunner(ISecretRedactor redactor)
+    {
+        _redactor = redactor;
+    }
+
     public async Task<ProcessRunResult> RunAsync(
         ProcessCommand command,
         IProgress<string>? log,
@@ -54,14 +66,16 @@ public sealed class ProcessRunner : IProcessRunner
         proc.OutputDataReceived += (_, e) =>
         {
             if (e.Data is null) return;
-            stdout.AppendLine(e.Data);
-            log?.Report(e.Data);
+            var line = _redactor.Redact(e.Data);
+            stdout.AppendLine(line);
+            log?.Report(line);
         };
         proc.ErrorDataReceived += (_, e) =>
         {
             if (e.Data is null) return;
-            stderr.AppendLine(e.Data);
-            log?.Report(e.Data);
+            var line = _redactor.Redact(e.Data);
+            stderr.AppendLine(line);
+            log?.Report(line);
         };
 
         using var timeoutCts = new CancellationTokenSource(command.Timeout);
@@ -110,11 +124,11 @@ public sealed class ProcessRunner : IProcessRunner
             canceled,
             command.ArtifactDirectory);
 
-        WriteArtifacts(command, result);
+        WriteArtifacts(command, result, _redactor);
         return result;
     }
 
-    private static void WriteArtifacts(ProcessCommand command, ProcessRunResult result)
+    private static void WriteArtifacts(ProcessCommand command, ProcessRunResult result, ISecretRedactor redactor)
     {
         if (string.IsNullOrWhiteSpace(command.ArtifactDirectory))
             return;
@@ -122,9 +136,9 @@ public sealed class ProcessRunner : IProcessRunner
         Directory.CreateDirectory(command.ArtifactDirectory);
         var name = Sanitize(command.ArtifactName ?? Path.GetFileNameWithoutExtension(command.FileName));
         File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.command.txt"),
-            $"{command.FileName} {command.Arguments}{Environment.NewLine}WorkingDirectory: {command.WorkingDirectory}{Environment.NewLine}TimeoutSeconds: {command.Timeout.TotalSeconds:0}");
-        File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.stdout.log"), result.StdOut);
-        File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.stderr.log"), result.StdErr);
+            redactor.Redact($"{command.FileName} {command.Arguments}{Environment.NewLine}WorkingDirectory: {command.WorkingDirectory}{Environment.NewLine}TimeoutSeconds: {command.Timeout.TotalSeconds:0}"));
+        File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.stdout.log"), redactor.Redact(result.StdOut));
+        File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.stderr.log"), redactor.Redact(result.StdErr));
         File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.exit.txt"),
             $"ExitCode: {result.ExitCode}{Environment.NewLine}TimedOut: {result.TimedOut}{Environment.NewLine}Canceled: {result.Canceled}");
     }

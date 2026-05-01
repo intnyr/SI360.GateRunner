@@ -20,6 +20,7 @@ D:\GateRunner\artifacts\GateRunner\<version>\cli
 ```
 
 The WPF artifact is framework-dependent `win-x86`. The target machine must have the .NET 8 desktop runtime installed.
+The `artifacts` directory is local/CI-generated output and is not checked into source control.
 
 ## Deployment Strategy
 

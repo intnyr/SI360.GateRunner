@@ -18,7 +18,7 @@ public interface IDecisionPolicy
 public sealed class DecisionPolicy : IDecisionPolicy
 {
     public string Name => "AllGatesAndScorecard";
-    public string Version => "2026.04.30";
+    public string Version => "2026.05.01";
 
     public DecisionPolicyResult Decide(RunSummary summary)
     {
@@ -43,6 +43,13 @@ public sealed class DecisionPolicy : IDecisionPolicy
             return Result(
                 DeployDecision.NoGo,
                 $"NO-GO: {redOrError.Count} gate(s) are red/error: {string.Join(", ", redOrError)}.");
+        }
+
+        if (summary.GateCatalogWarnings.Count > 0)
+        {
+            return Result(
+                DeployDecision.Hold,
+                $"HOLD: {summary.GateCatalogWarnings.Count} gate catalog warning(s) require release-owner review: {string.Join(", ", summary.GateCatalogWarnings.Select(w => w.Code))}.");
         }
 
         var score = summary.Scorecard.OverallScore;

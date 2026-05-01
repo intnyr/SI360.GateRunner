@@ -23,6 +23,8 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
     private readonly IGateDiscoveryService _gateDiscovery;
     private readonly IReportWriter _reportWriter;
     private readonly IProcessRunner _processRunner;
+    private readonly IDeploymentMetadataValidator _metadataValidator;
+    private readonly ISyntheticProbeRunner _probeRunner;
 
     public GateRunOrchestrator(
         RunnerSettings settings,
@@ -33,7 +35,9 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
         IDecisionPolicy decisionPolicy,
         IGateDiscoveryService gateDiscovery,
         IReportWriter reportWriter,
-        IProcessRunner processRunner)
+        IProcessRunner processRunner,
+        IDeploymentMetadataValidator metadataValidator,
+        ISyntheticProbeRunner probeRunner)
     {
         _settings = settings;
         _testRunner = testRunner;
@@ -44,6 +48,8 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
         _gateDiscovery = gateDiscovery;
         _reportWriter = reportWriter;
         _processRunner = processRunner;
+        _metadataValidator = metadataValidator;
+        _probeRunner = probeRunner;
     }
 
     public async Task<RunSummary> RunAsync(
@@ -51,8 +57,8 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
         IProgress<string>? log,
         CancellationToken cancellationToken)
     {
-        var startedAt = DateTime.Now;
-        var runDir = Path.Combine(_settings.ResultsDirectory, $"GateRun_{startedAt:yyyyMMdd_HHmmss}");
+        var startedAt = DateTime.UtcNow;
+        var runDir = Path.Combine(_settings.ResultsDirectory, $"GateRun_{startedAt:yyyyMMdd_HHmmss}Z");
         Directory.CreateDirectory(runDir);
 
         var summary = new RunSummary
@@ -65,6 +71,8 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
 
         foreach (var warning in _gateDiscovery.Validate(_settings))
             summary.GateCatalogWarnings.Add(warning);
+
+        await CollectRuntimeReadinessAsync(summary, cancellationToken).ConfigureAwait(false);
 
         if (request.BuildFirst)
         {
@@ -91,7 +99,7 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
         {
             cancellationToken.ThrowIfCancellationRequested();
             log?.Report($"Running {gate.DisplayName}...");
-            var started = DateTime.Now;
+            var started = DateTime.UtcNow;
             var (exit, trxPath, stdOut) = await _testRunner
                 .RunGateAsync(gate.Id, gate.TestClassFilter, runDir, log, cancellationToken)
                 .ConfigureAwait(false);
@@ -100,7 +108,7 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
             var result = new GateResult
             {
                 Definition = gate,
-                Duration = DateTime.Now - started,
+                Duration = DateTime.UtcNow - started,
                 TrxPath = trxPath,
                 StdOut = stdOut,
                 Passed = outcomes.Count(o => o.Status == TestStatus.Passed),
@@ -128,9 +136,48 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
         summary.DecisionPolicyName = decision.PolicyName;
         summary.DecisionPolicyVersion = decision.PolicyVersion;
         summary.DecisionRationale = decision.Rationale;
-        summary.Duration = DateTime.Now - startedAt;
+        summary.Duration = DateTime.UtcNow - startedAt;
         var (md, json) = await _reportWriter.WriteAsync(summary, _settings.ResultsDirectory).ConfigureAwait(false);
+        ReportRetentionPruner.Prune(_settings.ResultsDirectory, _settings.ReportRetentionDays, DateTimeOffset.UtcNow);
         summary.ReportMarkdownPath = md;
         summary.ReportJsonPath = json;
+    }
+
+    private async Task CollectRuntimeReadinessAsync(RunSummary summary, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(_settings.DeploymentMetadataPath))
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.Unknown;
+            summary.RuntimeReadinessRationale = "Deployment metadata was not configured.";
+            return;
+        }
+
+        summary.DeploymentMetadata = _metadataValidator.LoadAndValidate(_settings.DeploymentMetadataPath);
+        var probes = await _probeRunner.RunAsync(_settings, summary.DeploymentMetadata, cancellationToken).ConfigureAwait(false);
+        summary.SyntheticProbes.AddRange(probes);
+
+        if (!summary.DeploymentMetadata.IsValid)
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.NotReady;
+            summary.RuntimeReadinessRationale = "Deployment metadata validation failed.";
+            return;
+        }
+
+        if (string.Equals(_settings.ProbeMode, "Disabled", StringComparison.OrdinalIgnoreCase))
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.Unknown;
+            summary.RuntimeReadinessRationale = "Synthetic probes are disabled.";
+            return;
+        }
+
+        if (summary.SyntheticProbes.Any(p => p.Status is SyntheticProbeStatus.Failed or SyntheticProbeStatus.Error))
+        {
+            summary.RuntimeReadiness = RuntimeReadinessDecision.NotReady;
+            summary.RuntimeReadinessRationale = "One or more synthetic probes failed.";
+            return;
+        }
+
+        summary.RuntimeReadiness = RuntimeReadinessDecision.Ready;
+        summary.RuntimeReadinessRationale = "Deployment metadata is valid and synthetic probes passed or were skipped.";
     }
 }

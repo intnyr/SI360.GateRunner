@@ -44,7 +44,7 @@ Settings are saved to `%APPDATA%\SI360.GateRunner\settings.json`.
 Environment variables prefixed with `GATERUNNER_` can override configuration for automation, for example `GATERUNNER_BuildConfiguration`, `GATERUNNER_DeploymentMetadataPath`, `GATERUNNER_ProbeMode`, `GATERUNNER_ProbeTimeoutSeconds`, `GATERUNNER_ReportRetentionDays`, and `GATERUNNER_SupportBundleOutputPath`. The CLI also supports:
 
 ```powershell
-dotnet run --project .\SI360.GateRunner.Cli -- run --solution D:\SI36020WPF\SI360.slnx --test-project D:\SI36020WPF\SI360.Tests\SI360.Tests.csproj --results D:\SI36020WPF\TestResults --configuration Release --probe-mode ReadOnly
+dotnet run --project .\SI360.GateRunner.Cli -- run --solution E:\SI36020WPF\SI360.slnx --test-project E:\SI36020WPF\SI360.Tests\SI360.Tests.csproj --results E:\SI36020WPF\TestResults --configuration Release --probe-mode ReadOnly
 ```
 
 ## Commands

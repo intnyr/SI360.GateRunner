@@ -17,7 +17,7 @@ Use this runbook to run GateRunner headlessly in CI and publish the report artif
 ## CLI Example
 
 ```powershell
-dotnet run --project D:\GateRunner\SI360.GateRunner.Cli\SI360.GateRunner.Cli.csproj -c Release -- run --solution D:\SI36020WPF\SI360.slnx --test-project D:\SI36020WPF\SI360.Tests\SI360.Tests.csproj --results D:\SI36020WPF\TestResults
+dotnet run --project E:\GateRunner\SI360.GateRunner.Cli\SI360.GateRunner.Cli.csproj -c Release -- run --solution E:\SI36020WPF\SI360.slnx --test-project E:\SI36020WPF\SI360.Tests\SI360.Tests.csproj --results E:\SI36020WPF\TestResults
 ```
 
 ## Exit Codes

@@ -21,6 +21,12 @@ public sealed class RunnerSettingsTests
     }
 
     [Fact]
+    public void DefaultSi360Root_PointsToEDriveApplication()
+    {
+        Assert.Equal(@"E:\SI36020WPF", RunnerSettings.DefaultSi360Root);
+    }
+
+    [Fact]
     public void ApplyEnvironmentVariables_OverridesNewConfigurationFields()
     {
         var settings = new RunnerSettings();

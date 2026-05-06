@@ -1,6 +1,6 @@
 # GateRunner Required Changes
 
-Repository: `D:\GateRunner`
+Repository: `E:\GateRunner`
 
 ## Role In The Final Architecture
 
@@ -19,7 +19,7 @@ GateRunner remains the deployment validation and synthetic probe tool. It should
 - Decision policy is explicit.
 - Gate catalog discovery and validation exist.
 - GateRunner tests pass after restore/build: 41 tests passed after strict quality enforcement coverage.
-- Catalog validation against current `D:\SI36020WPF` pre-deployment gates exits successfully.
+- Catalog validation against current `E:\SI36020WPF` pre-deployment gates exits successfully.
 
 ## Documentation Ownership
 

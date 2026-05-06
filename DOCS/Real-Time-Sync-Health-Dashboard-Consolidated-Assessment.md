@@ -11,7 +11,7 @@
 Scope reviewed:
 
 - Findings document: `D:\SyncHealthHub\Real-Time-Sync-Health-Dashboard-Findings.md`
-- SI360 application: `D:\SI36020WPF`
+- SI360 application: `E:\SI36020WPF`
 - KDS application and hub service: `D:\KDS`
 
 Decision basis: 12-question architectural clarification session (2026-05-01) — see [Finalized Architectural And Technical Decisions](#finalized-architectural-and-technical-decisions).
@@ -46,12 +46,12 @@ Current flow:
 
 Relevant source:
 
-- `D:\SI36020WPF\SI360.SignalRHub\Hubs\PosHub.cs:18` connects clients and records only a static count.
-- `D:\SI36020WPF\SI360.SignalRHub\Hubs\PosHub.cs:82` accepts `DbChanged` messages.
-- `D:\SI36020WPF\SI360.SignalRHub\Hubs\PosHub.cs:103` sends by `site-{SiteId}` group.
-- `D:\SI36020WPF\SI360.SignalRHub\Client\PosSignalRClient.cs:61` starts the client connection.
-- `D:\SI36020WPF\SI360.SignalRHub\Client\PosSignalRClient.cs:90` configures reconnect delays.
-- `D:\SI36020WPF\SI360.UI\ViewModels\OrderingViewModel.cs:356` starts SignalR from the ordering UI.
+- `E:\SI36020WPF\SI360.SignalRHub\Hubs\PosHub.cs:18` connects clients and records only a static count.
+- `E:\SI36020WPF\SI360.SignalRHub\Hubs\PosHub.cs:82` accepts `DbChanged` messages.
+- `E:\SI36020WPF\SI360.SignalRHub\Hubs\PosHub.cs:103` sends by `site-{SiteId}` group.
+- `E:\SI36020WPF\SI360.SignalRHub\Client\PosSignalRClient.cs:61` starts the client connection.
+- `E:\SI36020WPF\SI360.SignalRHub\Client\PosSignalRClient.cs:90` configures reconnect delays.
+- `E:\SI36020WPF\SI360.UI\ViewModels\OrderingViewModel.cs:356` starts SignalR from the ordering UI.
 
 ### SI360 Offline Queue
 
@@ -124,9 +124,9 @@ Relevant source:
 
    Evidence:
 
-   - `D:\SI36020WPF\SI360.UI\appsettings.json:89`
-   - `D:\SI36020WPF\SI360.SignalRHub\Program.cs:12`
-   - `D:\SI36020WPF\SI360.SignalRHub\appsettings.json:11`
+   - `E:\SI36020WPF\SI360.UI\appsettings.json:89`
+   - `E:\SI36020WPF\SI360.SignalRHub\Program.cs:12`
+   - `E:\SI36020WPF\SI360.SignalRHub\appsettings.json:11`
 
 2. SI360 can report a false online state.
 
@@ -134,14 +134,14 @@ Relevant source:
 
    Evidence:
 
-   - `D:\SI36020WPF\SI360.SignalRHub\Client\PosSignalRClient.cs:61`
-   - `D:\SI36020WPF\SI360.SignalRHub\Client\PosSignalRClient.cs:124`
-   - `D:\SI36020WPF\SI360.UI\ViewModels\OrderingViewModel.cs:372`
-   - `D:\SI36020WPF\SI360.UI\ViewModels\OrderingViewModel.cs:373`
+   - `E:\SI36020WPF\SI360.SignalRHub\Client\PosSignalRClient.cs:61`
+   - `E:\SI36020WPF\SI360.SignalRHub\Client\PosSignalRClient.cs:124`
+   - `E:\SI36020WPF\SI360.UI\ViewModels\OrderingViewModel.cs:372`
+   - `E:\SI36020WPF\SI360.UI\ViewModels\OrderingViewModel.cs:373`
 
 3. SI360 solution-level build/test is not trustworthy yet.
 
-   `dotnet test .\SI360.slnx --no-restore --nologo --verbosity minimal` fails because `SI360.Infrastructure` references `SIPrintingLibrary` and KDS DTOs that are not available in the solution build graph. A direct `dotnet build .\SI360.Infrastructure\SI360.Infrastructure.csproj --no-restore` succeeds, which indicates solution graph drift. The machine also used SDK `10.0.300-preview.0.26177.108` because `D:\SI36020WPF` has no `global.json`.
+   `dotnet test .\SI360.slnx --no-restore --nologo --verbosity minimal` fails because `SI360.Infrastructure` references `SIPrintingLibrary` and KDS DTOs that are not available in the solution build graph. A direct `dotnet build .\SI360.Infrastructure\SI360.Infrastructure.csproj --no-restore` succeeds, which indicates solution graph drift. The machine also used SDK `10.0.300-preview.0.26177.108` because `E:\SI36020WPF` has no `global.json`.
 
 4. KDS transport is not secured in inspected code.
 
@@ -493,8 +493,8 @@ Grouped by ownership. **Internal** items can be resolved by SI360 + KDS + SyncHe
 Commands run:
 
 - `dotnet test .\SI-KDS.sln --no-restore --nologo --verbosity normal` in `D:\KDS`
-- `dotnet test .\SI360.slnx --no-restore --nologo --verbosity minimal` in `D:\SI36020WPF`
-- `dotnet build .\SI360.Infrastructure\SI360.Infrastructure.csproj --no-restore --nologo --verbosity minimal` in `D:\SI36020WPF`
+- `dotnet test .\SI360.slnx --no-restore --nologo --verbosity minimal` in `E:\SI36020WPF`
+- `dotnet build .\SI360.Infrastructure\SI360.Infrastructure.csproj --no-restore --nologo --verbosity minimal` in `E:\SI36020WPF`
 
 Results:
 

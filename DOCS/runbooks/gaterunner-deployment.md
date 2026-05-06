@@ -7,7 +7,7 @@ Use this runbook to build and publish GateRunner release artifacts.
 ## Publish Command
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File D:\GateRunner\Scripts\Publish-GateRunner.ps1 -Version 1.0.0
+powershell -ExecutionPolicy Bypass -File E:\GateRunner\Scripts\Publish-GateRunner.ps1 -Version 1.0.0
 ```
 
 ## Output
@@ -15,8 +15,8 @@ powershell -ExecutionPolicy Bypass -File D:\GateRunner\Scripts\Publish-GateRunne
 The script writes:
 
 ```text
-D:\GateRunner\artifacts\GateRunner\<version>\wpf
-D:\GateRunner\artifacts\GateRunner\<version>\cli
+E:\GateRunner\artifacts\GateRunner\<version>\wpf
+E:\GateRunner\artifacts\GateRunner\<version>\cli
 ```
 
 The WPF artifact is framework-dependent `win-x86`. The target machine must have the .NET 8 desktop runtime installed.

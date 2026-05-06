@@ -6,6 +6,8 @@ namespace SI360.GateRunner.Services;
 
 public sealed class RunnerSettings
 {
+    public const string DefaultSi360Root = @"E:\SI36020WPF";
+
     public string SolutionPath { get; set; } = string.Empty;
     public string TestProjectPath { get; set; } = string.Empty;
     public string ResultsDirectory { get; set; } = string.Empty;
@@ -55,8 +57,7 @@ public sealed class RunnerSettings
             AppContext.BaseDirectory,
             Path.Combine(AppContext.BaseDirectory, ".."),
             Path.Combine(AppContext.BaseDirectory, "..", ".."),
-            @"D:\SI36020WPF",
-            @"D:\SI360"
+            DefaultSi360Root
         };
 
         return Discover(candidates);

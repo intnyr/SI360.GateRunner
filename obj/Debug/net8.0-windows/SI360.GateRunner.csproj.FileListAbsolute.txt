@@ -74,3 +74,6 @@ D:\GateRunner\obj\Debug\net8.0-windows\refint\SI360.GateRunner.dll
 D:\GateRunner\obj\Debug\net8.0-windows\SI360.GateRunner.pdb
 D:\GateRunner\obj\Debug\net8.0-windows\SI360.GateRunner.genruntimeconfig.cache
 D:\GateRunner\obj\Debug\net8.0-windows\ref\SI360.GateRunner.dll
+E:\GateRunner\obj\Debug\net8.0-windows\SI360.GateRunner.dll
+E:\GateRunner\obj\Debug\net8.0-windows\refint\SI360.GateRunner.dll
+E:\GateRunner\obj\Debug\net8.0-windows\SI360.GateRunner.pdb

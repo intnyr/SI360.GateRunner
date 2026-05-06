@@ -16,13 +16,13 @@ Use this runbook when an engineer or QA owner needs a local pre-deployment gate 
 1. Build GateRunner.
 
    ```powershell
-   dotnet build D:\GateRunner\SI360.GateRunner.sln -c Release
+   dotnet build E:\GateRunner\SI360.GateRunner.sln -c Release
    ```
 
 2. Launch the WPF app.
 
    ```powershell
-   dotnet run --project D:\GateRunner\SI360.GateRunner.csproj -c Release
+   dotnet run --project E:\GateRunner\SI360.GateRunner.csproj -c Release
    ```
 
 3. Open Settings and verify:

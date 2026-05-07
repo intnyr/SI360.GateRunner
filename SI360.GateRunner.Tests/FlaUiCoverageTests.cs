@@ -130,6 +130,7 @@ public sealed class FlaUiCoverageTests
             "USER FUNCTIONS AND DINING ROOM SCENARIOS",
             new[]
             {
+                "User Functions",
                 "Sell Gift Card",
                 "Sell Multiple Gift Cards",
                 "Adding Tips to a Gift Card",

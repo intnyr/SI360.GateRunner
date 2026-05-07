@@ -310,72 +310,84 @@
       "name": "USER FUNCTIONS AND DINING ROOM SCENARIOS",
       "items": [
         {
+          "id": "user-functions-menu",
+          "name": "User Functions",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_54_User_Functions_Menu_Should_Expose_Core_Actions" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs" ],
+          "notes": "Dedicated User Function menu inventory coverage verifies the category and core actions are reachable."
+        },
+        {
           "id": "user-functions-sell-gift-card",
           "name": "Sell Gift Card",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NeedsReview",
-          "verificationLevel": "NeedsReview",
-          "testFilters": [ "Functional_14_Gift_Card_Action_Should_Be_Discoverable" ],
-          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
-          "notes": "Existing evidence is gift-card action discoverability, not confirmed end-to-end sale."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_51_Sell_Gift_Card_Should_Open_Dialog_And_Expose_Numpad" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "notes": "Dialog-level sale workflow coverage exists; final payment completion may still require processor/test data."
         },
         {
           "id": "user-functions-sell-multiple-gift-cards",
           "name": "Sell Multiple Gift Cards",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NotAutomated",
-          "verificationLevel": "None",
-          "sourceFiles": [ "SI360.UITests/PageObjects/GiftCardPage.cs" ],
-          "notes": "No dedicated mapped FlaUI scenario found."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_55_Sell_Multiple_Gift_Cards_Should_Open_Dialog_And_Expose_Numpad" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UI/Views/SellMultipleGiftCardDialog.xaml" ],
+          "notes": "Mapped to dedicated sell-multiple-gift-card dialog coverage."
         },
         {
           "id": "user-functions-add-tips-gift-card",
           "name": "Adding Tips to a Gift Card",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NeedsReview",
-          "verificationLevel": "NeedsReview",
-          "testFilters": [ "Functional_17_Tip_Action_Should_Be_Discoverable" ],
-          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/ChargeTipPage.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
-          "notes": "Tip action exists, but gift-card-specific tip workflow needs review."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_53_Tip_On_Gift_Card_Uses_Charge_Tip_Dialog" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ChargeTipPage.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "notes": "Mapped to interactive gift-card tip coverage through the charge tip dialog."
         },
         {
           "id": "user-functions-check-gift-card-balance",
           "name": "Check Gift Card Balance",
           "group": "UserFunctionsAndDiningRoomScenarios",
           "automationStatus": "Automated",
-          "verificationLevel": "Discoverable",
-          "testFilters": [ "Functional_29_Gift_Card_Balance_Action_Should_Be_Discoverable" ],
-          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
-          "notes": "Mapped to existing gift-card balance action discoverability."
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_46_Gift_Card_Balance_Should_Open_Dialog_And_Expose_Numpad" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardBalancePage.cs" ],
+          "notes": "Mapped to interactive gift-card balance dialog coverage."
         },
         {
           "id": "user-functions-add-funds-gift-card",
           "name": "Adding Funds to a Gift Card",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NotAutomated",
-          "verificationLevel": "None",
-          "sourceFiles": [ "SI360.UITests/PageObjects/GiftCardPage.cs" ],
-          "notes": "No dedicated mapped FlaUI scenario found."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_52_Add_Funds_To_Gift_Card_Should_Open_Dialog_And_Expose_Numpad" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests.PageObjects/GiftCardAddFundsPage.cs", "SI360.UITests.PageObjects/GiftCardAddFundsAmountPage.cs" ],
+          "notes": "Mapped to interactive add-funds dialog coverage."
         },
         {
           "id": "user-functions-redeem-gift-card",
           "name": "Redeeming Gift Card",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NeedsReview",
-          "verificationLevel": "NeedsReview",
-          "testFilters": [ "Functional_14_Gift_Card_Action_Should_Be_Discoverable" ],
-          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
-          "notes": "Gift-card media discoverability exists; redemption flow needs end-to-end review."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_47_Gift_Card_Redeem_Should_Open_Dialog_Or_Require_Payment_Context" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "notes": "Mapped to interactive redemption/payment-context coverage."
         },
         {
           "id": "user-functions-closed-check",
           "name": "Closed Check",
           "group": "UserFunctionsAndDiningRoomScenarios",
           "automationStatus": "Automated",
-          "verificationLevel": "Discoverable",
-          "testFilters": [ "Functional_31_Closed_Check_Action_Should_Be_Discoverable" ],
-          "sourceFiles": [ "SI360.UITests/Functional/CheckManagementFunctionalTests.cs" ],
-          "notes": "Mapped to existing check-management discoverability test."
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_45_Closed_Check_Should_Open_Dialog_And_Expose_Grid" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ClosedCheckPage.cs" ],
+          "notes": "Mapped to interactive closed-check dialog/grid coverage."
         },
         {
           "id": "user-functions-combine-check",
@@ -391,77 +403,81 @@
           "id": "user-functions-print-separate-checks",
           "name": "Print Separate Checks",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NotAutomated",
-          "verificationLevel": "None",
-          "sourceFiles": [ "SI360.UITests/PageObjects/PrintCheckPage.cs" ],
-          "notes": "No dedicated mapped FlaUI scenario found."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_56_Print_Separate_Checks_Should_Open_Dialog_And_Expose_Print_Actions" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UI/Views/PrintSeparateChecksDialog.xaml" ],
+          "notes": "Mapped to dedicated print-separate-checks dialog coverage."
         },
         {
           "id": "user-functions-enter-charge-tip",
           "name": "Enter Charge Tip",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "PartiallyAutomated",
-          "verificationLevel": "Discoverable",
-          "testFilters": [ "Functional_17_Tip_Action_Should_Be_Discoverable" ],
-          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/ChargeTipPage.cs" ],
-          "notes": "Tip action is discoverable; charge-tip entry amount workflow may need additional review."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_41_Charge_Tip_Should_Open_Dialog_And_Expose_Controls" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ChargeTipPage.cs" ],
+          "notes": "Mapped to interactive charge tip dialog/control coverage."
         },
         {
           "id": "user-functions-print-check",
           "name": "Print Check",
           "group": "UserFunctionsAndDiningRoomScenarios",
           "automationStatus": "Automated",
-          "verificationLevel": "Discoverable",
-          "testFilters": [ "Functional_18_Print_Check_Action_Should_Be_Discoverable" ],
-          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/PrintCheckPage.cs" ],
-          "notes": "Mapped to existing print-check action discoverability."
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_42_Print_Check_Should_Open_Dialog_And_Expose_Copy_Controls" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/PrintCheckPage.cs" ],
+          "notes": "Mapped to interactive print-check dialog coverage."
         },
         {
           "id": "user-functions-split-item",
           "name": "Split Item",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NotAutomated",
-          "verificationLevel": "None",
-          "sourceFiles": [ "SI360.UITests/PageObjects/SplitItemPage.cs" ],
-          "notes": "Page object exists, but no dedicated mapped scenario was found."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_57_Split_Item_Should_Open_Dialog_And_Expose_Controls" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/SplitItemPage.cs" ],
+          "notes": "Mapped to dedicated split-item dialog coverage."
         },
         {
           "id": "user-functions-reorder",
           "name": "Reorder",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NotAutomated",
-          "verificationLevel": "None",
-          "notes": "No dedicated mapped FlaUI scenario found."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_49_Reorder_Should_Open_Confirmation_Or_Show_Response" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ReorderConfirmationPage.cs" ],
+          "notes": "Mapped to interactive reorder confirmation/response coverage."
         },
         {
           "id": "user-functions-reset-service-profile",
           "name": "Reset Service Profile",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "PartiallyAutomated",
-          "verificationLevel": "Helper",
-          "testFilters": [ "SmokeTestSupport.ResetServiceProfile", "Job_Code_List_Should_Appear_After_Valid_Pin" ],
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_58_Reset_Service_Profile_Should_Open_Confirmation" ],
           "sourceFiles": [ "SI360.UITests/Core/SmokeTestSupport.cs", "SI360.UITests/Smoke/PinLoginSmokeTests.cs" ],
-          "notes": "Helper coverage exists; user-function scenario should be reviewed for end-to-end intent."
+          "notes": "Dedicated User Function coverage verifies the reset service profile confirmation dialog."
         },
         {
           "id": "user-functions-restart",
           "name": "Restart",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NeedsReview",
-          "verificationLevel": "NeedsReview",
-          "testFilters": [ "AppFixture.RestartApp" ],
-          "sourceFiles": [ "SI360.UITests/Core/AppFixture.cs", "SI360.UITests/Smoke/AppLaunchSmokeTests.cs" ],
-          "notes": "Meaning of Restart is ambiguous; current evidence covers fixture/app restart, not a confirmed user-function command."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_59_Restart_Should_Open_Confirmation" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UI/Views/RestartConfirmationDialog.xaml" ],
+          "notes": "Dedicated User Function coverage verifies the restart confirmation dialog and cancels safely."
         },
         {
           "id": "user-functions-server-sales-report",
           "name": "Server Sales Report",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NeedsReview",
-          "verificationLevel": "NeedsReview",
-          "testFilters": [ "Functional_38_View_Open_Sales_Should_Open_Grid_Or_Empty_State" ],
-          "sourceFiles": [ "SI360.UITests/Functional/ReportsFunctionalTests.cs", "SI360.UITests/PageObjects/ReportViewPage.cs" ],
-          "notes": "Existing report tests may be partial; exact Server Sales Report mapping needs confirmation."
+          "automationStatus": "Automated",
+          "verificationLevel": "ReportState",
+          "testFilters": [ "Functional_50_Server_Sales_Report_Should_Open_And_Expose_Report_Grids" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ServerSalesReportPage.cs" ],
+          "notes": "Mapped to interactive server sales report grid/state coverage."
         },
         {
           "id": "user-functions-employee-cashout-report",
@@ -478,20 +494,20 @@
           "name": "Transfer Check",
           "group": "UserFunctionsAndDiningRoomScenarios",
           "automationStatus": "Automated",
-          "verificationLevel": "Discoverable",
-          "testFilters": [ "Functional_32_Transfer_Check_Action_Should_Be_Discoverable" ],
-          "sourceFiles": [ "SI360.UITests/Functional/CheckManagementFunctionalTests.cs", "SI360.UITests/PageObjects/TransferCheckPage.cs" ],
-          "notes": "Mapped to existing transfer-check discoverability."
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_44_Transfer_Check_Should_Open_Dialog_And_Expose_Employee_List" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/TransferCheckPage.cs" ],
+          "notes": "Mapped to interactive transfer-check dialog coverage."
         },
         {
           "id": "user-functions-change-order-types",
           "name": "Change Order Types",
           "group": "UserFunctionsAndDiningRoomScenarios",
-          "automationStatus": "NeedsReview",
-          "verificationLevel": "NeedsReview",
-          "testFilters": [ "Functional_10D_Ordering_Screen_Layout_Should_Expose_Core_Regions" ],
-          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs", "SI360.UITests/PageObjects/OrderingPage.cs" ],
-          "notes": "Ordering page exposes ChangeOrderTypeButton in tests; dedicated scenario coverage needs confirmation."
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_48_Change_Order_Type_Should_Open_Dialog_And_Expose_Options" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/OrderTypeSelectionPage.cs" ],
+          "notes": "Mapped to interactive change-order-type dialog coverage."
         }
       ]
     }

@@ -31,7 +31,7 @@ public sealed partial class SecretRedactor : ISecretRedactor
     [GeneratedRegex(@"(?i)(--(?:api[-_]?key|token|access-token|password|pwd|secret|client-secret)\s+)(?:""[^""]+""|'[^']+'|[^\s;&]+)")]
     private static partial Regex CommandLineSecretRegex();
 
-    [GeneratedRegex(@"(?i)\b(api[-_ ]?key|apikey|x-api-key|token|access_token|password|pwd|secret|client_secret)(\s*[=:]\s*)(""[^""]+""|'[^']+'|[^\s;&]+)")]
+    [GeneratedRegex(@"(?i)\b(api[-_ ]?key|apikey|x-api-key|token|access_token|password|pwd|pin|valid_pin|si360_ui_valid_pin|secret|client_secret)(\s*[=:]\s*)(""[^""]+""|'[^']+'|[^\s;&]+)")]
     private static partial Regex KeyValueSecretRegex();
 
     [GeneratedRegex(@"(?i)([?&](?:api[-_]?key|apikey|token|access_token|password|pwd|secret|client_secret)=)([^&#\s]+)")]

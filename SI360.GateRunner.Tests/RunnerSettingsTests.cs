@@ -12,11 +12,19 @@ public sealed class RunnerSettingsTests
         var testsDir = Path.Combine(dir.Path, "SI360.Tests");
         Directory.CreateDirectory(testsDir);
         File.WriteAllText(Path.Combine(testsDir, "SI360.Tests.csproj"), "<Project />");
+        var uiTestsDir = Path.Combine(dir.Path, "SI360.UITests");
+        Directory.CreateDirectory(uiTestsDir);
+        File.WriteAllText(Path.Combine(uiTestsDir, "SI360.UITests.csproj"), "<Project />");
+        var uiBinDir = Path.Combine(dir.Path, "SI360.UI", "bin", "Release", "net8.0-windows");
+        Directory.CreateDirectory(uiBinDir);
+        File.WriteAllText(Path.Combine(uiBinDir, "SI360.UI.exe"), string.Empty);
 
         var settings = RunnerSettings.Discover(new[] { dir.Path });
 
         Assert.Equal(Path.Combine(dir.Path, "SI360.slnx"), settings.SolutionPath);
         Assert.Equal(Path.Combine(testsDir, "SI360.Tests.csproj"), settings.TestProjectPath);
+        Assert.Equal(Path.Combine(uiTestsDir, "SI360.UITests.csproj"), settings.FlaUiTestProjectPath);
+        Assert.Equal(Path.Combine(uiBinDir, "SI360.UI.exe"), settings.Si360UiAppPath);
         Assert.Equal(Path.Combine(dir.Path, "TestResults"), settings.ResultsDirectory);
     }
 
@@ -37,7 +45,10 @@ public sealed class RunnerSettingsTests
             ["GATERUNNER_ProbeMode"] = "Active",
             ["GATERUNNER_ProbeTimeoutSeconds"] = "45",
             ["GATERUNNER_ReportRetentionDays"] = "14",
-            ["GATERUNNER_SupportBundleOutputPath"] = @"D:\bundle.zip"
+            ["GATERUNNER_SupportBundleOutputPath"] = @"D:\bundle.zip",
+            ["GATERUNNER_FlaUiTestProjectPath"] = @"D:\SI360.UITests\SI360.UITests.csproj",
+            ["GATERUNNER_Si360UiAppPath"] = @"D:\SI360.UI\SI360.UI.exe",
+            ["GATERUNNER_Si360UiValidPin"] = "7458"
         };
 
         settings.ApplyEnvironmentVariables(key => values.TryGetValue(key, out var value) ? value : null);
@@ -48,6 +59,9 @@ public sealed class RunnerSettingsTests
         Assert.Equal(45, settings.ProbeTimeoutSeconds);
         Assert.Equal(14, settings.ReportRetentionDays);
         Assert.Equal(@"D:\bundle.zip", settings.SupportBundleOutputPath);
+        Assert.Equal(@"D:\SI360.UITests\SI360.UITests.csproj", settings.FlaUiTestProjectPath);
+        Assert.Equal(@"D:\SI360.UI\SI360.UI.exe", settings.Si360UiAppPath);
+        Assert.Equal("7458", settings.Si360UiValidPin);
     }
 
     [Fact]

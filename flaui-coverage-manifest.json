@@ -1,0 +1,499 @@
+{
+  "schemaVersion": "1.0",
+  "sections": [
+    {
+      "group": "OrderTakingProcedures",
+      "name": "ORDER TAKING PROCEDURES",
+      "sourceDocument": "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md",
+      "items": [
+        {
+          "id": "order-taking-sign-on",
+          "name": "Sign on",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_01_Login_To_Room_Should_Succeed" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-select-profile",
+          "name": "Select profile",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "Helper",
+          "testFilters": [ "Functional_01A_Select_Profile_Should_Show_Room_Canvas" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs", "SI360.UITests/Core/SmokeTestSupport.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Covered through shared room/profile selection helper."
+        },
+        {
+          "id": "order-taking-start-table",
+          "name": "Start a Table",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_02_Room_To_Table_Should_Navigate" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-assign-customers-seat",
+          "name": "Assign Customers to A Seat",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-meal-type-selection",
+          "name": "Meal Type Selection",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-additional-options-reassign-seat",
+          "name": "Additional Options - Reassign Seat",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_32_Additional_Option_Reassign_Seat_Should_Move_Customer_To_Target_Seat" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-additional-options-remove-resident",
+          "name": "Additional Options - Remove Resident",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_33_Additional_Option_Remove_Resident_Should_Clear_Selected_Seat" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-additional-options-replace-customer",
+          "name": "Additional Options - Replace Customer",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_34_Additional_Option_Replace_Customer_Should_Assign_New_Customer" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-public-customers",
+          "name": "Public Customers",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_23_Public_Guest_Button_Should_Be_Available" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-additional-seats",
+          "name": "Adding Additional Seats",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_35_Add_Seat_Should_Increase_Visible_Seat_Count" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-add-order",
+          "name": "Add Order",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_03_Table_To_Ordering_Should_Navigate" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-screen-layout",
+          "name": "Screen Layout",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_10D_Ordering_Screen_Layout_Should_Expose_Core_Regions" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-select-menu-items",
+          "name": "Select Menu Items",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_04_Add_Item_Should_Show_Order_Row" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-modifying-orders",
+          "name": "Modifying Orders",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_05A_Modifier_Selection_Should_Add_Parent_And_Modifier_Rows", "Functional_10C_Modify_Button_Should_Reopen_Modifiers_And_Update_Selected_Item" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-forced-modifiers",
+          "name": "Forced Modifiers",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_05A_Modifier_Selection_Should_Add_Parent_And_Modifier_Rows" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-modify-button",
+          "name": "Modify Button",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_10C_Modify_Button_Should_Reopen_Modifiers_And_Update_Selected_Item" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-message-to-kitchen",
+          "name": "Message to Kitchen",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_10_Message_To_Kitchen_Should_Add_Message_Row_To_Guest_Check" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-send-order",
+          "name": "Send Order",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_05_Send_Order_Should_Keep_Ordering_Interactive" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-delete-items",
+          "name": "Delete Items From an Order",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Remove_Item_Should_Clear_From_Check" ],
+          "sourceFiles": [ "SI360.UITests/Smoke/RemoveItemSmokeTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-move-items-seat",
+          "name": "Move Items to Another Seat",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_10A_Move_Selected_Item_To_Another_Seat_Should_Preserve_Order_Row" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-check-settlement",
+          "name": "Check Settlement",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Close_Check_With_Cash_Should_Calculate_Change" ],
+          "sourceFiles": [ "SI360.UITests/Smoke/CashPaymentSmokeTests.cs", "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-auto-pay",
+          "name": "Auto Pay",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_10B_Auto_Pay_Should_Settle_Check" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-pay-check",
+          "name": "Pay Check",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_11_Payment_Entry_Action_Should_Navigate_To_Payment" ],
+          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-pay-check-cash",
+          "name": "Pay Check - Cash",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Close_Check_With_Cash_Should_Calculate_Change" ],
+          "sourceFiles": [ "SI360.UITests/Smoke/CashPaymentSmokeTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-pay-check-direct-billing",
+          "name": "Pay Check - Direct Billing",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_21_Pay_Check_Direct_Billing_Should_Add_Payment_Media_When_Available" ],
+          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-pay-check-meal-plan",
+          "name": "Pay Check - Meal Plan",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_22_Pay_Check_Meal_Plan_Should_Add_Payment_Media_When_Available" ],
+          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        },
+        {
+          "id": "order-taking-split-payment",
+          "name": "Split Payment",
+          "group": "OrderTakingProcedures",
+          "automationStatus": "Automated",
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_23_Split_Payment_Should_Select_Seat_And_Add_Multiple_Payment_Media" ],
+          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
+          "notes": "Mapped from the verified Order Taking coverage register."
+        }
+      ]
+    },
+    {
+      "group": "UserFunctionsAndDiningRoomScenarios",
+      "name": "USER FUNCTIONS AND DINING ROOM SCENARIOS",
+      "items": [
+        {
+          "id": "user-functions-sell-gift-card",
+          "name": "Sell Gift Card",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NeedsReview",
+          "verificationLevel": "NeedsReview",
+          "testFilters": [ "Functional_14_Gift_Card_Action_Should_Be_Discoverable" ],
+          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "notes": "Existing evidence is gift-card action discoverability, not confirmed end-to-end sale."
+        },
+        {
+          "id": "user-functions-sell-multiple-gift-cards",
+          "name": "Sell Multiple Gift Cards",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NotAutomated",
+          "verificationLevel": "None",
+          "sourceFiles": [ "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "notes": "No dedicated mapped FlaUI scenario found."
+        },
+        {
+          "id": "user-functions-add-tips-gift-card",
+          "name": "Adding Tips to a Gift Card",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NeedsReview",
+          "verificationLevel": "NeedsReview",
+          "testFilters": [ "Functional_17_Tip_Action_Should_Be_Discoverable" ],
+          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/ChargeTipPage.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "notes": "Tip action exists, but gift-card-specific tip workflow needs review."
+        },
+        {
+          "id": "user-functions-check-gift-card-balance",
+          "name": "Check Gift Card Balance",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_29_Gift_Card_Balance_Action_Should_Be_Discoverable" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "notes": "Mapped to existing gift-card balance action discoverability."
+        },
+        {
+          "id": "user-functions-add-funds-gift-card",
+          "name": "Adding Funds to a Gift Card",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NotAutomated",
+          "verificationLevel": "None",
+          "sourceFiles": [ "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "notes": "No dedicated mapped FlaUI scenario found."
+        },
+        {
+          "id": "user-functions-redeem-gift-card",
+          "name": "Redeeming Gift Card",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NeedsReview",
+          "verificationLevel": "NeedsReview",
+          "testFilters": [ "Functional_14_Gift_Card_Action_Should_Be_Discoverable" ],
+          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "notes": "Gift-card media discoverability exists; redemption flow needs end-to-end review."
+        },
+        {
+          "id": "user-functions-closed-check",
+          "name": "Closed Check",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_31_Closed_Check_Action_Should_Be_Discoverable" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CheckManagementFunctionalTests.cs" ],
+          "notes": "Mapped to existing check-management discoverability test."
+        },
+        {
+          "id": "user-functions-combine-check",
+          "name": "Combine Check (Merging Orders of More Than One Sale Together)",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "Automated",
+          "verificationLevel": "Dialog",
+          "testFilters": [ "Functional_33_Combine_Check_Action_Should_Open_Dialog" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CheckManagementFunctionalTests.cs", "SI360.UITests/PageObjects/CombineCheckPage.cs" ],
+          "notes": "Mapped to existing combine-check dialog/action test."
+        },
+        {
+          "id": "user-functions-print-separate-checks",
+          "name": "Print Separate Checks",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NotAutomated",
+          "verificationLevel": "None",
+          "sourceFiles": [ "SI360.UITests/PageObjects/PrintCheckPage.cs" ],
+          "notes": "No dedicated mapped FlaUI scenario found."
+        },
+        {
+          "id": "user-functions-enter-charge-tip",
+          "name": "Enter Charge Tip",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "PartiallyAutomated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_17_Tip_Action_Should_Be_Discoverable" ],
+          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/ChargeTipPage.cs" ],
+          "notes": "Tip action is discoverable; charge-tip entry amount workflow may need additional review."
+        },
+        {
+          "id": "user-functions-print-check",
+          "name": "Print Check",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_18_Print_Check_Action_Should_Be_Discoverable" ],
+          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs", "SI360.UITests/PageObjects/PrintCheckPage.cs" ],
+          "notes": "Mapped to existing print-check action discoverability."
+        },
+        {
+          "id": "user-functions-split-item",
+          "name": "Split Item",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NotAutomated",
+          "verificationLevel": "None",
+          "sourceFiles": [ "SI360.UITests/PageObjects/SplitItemPage.cs" ],
+          "notes": "Page object exists, but no dedicated mapped scenario was found."
+        },
+        {
+          "id": "user-functions-reorder",
+          "name": "Reorder",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NotAutomated",
+          "verificationLevel": "None",
+          "notes": "No dedicated mapped FlaUI scenario found."
+        },
+        {
+          "id": "user-functions-reset-service-profile",
+          "name": "Reset Service Profile",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "PartiallyAutomated",
+          "verificationLevel": "Helper",
+          "testFilters": [ "SmokeTestSupport.ResetServiceProfile", "Job_Code_List_Should_Appear_After_Valid_Pin" ],
+          "sourceFiles": [ "SI360.UITests/Core/SmokeTestSupport.cs", "SI360.UITests/Smoke/PinLoginSmokeTests.cs" ],
+          "notes": "Helper coverage exists; user-function scenario should be reviewed for end-to-end intent."
+        },
+        {
+          "id": "user-functions-restart",
+          "name": "Restart",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NeedsReview",
+          "verificationLevel": "NeedsReview",
+          "testFilters": [ "AppFixture.RestartApp" ],
+          "sourceFiles": [ "SI360.UITests/Core/AppFixture.cs", "SI360.UITests/Smoke/AppLaunchSmokeTests.cs" ],
+          "notes": "Meaning of Restart is ambiguous; current evidence covers fixture/app restart, not a confirmed user-function command."
+        },
+        {
+          "id": "user-functions-server-sales-report",
+          "name": "Server Sales Report",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NeedsReview",
+          "verificationLevel": "NeedsReview",
+          "testFilters": [ "Functional_38_View_Open_Sales_Should_Open_Grid_Or_Empty_State" ],
+          "sourceFiles": [ "SI360.UITests/Functional/ReportsFunctionalTests.cs", "SI360.UITests/PageObjects/ReportViewPage.cs" ],
+          "notes": "Existing report tests may be partial; exact Server Sales Report mapping needs confirmation."
+        },
+        {
+          "id": "user-functions-employee-cashout-report",
+          "name": "Employee Cashout Report",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "Automated",
+          "verificationLevel": "ReportState",
+          "testFilters": [ "Functional_40_Employee_Cashout_Report_Should_Open_And_Show_Report_State" ],
+          "sourceFiles": [ "SI360.UITests/Functional/ReportsFunctionalTests.cs", "SI360.UITests/PageObjects/ReportViewPage.cs" ],
+          "notes": "Mapped to existing employee cashout report state verification."
+        },
+        {
+          "id": "user-functions-transfer-check",
+          "name": "Transfer Check",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "Automated",
+          "verificationLevel": "Discoverable",
+          "testFilters": [ "Functional_32_Transfer_Check_Action_Should_Be_Discoverable" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CheckManagementFunctionalTests.cs", "SI360.UITests/PageObjects/TransferCheckPage.cs" ],
+          "notes": "Mapped to existing transfer-check discoverability."
+        },
+        {
+          "id": "user-functions-change-order-types",
+          "name": "Change Order Types",
+          "group": "UserFunctionsAndDiningRoomScenarios",
+          "automationStatus": "NeedsReview",
+          "verificationLevel": "NeedsReview",
+          "testFilters": [ "Functional_10D_Ordering_Screen_Layout_Should_Expose_Core_Regions" ],
+          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs", "SI360.UITests/PageObjects/OrderingPage.cs" ],
+          "notes": "Ordering page exposes ChangeOrderTypeButton in tests; dedicated scenario coverage needs confirmation."
+        }
+      ]
+    }
+  ]
+}

@@ -9,7 +9,8 @@ public sealed record ProcessCommand(
     string WorkingDirectory,
     TimeSpan Timeout,
     string? ArtifactDirectory = null,
-    string? ArtifactName = null);
+    string? ArtifactName = null,
+    IReadOnlyDictionary<string, string>? EnvironmentVariables = null);
 
 public sealed record ProcessRunResult(
     int ExitCode,
@@ -61,6 +62,15 @@ public sealed class ProcessRunner : IProcessRunner
             UseShellExecute = false,
             CreateNoWindow = true
         };
+
+        if (command.EnvironmentVariables is not null)
+        {
+            foreach (var pair in command.EnvironmentVariables)
+            {
+                if (!string.IsNullOrWhiteSpace(pair.Key))
+                    psi.Environment[pair.Key] = pair.Value;
+            }
+        }
 
         using var proc = new Process { StartInfo = psi, EnableRaisingEvents = true };
         proc.OutputDataReceived += (_, e) =>
@@ -136,11 +146,24 @@ public sealed class ProcessRunner : IProcessRunner
         Directory.CreateDirectory(command.ArtifactDirectory);
         var name = Sanitize(command.ArtifactName ?? Path.GetFileNameWithoutExtension(command.FileName));
         File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.command.txt"),
-            redactor.Redact($"{command.FileName} {command.Arguments}{Environment.NewLine}WorkingDirectory: {command.WorkingDirectory}{Environment.NewLine}TimeoutSeconds: {command.Timeout.TotalSeconds:0}"));
+            redactor.Redact($"{command.FileName} {command.Arguments}{Environment.NewLine}WorkingDirectory: {command.WorkingDirectory}{Environment.NewLine}TimeoutSeconds: {command.Timeout.TotalSeconds:0}{FormatEnvironment(command.EnvironmentVariables)}"));
         File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.stdout.log"), redactor.Redact(result.StdOut));
         File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.stderr.log"), redactor.Redact(result.StdErr));
         File.WriteAllText(Path.Combine(command.ArtifactDirectory, $"{name}.exit.txt"),
             $"ExitCode: {result.ExitCode}{Environment.NewLine}TimedOut: {result.TimedOut}{Environment.NewLine}Canceled: {result.Canceled}");
+    }
+
+    private static string FormatEnvironment(IReadOnlyDictionary<string, string>? environmentVariables)
+    {
+        if (environmentVariables is null || environmentVariables.Count == 0)
+            return string.Empty;
+
+        var sb = new StringBuilder();
+        sb.AppendLine();
+        sb.AppendLine("Environment:");
+        foreach (var pair in environmentVariables.OrderBy(p => p.Key, StringComparer.OrdinalIgnoreCase))
+            sb.AppendLine($"{pair.Key}={pair.Value}");
+        return sb.ToString();
     }
 
     private static string Sanitize(string value)

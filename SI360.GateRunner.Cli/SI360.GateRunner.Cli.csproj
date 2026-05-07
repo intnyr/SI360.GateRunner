@@ -20,4 +20,13 @@
     <ProjectReference Include="..\SI360.GateRunner.Core\SI360.GateRunner.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\appsettings.json" Link="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\flaui-coverage-manifest.json" Link="flaui-coverage-manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

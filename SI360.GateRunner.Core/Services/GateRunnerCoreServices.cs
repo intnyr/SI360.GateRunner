@@ -14,6 +14,9 @@ public static class GateRunnerCoreServices
         services.AddSingleton<DotnetTestRunner>();
         services.AddSingleton<BuildErrorCollector>();
         services.AddSingleton<TrxResultParser>();
+        services.AddSingleton<IFlaUiCoverageManifestLoader, FlaUiCoverageManifestLoader>();
+        services.AddSingleton<IFlaUiCoverageService, FlaUiCoverageService>();
+        services.AddSingleton<IFlaUiCoverageRunner, FlaUiCoverageRunner>();
         services.AddSingleton<ScorecardAggregator>();
         services.AddSingleton<IDecisionPolicy, DecisionPolicy>();
         services.AddSingleton<IGateDiscoveryService, GateCatalogDriftAnalyzer>();

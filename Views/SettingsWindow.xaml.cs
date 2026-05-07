@@ -16,6 +16,9 @@ public partial class SettingsWindow : Window
 
         SolutionPathBox.Text = settings.SolutionPath;
         TestProjectPathBox.Text = settings.TestProjectPath;
+        FlaUiTestProjectPathBox.Text = settings.ResolveFlaUiTestProjectPath();
+        Si360UiAppPathBox.Text = settings.ResolveSi360UiAppPath();
+        Si360UiValidPinBox.Password = settings.ResolveSi360UiValidPin();
         ResultsDirectoryBox.Text = settings.ResultsDirectory;
         RestoreTimeoutBox.Text = settings.RestoreTimeoutSeconds.ToString();
         BuildTimeoutBox.Text = settings.BuildTimeoutSeconds.ToString();
@@ -53,6 +56,20 @@ public partial class SettingsWindow : Window
             return;
         }
 
+        if (!string.IsNullOrWhiteSpace(FlaUiTestProjectPathBox.Text) &&
+            !File.Exists(FlaUiTestProjectPathBox.Text))
+        {
+            ValidationText.Text = "FlaUI test project path must point to an existing project file when provided.";
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(Si360UiAppPathBox.Text) &&
+            !File.Exists(Si360UiAppPathBox.Text))
+        {
+            ValidationText.Text = "SI360 UI app path must point to an existing executable file when provided.";
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(ResultsDirectoryBox.Text))
         {
             ValidationText.Text = "Results directory is required.";
@@ -81,6 +98,9 @@ public partial class SettingsWindow : Window
 
         _settings.SolutionPath = SolutionPathBox.Text.Trim();
         _settings.TestProjectPath = TestProjectPathBox.Text.Trim();
+        _settings.FlaUiTestProjectPath = FlaUiTestProjectPathBox.Text.Trim();
+        _settings.Si360UiAppPath = Si360UiAppPathBox.Text.Trim();
+        _settings.Si360UiValidPin = Si360UiValidPinBox.Password.Trim();
         _settings.ResultsDirectory = ResultsDirectoryBox.Text.Trim();
         _settings.RestoreTimeoutSeconds = restoreTimeout;
         _settings.BuildTimeoutSeconds = buildTimeout;

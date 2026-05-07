@@ -246,6 +246,9 @@
                     <TabItem Header="Gate Detail">
                         <views:GateDetailView DataContext="{Binding SelectedGate}"/>
                     </TabItem>
+                    <TabItem Header="FlaUI Coverage">
+                        <views:FlaUiCoverageView DataContext="{Binding FlaUiCoverage}"/>
+                    </TabItem>
                     <TabItem Header="Failures">
                         <views:FailureInventoryView/>
                     </TabItem>

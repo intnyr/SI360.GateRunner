@@ -27,6 +27,7 @@ The JSON report includes `schemaVersion`. Additive fields are allowed in minor u
 - `healthContracts`
 - `deploymentMetadata`
 - `syntheticProbes`
+- `flauiCoverage`
 - `qualityIssues`
 - `gradingImpacts`
 - `scorecard`
@@ -62,9 +63,29 @@ GateRunner prunes old `GateRun_*` Markdown reports, JSON reports, and per-run ar
 
 `syntheticProbes` contains read-only phase-1 probe results with endpoint, status, duration, contract version, and redacted diagnostics.
 
+## FlaUI Coverage Semantics
+
+`flauiCoverage` is an additive checklist section for SI360 WPF FlaUI coverage. It is grouped into exactly:
+
+- `ORDER TAKING PROCEDURES`
+- `USER FUNCTIONS AND DINING ROOM SCENARIOS`
+
+Each item has one checklist status: `NotStarted`, `Passed`, `Failed`, `Blocked`, or `NeedsReview`. Automation availability and latest execution status are kept separate so discoverability-only coverage is not mistaken for a passing end-to-end run. Evidence paths may include TRX files, source files, report files, screenshots, UI tree dumps, and artifact folders.
+
+The known FlaUI fixture startup issue, `Unable to acquire current main window`, is represented as `Blocked` when it prevents live execution.
+
+The `flauiCoverage` object includes:
+
+- `schemaVersion`: coverage manifest schema version.
+- `loadedAt`: UTC time when coverage was evaluated.
+- `manifestPath`: manifest used for the run.
+- `loadErrors`: manifest or source validation failures.
+- `summary`: total, automated, passed, failed, blocked, needs-review, and not-started counts.
+- `sections`: the two coverage groups and item rows with scenario id/name, checklist status, automation status, execution status, verification level, latest TRX/test reference, evidence paths, source files, blocker reason, error message, and notes.
+
 ## Quality Issue And Grading Semantics
 
-Schema `2.2` adds a deployment-integrity ledger:
+Schema `2.3` keeps the deployment-integrity ledger from `2.2` and adds FlaUI coverage reporting:
 
 - `qualityIssues`: every warning or error that affects GateRunner grading.
 - `gradingImpacts`: the same issue set shaped for consumers that need issue-to-score-to-decision traceability.

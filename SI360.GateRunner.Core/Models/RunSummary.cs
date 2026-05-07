@@ -28,6 +28,7 @@ public sealed class RunSummary
     public HealthContractVersions HealthContracts { get; set; } = new();
     public RuntimeReadinessDecision RuntimeReadiness { get; set; } = RuntimeReadinessDecision.Unknown;
     public string RuntimeReadinessRationale { get; set; } = "Deployment metadata was not configured.";
+    public FlaUiCoverageRun FlaUiCoverage { get; set; } = new();
     public Scorecard Scorecard { get; set; } = new();
     public DeployDecision Decision { get; set; } = DeployDecision.NoGo;
     public string DecisionPolicyName { get; set; } = string.Empty;

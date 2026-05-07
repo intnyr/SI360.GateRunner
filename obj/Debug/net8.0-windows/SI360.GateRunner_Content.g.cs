@@ -8,5 +8,6 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("appsettings.json")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("flaui-coverage-manifest.json")]
 
 

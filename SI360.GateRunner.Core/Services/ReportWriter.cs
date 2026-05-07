@@ -12,7 +12,7 @@ public interface IReportWriter
 
 public sealed class ReportWriter : IReportWriter
 {
-    public const string SchemaVersion = "2.2";
+    public const string SchemaVersion = "2.3";
     private readonly IReportHistoryAnalyzer _historyAnalyzer;
     private readonly ISecretRedactor _redactor;
 
@@ -115,6 +115,8 @@ public sealed class ReportWriter : IReportWriter
                 sb.AppendLine($"| {Escape(probe.Name, redactor)} | {probe.Status} | {probe.DurationMs:0.0}ms | `{Escape(probe.Endpoint, redactor)}` | {Escape(probe.Diagnostics, redactor)} |");
             sb.AppendLine();
         }
+
+        AppendFlaUiCoverageMarkdown(sb, s.FlaUiCoverage, redactor);
 
         sb.AppendLine("## Run History");
         sb.AppendLine();
@@ -302,6 +304,46 @@ public sealed class ReportWriter : IReportWriter
                 durationMs = p.DurationMs,
                 diagnostics = Safe(p.Diagnostics, redactor)
             }),
+            flauiCoverage = new
+            {
+                schemaVersion = Safe(s.FlaUiCoverage.SchemaVersion, redactor),
+                loadedAt = s.FlaUiCoverage.LoadedAt,
+                manifestPath = Safe(s.FlaUiCoverage.ManifestPath, redactor),
+                loadErrors = s.FlaUiCoverage.LoadErrors.Select(e => Safe(e, redactor)),
+                summary = new
+                {
+                    s.FlaUiCoverage.Summary.Total,
+                    s.FlaUiCoverage.Summary.Automated,
+                    s.FlaUiCoverage.Summary.Passed,
+                    s.FlaUiCoverage.Summary.Failed,
+                    s.FlaUiCoverage.Summary.Blocked,
+                    s.FlaUiCoverage.Summary.NeedsReview,
+                    s.FlaUiCoverage.Summary.NotStarted
+                },
+                sections = s.FlaUiCoverage.Sections.Select(section => new
+                {
+                    group = section.Group.ToString(),
+                    name = Safe(section.Name, redactor),
+                    sourceDocument = Safe(section.SourceDocument, redactor),
+                    items = section.Items.Select(item => new
+                    {
+                        id = Safe(item.Item.Id, redactor),
+                        name = Safe(item.Item.Name, redactor),
+                        group = item.Item.Group.ToString(),
+                        status = item.Status.ToString(),
+                        automationStatus = item.Item.AutomationStatus.ToString(),
+                        executionStatus = item.ExecutionStatus.ToString(),
+                        verificationLevel = Safe(item.Item.VerificationLevel, redactor),
+                        latestTestName = Safe(item.LatestTestName, redactor),
+                        trxPath = Safe(item.TrxPath, redactor),
+                        errorMessage = Safe(item.ErrorMessage, redactor),
+                        blockerReason = Safe(item.BlockerReason, redactor),
+                        sourceFiles = item.Item.SourceFiles.Select(p => Safe(p, redactor)),
+                        evidencePaths = item.EvidencePaths.Select(p => Safe(p, redactor)),
+                        notes = Safe(item.Item.Notes, redactor)
+                    })
+                })
+            },
             gateCatalogWarnings = s.GateCatalogWarnings.Select(w => new
             {
                 Code = Safe(w.Code, redactor),
@@ -427,5 +469,39 @@ public sealed class ReportWriter : IReportWriter
         var marker = "/SI36020WPF/";
         var idx = normalized.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
         return idx >= 0 ? normalized[(idx + marker.Length)..] : Path.GetFileName(filePath);
+    }
+
+    private static void AppendFlaUiCoverageMarkdown(StringBuilder sb, FlaUiCoverageRun coverage, ISecretRedactor redactor)
+    {
+        sb.AppendLine("## FlaUI Coverage");
+        sb.AppendLine();
+        if (coverage.LoadErrors.Count > 0)
+        {
+            sb.AppendLine("### Load Errors");
+            sb.AppendLine();
+            foreach (var error in coverage.LoadErrors)
+                sb.AppendLine($"- {Escape(error, redactor)}");
+            sb.AppendLine();
+        }
+
+        sb.AppendLine($"**Total:** {coverage.Summary.Total}  ");
+        sb.AppendLine($"**Automated:** {coverage.Summary.Automated}  ");
+        sb.AppendLine($"**Passed:** {coverage.Summary.Passed} &nbsp;&nbsp; **Failed:** {coverage.Summary.Failed} &nbsp;&nbsp; **Blocked:** {coverage.Summary.Blocked} &nbsp;&nbsp; **Needs Review:** {coverage.Summary.NeedsReview} &nbsp;&nbsp; **Not Started:** {coverage.Summary.NotStarted}");
+        sb.AppendLine();
+
+        foreach (var section in coverage.Sections)
+        {
+            sb.AppendLine($"### {Escape(section.Name, redactor)}");
+            sb.AppendLine();
+            sb.AppendLine("| Scenario | Status | Automation | Execution | Verification | Evidence | Notes |");
+            sb.AppendLine("|----------|--------|------------|-----------|--------------|----------|-------|");
+            foreach (var item in section.Items)
+            {
+                var evidence = item.EvidencePaths.Count > 0 ? string.Join("<br>", item.EvidencePaths.Select(p => $"`{Escape(p, redactor)}`")) : "-";
+                var notes = item.BlockerReason ?? item.Item.Notes;
+                sb.AppendLine($"| {Escape(item.Item.Name, redactor)} | {item.Status} | {item.Item.AutomationStatus} | {item.ExecutionStatus} | {Escape(item.Item.VerificationLevel, redactor)} | {evidence} | {Escape(notes, redactor)} |");
+            }
+            sb.AppendLine();
+        }
     }
 }

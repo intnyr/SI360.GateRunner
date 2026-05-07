@@ -36,6 +36,33 @@ public static class GateRunnerCommands
             runDirectory,
             $"gate-{gateId}");
 
+    public static ProcessCommand FlaUiCoverage(
+        RunnerSettings settings,
+        string filter,
+        string runDirectory,
+        string trxName,
+        int filterCount)
+    {
+        var testProjectPath = Require(settings.ResolveFlaUiTestProjectPath(), nameof(settings.FlaUiTestProjectPath));
+        var appPath = Require(settings.ResolveSi360UiAppPath(), nameof(settings.Si360UiAppPath));
+        var environment = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["SI360_UI_APP_PATH"] = appPath
+        };
+        var validPin = settings.ResolveSi360UiValidPin();
+        if (!string.IsNullOrWhiteSpace(validPin))
+            environment["SI360_UI_VALID_PIN"] = validPin;
+
+        return new(
+            "dotnet",
+            $"test \"{testProjectPath}\" --no-build --nologo --filter \"{filter}\" --logger \"trx;LogFileName={trxName}\" --results-directory \"{runDirectory}\" -v normal",
+            WorkingDirectoryFor(testProjectPath),
+            TimeSpan.FromSeconds(Math.Max(settings.GateTimeoutSeconds, settings.PerTestTimeoutSeconds * Math.Max(1, filterCount))),
+            runDirectory,
+            "flaui-coverage",
+            environment);
+    }
+
     public static ProcessCommandSnapshot Snapshot(string name, ProcessCommand command) =>
         new(
             name,

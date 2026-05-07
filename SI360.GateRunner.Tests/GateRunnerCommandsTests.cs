@@ -51,6 +51,29 @@ public sealed class GateRunnerCommandsTests
     }
 
     [Fact]
+    public void FlaUiCoverageCommand_WritesTrxToCoverageRunDirectory()
+    {
+        var settings = Settings();
+        var command = GateRunnerCommands.FlaUiCoverage(
+            settings,
+            "FullyQualifiedName~Functional_01_Login_To_Room_Should_Succeed",
+            "coverage-artifacts",
+            "coverage.trx",
+            filterCount: 1);
+
+        Assert.Contains($"test \"{settings.FlaUiTestProjectPath}\"", command.Arguments);
+        Assert.DoesNotContain($"test \"{settings.TestProjectPath}\"", command.Arguments);
+        Assert.NotNull(command.EnvironmentVariables);
+        Assert.Equal(settings.Si360UiAppPath, command.EnvironmentVariables!["SI360_UI_APP_PATH"]);
+        Assert.Equal(settings.Si360UiValidPin, command.EnvironmentVariables["SI360_UI_VALID_PIN"]);
+        Assert.Contains("--filter \"FullyQualifiedName~Functional_01_Login_To_Room_Should_Succeed\"", command.Arguments);
+        Assert.Contains("--logger \"trx;LogFileName=coverage.trx\"", command.Arguments);
+        Assert.Contains("--results-directory \"coverage-artifacts\"", command.Arguments);
+        Assert.Equal("flaui-coverage", command.ArtifactName);
+        Assert.Equal("coverage-artifacts", command.ArtifactDirectory);
+    }
+
+    [Fact]
     public void Snapshot_MatchesCommandFactoryOutput()
     {
         var settings = Settings();
@@ -68,10 +91,14 @@ public sealed class GateRunnerCommandsTests
     {
         var root = Path.Combine(Path.GetTempPath(), $"gaterunner-commands-{Guid.NewGuid():N}");
         Directory.CreateDirectory(Path.Combine(root, "SI360.Tests"));
+        Directory.CreateDirectory(Path.Combine(root, "SI360.UITests"));
         return new RunnerSettings
         {
             SolutionPath = Path.Combine(root, "SI360.slnx"),
             TestProjectPath = Path.Combine(root, "SI360.Tests", "SI360.Tests.csproj"),
+            FlaUiTestProjectPath = Path.Combine(root, "SI360.UITests", "SI360.UITests.csproj"),
+            Si360UiAppPath = Path.Combine(root, "SI360.UI", "bin", "Debug", "net8.0-windows", "SI360.UI.exe"),
+            Si360UiValidPin = "7458",
             ResultsDirectory = Path.Combine(root, "TestResults"),
             RestoreTimeoutSeconds = 30,
             BuildTimeoutSeconds = 40,

@@ -10,6 +10,9 @@ public sealed class RunnerSettings
 
     public string SolutionPath { get; set; } = string.Empty;
     public string TestProjectPath { get; set; } = string.Empty;
+    public string FlaUiTestProjectPath { get; set; } = string.Empty;
+    public string Si360UiAppPath { get; set; } = string.Empty;
+    public string Si360UiValidPin { get; set; } = string.Empty;
     public string ResultsDirectory { get; set; } = string.Empty;
     public int PerTestTimeoutSeconds { get; set; } = 60;
     public int RestoreTimeoutSeconds { get; set; } = 300;
@@ -76,6 +79,9 @@ public sealed class RunnerSettings
                 var dir = Path.GetDirectoryName(sln)!;
                 var csproj = Path.Combine(dir, "SI360.Tests", "SI360.Tests.csproj");
                 if (File.Exists(csproj)) s.TestProjectPath = csproj;
+                var flauiCsproj = Path.Combine(dir, "SI360.UITests", "SI360.UITests.csproj");
+                if (File.Exists(flauiCsproj)) s.FlaUiTestProjectPath = flauiCsproj;
+                s.Si360UiAppPath = s.ResolveSi360UiAppPath();
                 s.ResultsDirectory = Path.Combine(dir, "TestResults");
                 return s;
             }
@@ -109,6 +115,9 @@ public sealed class RunnerSettings
         getEnvironmentVariable ??= Environment.GetEnvironmentVariable;
         ApplyString(nameof(SolutionPath), value => SolutionPath = value);
         ApplyString(nameof(TestProjectPath), value => TestProjectPath = value);
+        ApplyString(nameof(FlaUiTestProjectPath), value => FlaUiTestProjectPath = value);
+        ApplyString(nameof(Si360UiAppPath), value => Si360UiAppPath = value);
+        ApplyString(nameof(Si360UiValidPin), value => Si360UiValidPin = value);
         ApplyString(nameof(ResultsDirectory), value => ResultsDirectory = value);
         ApplyInt(nameof(PerTestTimeoutSeconds), value => PerTestTimeoutSeconds = value);
         ApplyInt(nameof(RestoreTimeoutSeconds), value => RestoreTimeoutSeconds = value);
@@ -143,6 +152,10 @@ public sealed class RunnerSettings
             errors.Add("SolutionPath must point to an existing solution file.");
         if (string.IsNullOrWhiteSpace(TestProjectPath) || !File.Exists(TestProjectPath))
             errors.Add("TestProjectPath must point to an existing project file.");
+        if (!string.IsNullOrWhiteSpace(FlaUiTestProjectPath) && !File.Exists(FlaUiTestProjectPath))
+            errors.Add("FlaUiTestProjectPath must point to an existing project file when provided.");
+        if (!string.IsNullOrWhiteSpace(Si360UiAppPath) && !File.Exists(Si360UiAppPath))
+            errors.Add("Si360UiAppPath must point to an existing executable file when provided.");
         if (string.IsNullOrWhiteSpace(ResultsDirectory))
             errors.Add("ResultsDirectory is required.");
         if (RestoreTimeoutSeconds <= 0)
@@ -176,4 +189,58 @@ public sealed class RunnerSettings
         string.Equals(value, "Disabled", StringComparison.OrdinalIgnoreCase) ||
         string.Equals(value, "ReadOnly", StringComparison.OrdinalIgnoreCase) ||
         string.Equals(value, "Active", StringComparison.OrdinalIgnoreCase);
+
+    public string ResolveFlaUiTestProjectPath()
+    {
+        if (!string.IsNullOrWhiteSpace(FlaUiTestProjectPath))
+            return FlaUiTestProjectPath;
+
+        var solutionDir = string.IsNullOrWhiteSpace(SolutionPath)
+            ? string.Empty
+            : Path.GetDirectoryName(SolutionPath) ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(solutionDir))
+        {
+            var inferred = Path.Combine(solutionDir, "SI360.UITests", "SI360.UITests.csproj");
+            if (File.Exists(inferred))
+                return inferred;
+        }
+
+        return TestProjectPath;
+    }
+
+    public string ResolveSi360UiAppPath()
+    {
+        if (!string.IsNullOrWhiteSpace(Si360UiAppPath))
+            return Si360UiAppPath;
+
+        var environmentPath = Environment.GetEnvironmentVariable("SI360_UI_APP_PATH");
+        if (!string.IsNullOrWhiteSpace(environmentPath))
+            return environmentPath;
+
+        var solutionDir = string.IsNullOrWhiteSpace(SolutionPath)
+            ? string.Empty
+            : Path.GetDirectoryName(SolutionPath) ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(solutionDir))
+            return string.Empty;
+
+        var candidates = new[]
+        {
+            Path.Combine(solutionDir, "SI360.UI", "bin", BuildConfiguration, "net8.0-windows", "SI360.UI.exe"),
+            Path.Combine(solutionDir, "SI360.UI", "bin", "Debug", "net8.0-windows", "SI360.UI.exe"),
+            Path.Combine(solutionDir, "SI360.UI", "bin", "Release", "net8.0-windows", "SI360.UI.exe"),
+            Path.Combine(solutionDir, "SI360.Tests", "bin", BuildConfiguration, "net8.0-windows", "SI360.UI.exe"),
+            Path.Combine(solutionDir, "SI360.Tests", "bin", "Debug", "net8.0-windows", "SI360.UI.exe"),
+            Path.Combine(solutionDir, "SI360.Tests", "bin", "Release", "net8.0-windows", "SI360.UI.exe")
+        };
+
+        return candidates.FirstOrDefault(File.Exists) ?? candidates[0];
+    }
+
+    public string ResolveSi360UiValidPin()
+    {
+        if (!string.IsNullOrWhiteSpace(Si360UiValidPin))
+            return Si360UiValidPin;
+
+        return Environment.GetEnvironmentVariable("SI360_UI_VALID_PIN") ?? string.Empty;
+    }
 }

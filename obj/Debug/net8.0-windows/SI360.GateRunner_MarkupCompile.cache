@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\GateRunner\obj\Debug\net8.0-windows\
+E:\GateRunner\obj\Debug\net8.0-windows\
 SI360.GateRunner
 none
 false
-TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-D:\GateRunner\App.xaml
-8-327671213
-11413424753
-17-1238837500
-23790966435
-Styles\DarkTheme.xaml;Styles\LightTheme.xaml;Styles\SharedStyles.xaml;Views\FailureInventoryView.xaml;Views\GateDetailView.xaml;Views\MainWindow.xaml;Views\ScorecardView.xaml;Views\SettingsWindow.xaml;
+TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
+E:\GateRunner\App.xaml
+9-555857213
+2-28378812
+201665891945
+2371437948246
+Styles\DarkTheme.xaml;Styles\LightTheme.xaml;Styles\SharedStyles.xaml;Views\FailureInventoryView.xaml;Views\FlaUiCoverageView.xaml;Views\GateDetailView.xaml;Views\MainWindow.xaml;Views\ScorecardView.xaml;Views\SettingsWindow.xaml;
 
 False
 

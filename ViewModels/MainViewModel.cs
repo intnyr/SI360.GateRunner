@@ -29,6 +29,7 @@ public partial class MainViewModel : ObservableObject
     private readonly IDeploymentMetadataValidator _metadataValidator;
     private readonly ISyntheticProbeRunner _probeRunner;
     private readonly ISupportBundleExporter _supportBundleExporter;
+    private readonly IFlaUiCoverageService _flaUiCoverageService;
     private readonly ThemeManager _themeManager;
     private readonly ToastNotifier _toast;
     private CancellationTokenSource? _cts;
@@ -52,6 +53,8 @@ public partial class MainViewModel : ObservableObject
         IDeploymentMetadataValidator metadataValidator,
         ISyntheticProbeRunner probeRunner,
         ISupportBundleExporter supportBundleExporter,
+        IFlaUiCoverageService flaUiCoverageService,
+        FlaUiCoverageViewModel flaUiCoverage,
         ThemeManager themeManager,
         ToastNotifier toast)
     {
@@ -67,6 +70,8 @@ public partial class MainViewModel : ObservableObject
         _metadataValidator = metadataValidator;
         _probeRunner = probeRunner;
         _supportBundleExporter = supportBundleExporter;
+        _flaUiCoverageService = flaUiCoverageService;
+        FlaUiCoverage = flaUiCoverage;
         _themeManager = themeManager;
         _toast = toast;
 
@@ -95,6 +100,7 @@ public partial class MainViewModel : ObservableObject
     public ScorecardViewModel Scorecard { get; }
     public ICollectionView GatesView { get; }
     public ICollectionView FailuresView { get; }
+    public FlaUiCoverageViewModel FlaUiCoverage { get; }
 
     [ObservableProperty] private string logTail = string.Empty;
     [ObservableProperty] private string statusText = "Idle.";
@@ -167,6 +173,7 @@ public partial class MainViewModel : ObservableObject
     {
         SolutionPath = _settings.SolutionPath;
         TestProjectPath = _settings.TestProjectPath;
+        FlaUiCoverage.Refresh();
         RefreshWarnings();
         LoadPreviousRun();
     }
@@ -178,6 +185,12 @@ public partial class MainViewModel : ObservableObject
             warnings.Add("Solution path is missing or invalid.");
         if (string.IsNullOrWhiteSpace(_settings.TestProjectPath) || !File.Exists(_settings.TestProjectPath))
             warnings.Add("Test project path is missing or invalid.");
+        var flaUiTestProjectPath = _settings.ResolveFlaUiTestProjectPath();
+        if (string.IsNullOrWhiteSpace(flaUiTestProjectPath) || !File.Exists(flaUiTestProjectPath))
+            warnings.Add("FlaUI test project path is missing or invalid; FlaUI Coverage run actions will be disabled by execution guard.");
+        var si360UiAppPath = _settings.ResolveSi360UiAppPath();
+        if (string.IsNullOrWhiteSpace(si360UiAppPath) || !File.Exists(si360UiAppPath))
+            warnings.Add("SI360 UI app path is missing or invalid; FlaUI Coverage scenarios cannot launch the app.");
         if (_settings.GateTimeoutSeconds <= 0 || _settings.BuildTimeoutSeconds <= 0 || _settings.RestoreTimeoutSeconds <= 0)
             warnings.Add("Timeout values must be greater than zero.");
 
@@ -251,6 +264,7 @@ public partial class MainViewModel : ObservableObject
                     .CollectAsync(_settings, _processRunner, runDir, _cts.Token)
                     .ConfigureAwait(true)
             };
+            summary.FlaUiCoverage = _flaUiCoverageService.Load(_settings);
             foreach (var warning in _catalogDriftAnalyzer.Validate(_settings))
             {
                 summary.GateCatalogWarnings.Add(warning);
@@ -434,6 +448,7 @@ public partial class MainViewModel : ObservableObject
         summary.ReportJsonPath = json;
         LatestReportPath = md;
         _latestSummary = summary;
+        FlaUiCoverage.Refresh();
         OpenReportCommand.NotifyCanExecuteChanged();
         ExportSupportBundleCommand.NotifyCanExecuteChanged();
     }

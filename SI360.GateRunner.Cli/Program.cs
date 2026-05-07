@@ -33,6 +33,7 @@ try
         "validate-catalog" => ValidateCatalog(host.Services),
         "validate-metadata" => ValidateMetadata(host.Services),
         "run-probes" => await RunProbesAsync(host.Services),
+        "flaui-coverage" => await RunFlaUiCoverageAsync(host.Services, options),
         "run" => await RunAsync(host.Services),
         "summarize" => Summarize(host.Services, options),
         _ => Help()
@@ -97,6 +98,40 @@ static async Task<int> RunProbesAsync(IServiceProvider services)
     return results.Any(r => r.Status is SyntheticProbeStatus.Failed or SyntheticProbeStatus.Error) ? 3 : 0;
 }
 
+static async Task<int> RunFlaUiCoverageAsync(IServiceProvider services, IReadOnlyDictionary<string, string> options)
+{
+    EnsureValid(services.GetRequiredService<RunnerSettings>());
+    var request = new FlaUiCoverageRunRequest
+    {
+        Scenario = options.TryGetValue("scenario", out var scenario) ? scenario : null,
+        Group = options.TryGetValue("group", out var group) ? ParseCoverageGroup(group) : null,
+        Status = options.TryGetValue("status", out var status) ? ParseCoverageStatus(status) : null
+    };
+
+    var runner = services.GetRequiredService<IFlaUiCoverageRunner>();
+    var progress = new Progress<string>(Console.WriteLine);
+    var result = await runner.RunAsync(request, progress, CancellationToken.None);
+
+    foreach (var skipped in result.SkippedItems)
+        Console.WriteLine($"Skipped\t{skipped.Id}\t{skipped.Name}\t{skipped.Reason}");
+    foreach (var error in result.Errors)
+        Console.Error.WriteLine(error);
+
+    Console.WriteLine($"Matched: {result.MatchedCount}");
+    Console.WriteLine($"Runnable filters: {result.RunnableCount}");
+    Console.WriteLine($"Exit code: {result.ExitCode}");
+    Console.WriteLine($"TRX: {result.TrxPath}");
+    Console.WriteLine($"Run directory: {result.RunDirectory}");
+
+    if (!result.StartedProcess)
+        return 5;
+    if (result.Canceled)
+        return 4;
+    if (result.TimedOut)
+        return 3;
+    return result.ExitCode == 0 ? 0 : 2;
+}
+
 static async Task<int> RunAsync(IServiceProvider services)
 {
     EnsureValid(services.GetRequiredService<RunnerSettings>());
@@ -145,12 +180,16 @@ static int Help()
       validate-catalog                 Validate GateRunner catalog against SI360.Tests source.
       validate-metadata                Validate deployment metadata JSON.
       run-probes                       Run read-only synthetic runtime probes.
+      flaui-coverage [options]          Run mapped FlaUI coverage tests and write TRX/artifacts.
       run                              Run restore, build, all gates, and emit reports.
       summarize [--report <path>]      Print a JSON report.
 
     Options:
       --solution <path>                Override SI360 solution path.
       --test-project <path>            Override SI360.Tests project path.
+      --flaui-test-project <path>      Override SI360.UITests project path.
+      --si360-ui-app <path>            Override SI360.UI executable path for FlaUI tests.
+      --si360-valid-pin <pin>          Override SI360_UI_VALID_PIN for Auth=Required FlaUI tests.
       --results <path>                 Override results directory.
       --configuration <name>           Override dotnet build configuration.
       --metadata <path>                Deployment metadata JSON path.
@@ -159,6 +198,11 @@ static int Help()
       --retention-days <number>        Override report retention window.
       --support-bundle <path>          Support bundle output path.
       --gate-timeout-seconds <number>  Override per-gate timeout.
+
+    FlaUI Coverage Options:
+      --scenario <id-or-name>           Run one mapped coverage scenario.
+      --group <order|user>              Run one coverage group.
+      --status <status>                 Run scenarios currently in this checklist status.
     """);
     return 0;
 }
@@ -185,6 +229,12 @@ static void ApplyOptions(RunnerSettings settings, IReadOnlyDictionary<string, st
         settings.SolutionPath = solution;
     if (options.TryGetValue("test-project", out var testProject))
         settings.TestProjectPath = testProject;
+    if (options.TryGetValue("flaui-test-project", out var flaUiTestProject))
+        settings.FlaUiTestProjectPath = flaUiTestProject;
+    if (options.TryGetValue("si360-ui-app", out var si360UiApp))
+        settings.Si360UiAppPath = si360UiApp;
+    if (options.TryGetValue("si360-valid-pin", out var si360ValidPin))
+        settings.Si360UiValidPin = si360ValidPin;
     if (options.TryGetValue("results", out var results))
         settings.ResultsDirectory = results;
     if (options.TryGetValue("configuration", out var configuration) ||
@@ -221,3 +271,25 @@ static string Label(DeployDecision decision) => decision switch
     DeployDecision.Hold => "HOLD",
     _ => "NO-GO"
 };
+
+static FlaUiCoverageGroup ParseCoverageGroup(string value)
+{
+    if (value.Equals("order", StringComparison.OrdinalIgnoreCase) ||
+        value.Equals("order-taking", StringComparison.OrdinalIgnoreCase) ||
+        value.Equals("OrderTakingProcedures", StringComparison.OrdinalIgnoreCase))
+        return FlaUiCoverageGroup.OrderTakingProcedures;
+    if (value.Equals("user", StringComparison.OrdinalIgnoreCase) ||
+        value.Equals("user-functions", StringComparison.OrdinalIgnoreCase) ||
+        value.Equals("dining-room", StringComparison.OrdinalIgnoreCase) ||
+        value.Equals("UserFunctionsAndDiningRoomScenarios", StringComparison.OrdinalIgnoreCase))
+        return FlaUiCoverageGroup.UserFunctionsAndDiningRoomScenarios;
+    throw new InvalidOperationException($"Unknown FlaUI coverage group '{value}'. Use order or user.");
+}
+
+static FlaUiCoverageStatus ParseCoverageStatus(string value)
+{
+    var normalized = value.Replace(" ", string.Empty).Replace("-", string.Empty);
+    return Enum.TryParse<FlaUiCoverageStatus>(normalized, ignoreCase: true, out var status)
+        ? status
+        : throw new InvalidOperationException($"Unknown FlaUI coverage status '{value}'.");
+}

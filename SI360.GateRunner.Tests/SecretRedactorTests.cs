@@ -18,6 +18,15 @@ public sealed class SecretRedactorTests
     }
 
     [Fact]
+    public void Redact_RemovesUiTestPin()
+    {
+        var redacted = SecretRedactor.Instance.Redact("SI360_UI_VALID_PIN=7458");
+
+        Assert.DoesNotContain("7458", redacted);
+        Assert.Contains(SecretRedactor.RedactedValue, redacted);
+    }
+
+    [Fact]
     public async Task ProcessRunner_RedactsLiveLogsAndArtifacts()
     {
         using var dir = new TempDirectory();

@@ -25,9 +25,11 @@
 
     <!-- Buttons: 64px min, padded 28, rounded 10 -->
     <Style TargetType="Button" x:Key="PrimaryButtonStyle">
+        <Setter Property="Height" Value="64"/>
         <Setter Property="MinHeight" Value="64"/>
         <Setter Property="MinWidth" Value="160"/>
         <Setter Property="Padding" Value="28,0"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
         <Setter Property="Foreground" Value="{DynamicResource OnPrimaryForegroundBrush}"/>
         <Setter Property="FontSize" Value="18"/>
@@ -120,6 +122,7 @@
 
     <!-- Chip toggle button: rectangular, for gate filter chips -->
     <Style x:Key="ChipToggleStyle" TargetType="ToggleButton">
+        <Setter Property="Height" Value="34"/>
         <Setter Property="MinHeight" Value="34"/>
         <Setter Property="Padding" Value="10,5"/>
         <Setter Property="Margin" Value="0,0,4,4"/>

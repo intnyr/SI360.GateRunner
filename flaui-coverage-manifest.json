@@ -11,11 +11,11 @@
           "name": "Sign on",
           "group": "OrderTakingProcedures",
           "automationStatus": "Automated",
-          "verificationLevel": "Discoverable",
-          "testFilters": [ "Functional_01_Login_To_Room_Should_Succeed" ],
-          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Sign_On_Screen_Should_Authenticate_To_Service_Profile_Or_Room_Selection" ],
+          "sourceFiles": [ "SI360.UITests/Functional/SignOnScreenFunctionalTests.cs" ],
           "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Mapped from the verified Order Taking coverage register."
+          "notes": "Dedicated Sign On Screen FlaUI scenario authenticates with the configured seeded PIN, verifies login is no longer active, and waits for service profile or room-selection controls."
         },
         {
           "id": "order-taking-select-profile",
@@ -46,9 +46,9 @@
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
           "testFilters": [ "Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat" ],
-          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
+          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs", "SI360.UI/Views/TableSelectionView.xaml" ],
           "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Mapped from the verified Order Taking coverage register."
+          "notes": "Functional_31 selects a seat through SeatButton, searches the configured resident through CustomerSearchComboBox, selects the matching result, handles meal type if prompted, and verifies CustomerDetailPanel, CustomerNameHeader, and ResidentIdValue confirm the assignment."
         },
         {
           "id": "order-taking-meal-type-selection",
@@ -65,6 +65,8 @@
           "id": "order-taking-additional-options-reassign-seat",
           "name": "Additional Options - Reassign Seat",
           "group": "OrderTakingProcedures",
+          "isDerived": true,
+          "canonicalScenario": "Additional Options",
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
           "testFilters": [ "Functional_32_Additional_Option_Reassign_Seat_Should_Move_Customer_To_Target_Seat" ],
@@ -76,6 +78,8 @@
           "id": "order-taking-additional-options-remove-resident",
           "name": "Additional Options - Remove Resident",
           "group": "OrderTakingProcedures",
+          "isDerived": true,
+          "canonicalScenario": "Additional Options",
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
           "testFilters": [ "Functional_33_Additional_Option_Remove_Resident_Should_Clear_Selected_Seat" ],
@@ -87,6 +91,8 @@
           "id": "order-taking-additional-options-replace-customer",
           "name": "Additional Options - Replace Customer",
           "group": "OrderTakingProcedures",
+          "isDerived": true,
+          "canonicalScenario": "Additional Options",
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
           "testFilters": [ "Functional_34_Additional_Option_Replace_Customer_Should_Assign_New_Customer" ],
@@ -263,6 +269,8 @@
           "id": "order-taking-pay-check-cash",
           "name": "Pay Check - Cash",
           "group": "OrderTakingProcedures",
+          "isDerived": true,
+          "canonicalScenario": "Pay Check",
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
           "testFilters": [ "Close_Check_With_Cash_Should_Calculate_Change" ],
@@ -274,6 +282,8 @@
           "id": "order-taking-pay-check-direct-billing",
           "name": "Pay Check - Direct Billing",
           "group": "OrderTakingProcedures",
+          "isDerived": true,
+          "canonicalScenario": "Pay Check",
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
           "testFilters": [ "Functional_21_Pay_Check_Direct_Billing_Should_Add_Payment_Media_When_Available" ],
@@ -285,6 +295,8 @@
           "id": "order-taking-pay-check-meal-plan",
           "name": "Pay Check - Meal Plan",
           "group": "OrderTakingProcedures",
+          "isDerived": true,
+          "canonicalScenario": "Pay Check",
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
           "testFilters": [ "Functional_22_Pay_Check_Meal_Plan_Should_Add_Payment_Media_When_Available" ],
@@ -308,6 +320,7 @@
     {
       "group": "UserFunctionsAndDiningRoomScenarios",
       "name": "USER FUNCTIONS AND DINING ROOM SCENARIOS",
+      "sourceDocument": "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md",
       "items": [
         {
           "id": "user-functions-menu",
@@ -317,6 +330,7 @@
           "verificationLevel": "Discoverable",
           "testFilters": [ "Functional_54_User_Functions_Menu_Should_Expose_Core_Actions" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Dedicated User Function menu inventory coverage verifies the category and core actions are reachable."
         },
         {
@@ -327,6 +341,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_51_Sell_Gift_Card_Should_Open_Dialog_And_Expose_Numpad" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Dialog-level sale workflow coverage exists; final payment completion may still require processor/test data."
         },
         {
@@ -337,6 +352,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_55_Sell_Multiple_Gift_Cards_Should_Open_Dialog_And_Expose_Numpad" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UI/Views/SellMultipleGiftCardDialog.xaml" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to dedicated sell-multiple-gift-card dialog coverage."
         },
         {
@@ -347,6 +363,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_53_Tip_On_Gift_Card_Uses_Charge_Tip_Dialog" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ChargeTipPage.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive gift-card tip coverage through the charge tip dialog."
         },
         {
@@ -357,6 +374,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_46_Gift_Card_Balance_Should_Open_Dialog_And_Expose_Numpad" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardBalancePage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive gift-card balance dialog coverage."
         },
         {
@@ -367,6 +385,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_52_Add_Funds_To_Gift_Card_Should_Open_Dialog_And_Expose_Numpad" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests.PageObjects/GiftCardAddFundsPage.cs", "SI360.UITests.PageObjects/GiftCardAddFundsAmountPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive add-funds dialog coverage."
         },
         {
@@ -377,6 +396,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_47_Gift_Card_Redeem_Should_Open_Dialog_Or_Require_Payment_Context" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/GiftCardPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive redemption/payment-context coverage."
         },
         {
@@ -387,6 +407,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_45_Closed_Check_Should_Open_Dialog_And_Expose_Grid" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ClosedCheckPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive closed-check dialog/grid coverage."
         },
         {
@@ -397,6 +418,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_33_Combine_Check_Action_Should_Open_Dialog" ],
           "sourceFiles": [ "SI360.UITests/Functional/CheckManagementFunctionalTests.cs", "SI360.UITests/PageObjects/CombineCheckPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to existing combine-check dialog/action test."
         },
         {
@@ -407,6 +429,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_56_Print_Separate_Checks_Should_Open_Dialog_And_Expose_Print_Actions" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UI/Views/PrintSeparateChecksDialog.xaml" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to dedicated print-separate-checks dialog coverage."
         },
         {
@@ -417,6 +440,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_41_Charge_Tip_Should_Open_Dialog_And_Expose_Controls" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ChargeTipPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive charge tip dialog/control coverage."
         },
         {
@@ -427,6 +451,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_42_Print_Check_Should_Open_Dialog_And_Expose_Copy_Controls" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/PrintCheckPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive print-check dialog coverage."
         },
         {
@@ -437,6 +462,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_57_Split_Item_Should_Open_Dialog_And_Expose_Controls" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/SplitItemPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to dedicated split-item dialog coverage."
         },
         {
@@ -447,6 +473,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_49_Reorder_Should_Open_Confirmation_Or_Show_Response" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ReorderConfirmationPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive reorder confirmation/response coverage."
         },
         {
@@ -457,17 +484,19 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_58_Reset_Service_Profile_Should_Open_Confirmation" ],
           "sourceFiles": [ "SI360.UITests/Core/SmokeTestSupport.cs", "SI360.UITests/Smoke/PinLoginSmokeTests.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Dedicated User Function coverage verifies the reset service profile confirmation dialog."
         },
         {
           "id": "user-functions-restart",
-          "name": "Restart",
+          "name": "Restart Application",
           "group": "UserFunctionsAndDiningRoomScenarios",
           "automationStatus": "Automated",
-          "verificationLevel": "Dialog",
-          "testFilters": [ "Functional_59_Restart_Should_Open_Confirmation" ],
-          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UI/Views/RestartConfirmationDialog.xaml" ],
-          "notes": "Dedicated User Function coverage verifies the restart confirmation dialog and cancels safely."
+          "verificationLevel": "EndToEnd",
+          "testFilters": [ "Functional_59A_Restart_Application_Should_Confirm_And_Reattach" ],
+          "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UI/Views/RestartConfirmationDialog.xaml", "SI360.UI/Services/NavigationService.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
+          "notes": "Dedicated Restart Application coverage opens the USER FUNCTION menu, confirms the restart dialog, and verifies process restart/re-attach."
         },
         {
           "id": "user-functions-server-sales-report",
@@ -477,6 +506,7 @@
           "verificationLevel": "ReportState",
           "testFilters": [ "Functional_50_Server_Sales_Report_Should_Open_And_Expose_Report_Grids" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/ServerSalesReportPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive server sales report grid/state coverage."
         },
         {
@@ -487,6 +517,7 @@
           "verificationLevel": "ReportState",
           "testFilters": [ "Functional_40_Employee_Cashout_Report_Should_Open_And_Show_Report_State" ],
           "sourceFiles": [ "SI360.UITests/Functional/ReportsFunctionalTests.cs", "SI360.UITests/PageObjects/ReportViewPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to existing employee cashout report state verification."
         },
         {
@@ -497,6 +528,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_44_Transfer_Check_Should_Open_Dialog_And_Expose_Employee_List" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/TransferCheckPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive transfer-check dialog coverage."
         },
         {
@@ -507,6 +539,7 @@
           "verificationLevel": "Dialog",
           "testFilters": [ "Functional_48_Change_Order_Type_Should_Open_Dialog_And_Expose_Options" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UITests/PageObjects/OrderTypeSelectionPage.cs" ],
+          "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
           "notes": "Mapped to interactive change-order-type dialog coverage."
         }
       ]

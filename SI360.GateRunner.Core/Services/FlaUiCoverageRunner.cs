@@ -161,6 +161,10 @@ public sealed class FlaUiCoverageRunner : IFlaUiCoverageRunner
             result.Errors.Add($"FlaUI coverage run exceeded the timeout of {process.ArtifactDirectory ?? runDir}.");
         if (process.Canceled)
             result.Errors.Add("FlaUI coverage run was canceled.");
+        if ((process.TimedOut || process.Canceled || process.ExitCode != 0) && !File.Exists(result.TrxPath))
+            result.Errors.Add($"FlaUI coverage run did not produce expected TRX: {result.TrxPath}.");
+        if (process.TimedOut || process.Canceled || process.ExitCode != 0 || !string.IsNullOrWhiteSpace(process.Diagnostics))
+            WriteFlaUiDiagnostics(result, process, testProjectPath, appPath);
         return result;
     }
 
@@ -216,5 +220,57 @@ public sealed class FlaUiCoverageRunner : IFlaUiCoverageRunner
         }
 
         return $"FullyQualifiedName~{clean}";
+    }
+
+    private static void WriteFlaUiDiagnostics(
+        FlaUiCoverageExecutionResult result,
+        ProcessRunResult process,
+        string testProjectPath,
+        string appPath)
+    {
+        if (string.IsNullOrWhiteSpace(result.RunDirectory))
+            return;
+
+        Directory.CreateDirectory(result.RunDirectory);
+        var sb = new StringBuilder();
+        sb.AppendLine("FlaUI coverage diagnostics");
+        sb.AppendLine($"UTC: {DateTime.UtcNow:O}");
+        sb.AppendLine($"ExitCode: {process.ExitCode}");
+        sb.AppendLine($"TimedOut: {process.TimedOut}");
+        sb.AppendLine($"Canceled: {process.Canceled}");
+        sb.AppendLine($"Filter: {result.Filter}");
+        sb.AppendLine($"FlaUI test project: {testProjectPath}");
+        sb.AppendLine($"SI360 UI app path: {appPath}");
+        sb.AppendLine($"Expected TRX: {result.TrxPath}");
+        sb.AppendLine($"Expected TRX exists: {(!string.IsNullOrWhiteSpace(result.TrxPath) && File.Exists(result.TrxPath))}");
+        sb.AppendLine();
+        sb.AppendLine("Errors:");
+        foreach (var error in result.Errors)
+            sb.AppendLine($"- {error}");
+        sb.AppendLine();
+        sb.AppendLine("Run directory files:");
+        foreach (var file in EnumerateRunDirectoryFiles(result.RunDirectory))
+            sb.AppendLine($"- {file}");
+
+        if (!string.IsNullOrWhiteSpace(process.Diagnostics))
+        {
+            sb.AppendLine();
+            sb.AppendLine("Process diagnostics:");
+            sb.AppendLine(process.Diagnostics.TrimEnd());
+        }
+
+        File.WriteAllText(Path.Combine(result.RunDirectory, "flaui-coverage.diagnostics.txt"), sb.ToString());
+    }
+
+    private static IEnumerable<string> EnumerateRunDirectoryFiles(string runDirectory)
+    {
+        if (!Directory.Exists(runDirectory))
+            yield break;
+
+        foreach (var file in Directory.EnumerateFiles(runDirectory, "*", SearchOption.TopDirectoryOnly)
+                     .OrderBy(Path.GetFileName, StringComparer.OrdinalIgnoreCase))
+        {
+            yield return Path.GetFileName(file) ?? file;
+        }
     }
 }

@@ -42,6 +42,9 @@ public sealed partial class FlaUiCoverageViewModel : ObservableObject
     [ObservableProperty] private string statusText = "FlaUI coverage not loaded.";
     [ObservableProperty] private bool hasLoadErrors;
     [ObservableProperty] private string loadErrorText = string.Empty;
+    [ObservableProperty] private bool hasLoadWarnings;
+    [ObservableProperty] private string loadWarningText = string.Empty;
+    [ObservableProperty] private string runtimeConfigurationText = string.Empty;
     [ObservableProperty] private bool isRunningCoverage;
     [ObservableProperty] private string runStatusText = "Ready to run mapped FlaUI coverage tests.";
     [ObservableProperty] private bool showOrderTaking = true;
@@ -59,7 +62,7 @@ public sealed partial class FlaUiCoverageViewModel : ObservableObject
     public int BlockedCount => _latestRun.Summary.Blocked;
     public int NeedsReviewCount => _latestRun.Summary.NeedsReview;
     public int NotStartedCount => _latestRun.Summary.NotStarted;
-    public string SummaryText => $"{TotalCount} scenarios | {AutomatedCount} automated | {PassedCount} passed | {FailedCount} failed | {BlockedCount} blocked | {NeedsReviewCount} needs review | {NotStartedCount} not started";
+    public string SummaryText => $"{TotalCount} scenarios ({_latestRun.Summary.CanonicalTotal} canonical, {_latestRun.Summary.DerivedTotal} derived) | {AutomatedCount} automated | {PassedCount} passed | {FailedCount} failed | {BlockedCount} blocked | {NeedsReviewCount} needs review | {NotStartedCount} not started";
     public bool HasItems => Items.Count > 0;
 
     partial void OnSelectedItemChanged(FlaUiCoverageItemViewModel? value)
@@ -92,6 +95,9 @@ public sealed partial class FlaUiCoverageViewModel : ObservableObject
         _latestRun = _coverageService.Load(_settings);
         HasLoadErrors = _latestRun.LoadErrors.Count > 0;
         LoadErrorText = string.Join(Environment.NewLine, _latestRun.LoadErrors);
+        HasLoadWarnings = _latestRun.LoadWarnings.Count > 0;
+        LoadWarningText = string.Join(Environment.NewLine, _latestRun.LoadWarnings);
+        RuntimeConfigurationText = BuildRuntimeConfigurationText(_latestRun.RuntimeConfiguration);
 
         foreach (var item in _latestRun.Sections.SelectMany(s => s.Items).Select(i => new FlaUiCoverageItemViewModel(i)))
             Items.Add(item);
@@ -254,6 +260,20 @@ public sealed partial class FlaUiCoverageViewModel : ObservableObject
         OnPropertyChanged(nameof(NotStartedCount));
         OnPropertyChanged(nameof(SummaryText));
         OnPropertyChanged(nameof(HasItems));
+    }
+
+    private static string BuildRuntimeConfigurationText(FlaUiRuntimeConfiguration configuration)
+    {
+        var flags = configuration.RuntimeFlags.Count == 0
+            ? "no testing flags discovered"
+            : string.Join("; ", configuration.RuntimeFlags.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+        return string.Join(Environment.NewLine,
+            $"SI360 UI: {configuration.Si360UiAppPath}",
+            $"FlaUI tests: {configuration.FlaUiTestProjectPath}",
+            $"Results: {configuration.ResultsDirectory}",
+            $"PIN source: {configuration.PinSource}",
+            $"Testing config: {configuration.TestingConfigurationPath}",
+            $"Testing flags: {flags}");
     }
 
     private bool CanRunCoverage() => !IsRunningCoverage && Items.Count > 0;

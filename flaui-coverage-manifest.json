@@ -48,7 +48,7 @@
           "testFilters": [ "Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat" ],
           "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs", "SI360.UI/Views/TableSelectionView.xaml" ],
           "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Functional_31 selects a seat through SeatButton, types a randomized single letter into CustomerSearchComboBox, chooses the first dropdown result, handles meal type if prompted, and verifies CustomerDetailPanel, CustomerNameHeader, and ResidentIdValue confirm the selected customer was assigned."
+          "notes": "Functional_31 selects a seat through SeatButton, types a randomized single letter into CustomerSearchComboBox, chooses the fifth dropdown result, handles meal type if prompted, and verifies CustomerDetailPanel, CustomerNameHeader, and ResidentIdValue confirm the selected customer was assigned."
         },
         {
           "id": "order-taking-meal-type-selection",

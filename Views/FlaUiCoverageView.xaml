@@ -7,86 +7,154 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              AutomationProperties.Name="FlaUI coverage gate list">
-    <Grid Margin="12">
+    <UserControl.Resources>
+        <Style x:Key="CoverageActionButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Height" Value="64"/>
+            <Setter Property="MinHeight" Value="64"/>
+            <Setter Property="MinWidth" Value="160"/>
+            <Setter Property="Padding" Value="28,0"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+        <Style x:Key="CoverageStatusTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Status}" Value="Passed">
+                    <Setter Property="Foreground" Value="{DynamicResource SuccessGreenBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Failed">
+                    <Setter Property="Foreground" Value="{DynamicResource DangerRedBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Blocked">
+                    <Setter Property="Foreground" Value="{DynamicResource WarningAmberBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Needs Review">
+                    <Setter Property="Foreground" Value="{DynamicResource WarningAmberBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Not Started">
+                    <Setter Property="Foreground" Value="{DynamicResource MutedForegroundBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid x:Name="CoverageRoot" Margin="12" SizeChanged="CoverageRoot_OnSizeChanged">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="420"/>
-        </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,10">
-            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+        <Grid x:Name="HeaderGrid" Grid.Row="0" Margin="0,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="260"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border x:Name="HeaderTextPanel"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="0,0,16,0"
+                    MaxHeight="112"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="0,0,0,1">
+                <ScrollViewer x:Name="CoverageDetailsScroll"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              PanningMode="VerticalOnly"
+                              CanContentScroll="False"
+                              Padding="0,0,8,8"
+                              AutomationProperties.Name="Scrollable FlaUI coverage details">
+                    <StackPanel>
+                        <TextBlock Text="FlaUI Coverage" FontSize="20" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding SummaryText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"
+                                   AutomationProperties.Name="FlaUI coverage summary"/>
+                        <TextBlock Text="{Binding RunStatusText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"
+                                   AutomationProperties.Name="FlaUI coverage run status"/>
+                        <TextBlock Text="{Binding RuntimeConfigurationText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"
+                                   FontFamily="Consolas"
+                                   FontSize="12"
+                                   AutomationProperties.Name="Resolved SI360 FlaUI runtime configuration"/>
+                        <TextBlock Text="{Binding LoadErrorText}" Foreground="{DynamicResource DangerRedBrush}" TextWrapping="Wrap"
+                                   AutomationProperties.Name="FlaUI coverage load errors">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasLoadErrors}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBlock Text="{Binding LoadWarningText}" Foreground="{DynamicResource WarningAmberBrush}" TextWrapping="Wrap"
+                                   AutomationProperties.Name="FlaUI coverage load warnings">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasLoadWarnings}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <WrapPanel x:Name="CoverageActionsPanel"
+                       Grid.Row="0"
+                       Grid.Column="1"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Top">
                 <Button Content="Run All"
-                        MinHeight="34"
-                        Padding="14,0"
-                        FontSize="13"
+                        Style="{StaticResource CoverageActionButtonStyle}"
                         Command="{Binding RunAllCoverageCommand}"
                         AutomationProperties.Name="Run all mapped FlaUI coverage scenarios"/>
                 <Button Content="Run Filtered"
-                        MinHeight="34"
-                        Padding="14,0"
-                        FontSize="13"
-                        Margin="8,0,0,0"
+                        Style="{StaticResource CoverageActionButtonStyle}"
                         Command="{Binding RunFilteredCoverageCommand}"
                         AutomationProperties.Name="Run filtered FlaUI coverage scenarios"/>
                 <Button Content="Run Selected"
-                        MinHeight="34"
-                        Padding="14,0"
-                        FontSize="13"
-                        Margin="8,0,0,0"
+                        Style="{StaticResource CoverageActionButtonStyle}"
                         Command="{Binding RunSelectedCoverageCommand}"
                         AutomationProperties.Name="Run selected FlaUI coverage scenario"/>
                 <Button Content="Cancel"
-                        MinHeight="34"
-                        Padding="14,0"
-                        FontSize="13"
-                        Margin="8,0,0,0"
+                        Style="{StaticResource CoverageActionButtonStyle}"
                         Command="{Binding CancelCoverageRunCommand}"
                         AutomationProperties.Name="Cancel FlaUI coverage run"/>
                 <Button Content="Refresh"
-                        MinHeight="34"
-                        Padding="14,0"
-                        FontSize="13"
-                        Margin="8,0,0,0"
+                        Style="{StaticResource CoverageActionButtonStyle}"
                         Command="{Binding RefreshCommand}"
                         AutomationProperties.Name="Refresh FlaUI coverage"/>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock Text="FlaUI Coverage" FontSize="20" FontWeight="Bold"/>
-                <TextBlock Text="{Binding SummaryText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"
-                           AutomationProperties.Name="FlaUI coverage summary"/>
-                <TextBlock Text="{Binding RunStatusText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"
-                           AutomationProperties.Name="FlaUI coverage run status"/>
-                <TextBlock Text="{Binding LoadErrorText}" Foreground="{DynamicResource DangerRedBrush}" TextWrapping="Wrap"
-                           AutomationProperties.Name="FlaUI coverage load errors">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding HasLoadErrors}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-            </StackPanel>
-        </DockPanel>
+            </WrapPanel>
+        </Grid>
 
-        <Grid Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,8">
+        <Grid x:Name="FilterGrid" Grid.Row="1" Margin="0,0,0,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="260" MinWidth="180"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0"
+            <TextBox x:Name="SearchBox"
+                     Grid.Row="0"
+                     Grid.Column="0"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Search FlaUI coverage"
                      ToolTip="Search scenarios, tests, source files, notes, evidence, and blocker text"/>
-            <WrapPanel Grid.Column="1" Margin="10,0,0,0">
+            <WrapPanel x:Name="FilterChipsPanel" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
                 <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowOrderTaking}" Content="Order Taking"/>
                 <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowUserFunctions}" Content="User Functions"/>
                 <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowPassed}" Content="Passed"/>
@@ -97,12 +165,24 @@
             </WrapPanel>
         </Grid>
 
-        <DataGrid Grid.Row="2"
+        <Grid x:Name="CoverageContentGrid" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition x:Name="DetailRow" Height="0"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="ListColumn" Width="3*" MinWidth="260"/>
+                <ColumnDefinition x:Name="DetailColumn" Width="2*" MinWidth="300"/>
+            </Grid.ColumnDefinitions>
+
+        <DataGrid Grid.Row="0"
                   Grid.Column="0"
                   ItemsSource="{Binding ItemsView}"
                   SelectedItem="{Binding SelectedItem}"
                   IsReadOnly="True"
                   AutoGenerateColumns="False"
+                  CanUserResizeColumns="True"
+                  ColumnWidth="Auto"
                   HorizontalScrollBarVisibility="Auto"
                   AutomationProperties.Name="FlaUI coverage scenario checklist">
             <DataGrid.GroupStyle>
@@ -117,8 +197,17 @@
                 </GroupStyle>
             </DataGrid.GroupStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="120"/>
-                <DataGridTextColumn Header="Scenario" Binding="{Binding Scenario}" MinWidth="260" Width="2*">
+                <DataGridTemplateColumn Header="Status" MinWidth="130" Width="Auto" CanUserResize="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Status}"
+                                       Style="{StaticResource CoverageStatusTextStyle}"
+                                       TextTrimming="CharacterEllipsis"
+                                       ToolTip="{Binding Status}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Scenario" Binding="{Binding Scenario}" MinWidth="220" Width="Auto" CanUserResize="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
@@ -126,10 +215,10 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Automation" Binding="{Binding Automation}" Width="140"/>
-                <DataGridTextColumn Header="Execution" Binding="{Binding Execution}" Width="120"/>
-                <DataGridTextColumn Header="Evidence" Binding="{Binding HasEvidence}" Width="90"/>
-                <DataGridTextColumn Header="Latest Test" Binding="{Binding LatestTest}" MinWidth="260" Width="2*">
+                <DataGridTextColumn Header="Automation" Binding="{Binding Automation}" MinWidth="120" Width="Auto" CanUserResize="True"/>
+                <DataGridTextColumn Header="Execution" Binding="{Binding Execution}" MinWidth="110" Width="Auto" CanUserResize="True"/>
+                <DataGridTextColumn Header="Evidence" Binding="{Binding HasEvidence}" MinWidth="90" Width="Auto" CanUserResize="True"/>
+                <DataGridTextColumn Header="Latest Test" Binding="{Binding LatestTest}" MinWidth="260" Width="Auto" CanUserResize="True">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
@@ -142,7 +231,10 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Border Grid.Row="2" Grid.Column="1" Margin="12,0,0,0"
+        <Border x:Name="DetailPanel"
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="12,0,0,0"
                 Background="{DynamicResource SurfaceBrush}"
                 BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="1"
@@ -150,14 +242,16 @@
                 Padding="12"
                 AutomationProperties.Name="FlaUI coverage scenario detail">
             <DockPanel>
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
-                    <Button Content="Open Evidence" MinHeight="34" Padding="12,0" FontSize="13"
+                <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,12,0,0">
+                    <Button Content="Open Evidence"
+                            Style="{StaticResource CoverageActionButtonStyle}"
                             Command="{Binding OpenSelectedEvidenceCommand}"
                             AutomationProperties.Name="Open selected FlaUI evidence"/>
-                    <Button Content="Copy Markdown" MinHeight="34" Padding="12,0" FontSize="13" Margin="8,0,0,0"
+                    <Button Content="Copy Markdown"
+                            Style="{StaticResource CoverageActionButtonStyle}"
                             Command="{Binding CopySelectedMarkdownCommand}"
                             AutomationProperties.Name="Copy selected FlaUI scenario as Markdown"/>
-                </StackPanel>
+                </WrapPanel>
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel DataContext="{Binding SelectedItem}">
                         <TextBlock Text="{Binding Scenario, FallbackValue='Select a FlaUI scenario'}"
@@ -167,13 +261,15 @@
                         <TextBlock Text="{Binding Group}" Foreground="{DynamicResource MutedForegroundBrush}" Margin="0,4,0,12" TextWrapping="Wrap"/>
                         <UniformGrid Columns="2" Margin="0,0,0,12">
                             <TextBlock Text="Status" FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding Status}" TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Style="{StaticResource CoverageStatusTextStyle}"/>
                             <TextBlock Text="Automation" FontWeight="SemiBold"/>
                             <TextBlock Text="{Binding Automation}" TextWrapping="Wrap"/>
                             <TextBlock Text="Execution" FontWeight="SemiBold"/>
                             <TextBlock Text="{Binding Execution}" TextWrapping="Wrap"/>
                             <TextBlock Text="Verification" FontWeight="SemiBold"/>
                             <TextBlock Text="{Binding VerificationLevel}" TextWrapping="Wrap"/>
+                            <TextBlock Text="Derived From" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding DerivedFrom}" TextWrapping="Wrap"/>
                         </UniformGrid>
                         <TextBlock Text="Latest Test" FontWeight="SemiBold"/>
                         <TextBlock Text="{Binding LatestTest}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,10"/>
@@ -191,5 +287,6 @@
                 </ScrollViewer>
             </DockPanel>
         </Border>
+        </Grid>
     </Grid>
 </UserControl>

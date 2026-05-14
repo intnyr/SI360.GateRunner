@@ -51,6 +51,8 @@ public sealed class FlaUiCoverageItem
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public FlaUiCoverageGroup Group { get; set; }
+    public bool IsDerived { get; set; }
+    public string? CanonicalScenario { get; set; }
     public FlaUiAutomationStatus AutomationStatus { get; set; } = FlaUiAutomationStatus.NotAutomated;
     public string VerificationLevel { get; set; } = "None";
     public List<string> TestFilters { get; set; } = new();
@@ -63,7 +65,21 @@ public sealed class FlaUiCoverageValidationResult
 {
     public FlaUiCoverageManifest? Manifest { get; set; }
     public List<string> Errors { get; } = new();
+    public List<string> Warnings { get; } = new();
     public bool IsValid => Manifest is not null && Errors.Count == 0;
+}
+
+public sealed class FlaUiRuntimeConfiguration
+{
+    public string SolutionPath { get; set; } = string.Empty;
+    public string TestProjectPath { get; set; } = string.Empty;
+    public string FlaUiTestProjectPath { get; set; } = string.Empty;
+    public string Si360UiAppPath { get; set; } = string.Empty;
+    public string ResultsDirectory { get; set; } = string.Empty;
+    public string PinSource { get; set; } = "Missing";
+    public string? TestingConfigurationPath { get; set; }
+    public Dictionary<string, string> RuntimeFlags { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public List<string> Warnings { get; } = new();
 }
 
 public sealed class FlaUiCoverageRun
@@ -72,6 +88,8 @@ public sealed class FlaUiCoverageRun
     public DateTime LoadedAt { get; set; } = DateTime.UtcNow;
     public string? ManifestPath { get; set; }
     public List<string> LoadErrors { get; } = new();
+    public List<string> LoadWarnings { get; } = new();
+    public FlaUiRuntimeConfiguration RuntimeConfiguration { get; set; } = new();
     public List<FlaUiCoverageSectionResult> Sections { get; } = new();
     public FlaUiCoverageSummary Summary { get; set; } = new();
 }
@@ -99,6 +117,8 @@ public sealed class FlaUiCoverageItemResult
 public sealed class FlaUiCoverageSummary
 {
     public int Total { get; set; }
+    public int CanonicalTotal { get; set; }
+    public int DerivedTotal { get; set; }
     public int Automated { get; set; }
     public int Passed { get; set; }
     public int Failed { get; set; }

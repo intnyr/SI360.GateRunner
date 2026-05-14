@@ -66,11 +66,14 @@ public sealed class GateRunnerCommandsTests
         Assert.NotNull(command.EnvironmentVariables);
         Assert.Equal(settings.Si360UiAppPath, command.EnvironmentVariables!["SI360_UI_APP_PATH"]);
         Assert.Equal(settings.Si360UiValidPin, command.EnvironmentVariables["SI360_UI_VALID_PIN"]);
+        Assert.False(string.IsNullOrWhiteSpace(command.EnvironmentVariables["windir"]));
+        Assert.False(string.IsNullOrWhiteSpace(command.EnvironmentVariables["SystemRoot"]));
         Assert.Contains("--filter \"FullyQualifiedName~Functional_01_Login_To_Room_Should_Succeed\"", command.Arguments);
         Assert.Contains("--logger \"trx;LogFileName=coverage.trx\"", command.Arguments);
         Assert.Contains("--results-directory \"coverage-artifacts\"", command.Arguments);
         Assert.Equal("flaui-coverage", command.ArtifactName);
         Assert.Equal("coverage-artifacts", command.ArtifactDirectory);
+        Assert.Equal(180, command.Timeout.TotalSeconds);
     }
 
     [Fact]
@@ -102,7 +105,8 @@ public sealed class GateRunnerCommandsTests
             ResultsDirectory = Path.Combine(root, "TestResults"),
             RestoreTimeoutSeconds = 30,
             BuildTimeoutSeconds = 40,
-            GateTimeoutSeconds = 50
+            GateTimeoutSeconds = 900,
+            PerTestTimeoutSeconds = 60
         };
     }
 

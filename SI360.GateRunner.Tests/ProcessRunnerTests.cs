@@ -47,6 +47,10 @@ public sealed class ProcessRunnerTests
 
         Assert.True(result.TimedOut);
         Assert.NotEqual(0, result.ExitCode);
+        Assert.Contains("Process snapshot", result.Diagnostics);
+        var diagnosticsPath = Path.Combine(dir.Path, "timeout.diagnostics.txt");
+        Assert.True(File.Exists(diagnosticsPath));
+        Assert.Contains("Process snapshot", await File.ReadAllTextAsync(diagnosticsPath));
     }
 
     private sealed class TempDirectory : IDisposable

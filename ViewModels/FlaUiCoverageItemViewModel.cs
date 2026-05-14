@@ -20,6 +20,9 @@ public sealed partial class FlaUiCoverageItemViewModel : ObservableObject
     public string Automation => Result.Item.AutomationStatus.ToString();
     public string Execution => Result.ExecutionStatus.ToString();
     public string VerificationLevel => Result.Item.VerificationLevel;
+    public string DerivedFrom => Result.Item.IsDerived
+        ? Result.Item.CanonicalScenario ?? "Canonical scenario not specified"
+        : string.Empty;
     public string LatestTest => Result.LatestTestName ?? string.Empty;
     public string SourceFiles => string.Join("; ", Result.Item.SourceFiles);
     public string Evidence => string.Join("; ", Result.EvidencePaths.Distinct(StringComparer.OrdinalIgnoreCase));
@@ -36,6 +39,7 @@ public sealed partial class FlaUiCoverageItemViewModel : ObservableObject
         - Automation: {Automation}
         - Execution: {Execution}
         - Verification Level: {VerificationLevel}
+        - Derived From: {DerivedFrom}
         - Latest Test: {LatestTest}
         - Source Files: {SourceFiles}
         - Evidence: {Evidence}

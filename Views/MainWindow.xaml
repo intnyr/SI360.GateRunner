@@ -237,12 +237,7 @@
 
             <!-- Right panel -->
             <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="280"/>
-                </Grid.RowDefinitions>
-
-                <TabControl x:Name="MainTabs" Grid.Row="0" Background="Transparent" BorderThickness="0">
+                <TabControl x:Name="MainTabs" Background="Transparent" BorderThickness="0">
                     <TabItem Header="Gate Detail">
                         <views:GateDetailView DataContext="{Binding SelectedGate}"/>
                     </TabItem>
@@ -298,23 +293,23 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </TabItem>
+                    <TabItem Header="dotnet output">
+                        <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Top" Text="dotnet output" FontSize="14" FontWeight="SemiBold" Margin="12,8,0,4"/>
+                                <TextBox Text="{Binding LogTail, Mode=OneWay}"
+                                         IsReadOnly="True"
+                                         FontFamily="Consolas"
+                                         FontSize="14"
+                                         VerticalScrollBarVisibility="Auto"
+                                         HorizontalScrollBarVisibility="Auto"
+                                         TextWrapping="NoWrap"
+                                         AcceptsReturn="True"
+                                         sv:TextBoxBehavior.AutoScrollToEnd="True"/>
+                            </DockPanel>
+                        </Border>
+                    </TabItem>
                 </TabControl>
-
-                <!-- Live log with auto-scroll -->
-                <Border Grid.Row="1" Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
-                    <DockPanel>
-                        <TextBlock DockPanel.Dock="Top" Text="dotnet output" FontSize="14" FontWeight="SemiBold" Margin="12,8,0,4"/>
-                        <TextBox Text="{Binding LogTail, Mode=OneWay}"
-                                 IsReadOnly="True"
-                                 FontFamily="Consolas"
-                                 FontSize="14"
-                                 VerticalScrollBarVisibility="Auto"
-                                 HorizontalScrollBarVisibility="Auto"
-                                 TextWrapping="NoWrap"
-                                 AcceptsReturn="True"
-                                 sv:TextBoxBehavior.AutoScrollToEnd="True"/>
-                    </DockPanel>
-                </Border>
             </Grid>
         </Grid>
 

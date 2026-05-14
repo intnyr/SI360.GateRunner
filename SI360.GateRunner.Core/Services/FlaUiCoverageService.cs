@@ -1,3 +1,4 @@
+using System.Text.Json;
 using SI360.GateRunner.Models;
 
 namespace SI360.GateRunner.Services;
@@ -24,8 +25,11 @@ public sealed class FlaUiCoverageService : IFlaUiCoverageService
             ? _manifestLoader.ResolveDefaultManifestPath()
             : manifestPath;
         var run = new FlaUiCoverageRun { ManifestPath = path };
+        run.RuntimeConfiguration = BuildRuntimeConfiguration(settings);
+        run.LoadWarnings.AddRange(run.RuntimeConfiguration.Warnings);
         var manifestResult = _manifestLoader.Load(path, settings);
         run.LoadErrors.AddRange(manifestResult.Errors);
+        run.LoadWarnings.AddRange(manifestResult.Warnings);
 
         if (manifestResult.Manifest is null)
         {
@@ -106,7 +110,7 @@ public sealed class FlaUiCoverageService : IFlaUiCoverageService
         if (!string.IsNullOrWhiteSpace(latest.TrxPath))
             result.EvidencePaths.Add(latest.TrxPath);
 
-        var blockerReason = matched.Select(GetBlockerReason).FirstOrDefault(reason => !string.IsNullOrWhiteSpace(reason));
+        var blockerReason = GetBlockerReason(latest);
         if (!string.IsNullOrWhiteSpace(blockerReason))
         {
             result.ExecutionStatus = FlaUiExecutionStatus.Blocked;
@@ -115,16 +119,15 @@ public sealed class FlaUiCoverageService : IFlaUiCoverageService
             return result;
         }
 
-        if (matched.Any(m => m.Outcome.Status == TestStatus.Failed))
+        if (latest.Outcome.Status == TestStatus.Failed)
         {
-            var failed = matched.First(m => m.Outcome.Status == TestStatus.Failed);
             result.ExecutionStatus = FlaUiExecutionStatus.Failed;
             result.Status = FlaUiCoverageStatus.Failed;
-            result.ErrorMessage = failed.Outcome.ErrorMessage;
+            result.ErrorMessage = latest.Outcome.ErrorMessage;
             return result;
         }
 
-        if (matched.Any(m => m.Outcome.Status == TestStatus.Passed))
+        if (latest.Outcome.Status == TestStatus.Passed)
         {
             result.ExecutionStatus = FlaUiExecutionStatus.Passed;
             result.Status = item.AutomationStatus == FlaUiAutomationStatus.Automated
@@ -161,6 +164,10 @@ public sealed class FlaUiCoverageService : IFlaUiCoverageService
             return "SI360_UI_APP_PATH is required for FlaUI tests.";
         if (text.Contains("PIN login page was not ready", StringComparison.OrdinalIgnoreCase))
             return "SI360 launched, but the PIN login page was not ready for FlaUI automation.";
+        if (text.Contains("SecurityLevel = 99 is required", StringComparison.OrdinalIgnoreCase))
+            return "A dbo.Employee user with SecurityLevel = 99 and a resolvable PIN is required for this FlaUI scenario.";
+        if (text.Contains("No visible assignable table was found", StringComparison.OrdinalIgnoreCase))
+            return "An available table with at least one assignable seat is required for the Assign Customers to A Seat FlaUI scenario.";
         if (text.Contains("Unable to acquire current main window", StringComparison.OrdinalIgnoreCase) ||
             text.Contains("AppFixture is not ready", StringComparison.OrdinalIgnoreCase) ||
             text.Contains("AppFixture", StringComparison.OrdinalIgnoreCase) &&
@@ -175,6 +182,8 @@ public sealed class FlaUiCoverageService : IFlaUiCoverageService
         return new FlaUiCoverageSummary
         {
             Total = items.Count,
+            CanonicalTotal = items.Count(i => !i.Item.IsDerived),
+            DerivedTotal = items.Count(i => i.Item.IsDerived),
             Automated = items.Count(i => i.Item.AutomationStatus is FlaUiAutomationStatus.Automated or FlaUiAutomationStatus.PartiallyAutomated),
             Passed = items.Count(i => i.Status == FlaUiCoverageStatus.Passed),
             Failed = items.Count(i => i.Status == FlaUiCoverageStatus.Failed),
@@ -182,5 +191,105 @@ public sealed class FlaUiCoverageService : IFlaUiCoverageService
             NeedsReview = items.Count(i => i.Status == FlaUiCoverageStatus.NeedsReview),
             NotStarted = items.Count(i => i.Status == FlaUiCoverageStatus.NotStarted)
         };
+    }
+
+    private static FlaUiRuntimeConfiguration BuildRuntimeConfiguration(RunnerSettings settings)
+    {
+        var configuration = new FlaUiRuntimeConfiguration
+        {
+            SolutionPath = settings.SolutionPath,
+            TestProjectPath = settings.TestProjectPath,
+            FlaUiTestProjectPath = settings.ResolveFlaUiTestProjectPath(),
+            Si360UiAppPath = settings.ResolveSi360UiAppPath(),
+            ResultsDirectory = settings.ResultsDirectory,
+            PinSource = ResolvePinSource(settings)
+        };
+
+        var solutionDirectory = string.IsNullOrWhiteSpace(settings.SolutionPath)
+            ? string.Empty
+            : Path.GetDirectoryName(settings.SolutionPath) ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(solutionDirectory))
+            return configuration;
+
+        var testingConfigurationPath = Path.Combine(solutionDirectory, "SI360.UI", "appsettings.Testing.json");
+        configuration.TestingConfigurationPath = testingConfigurationPath;
+        if (!File.Exists(testingConfigurationPath))
+        {
+            configuration.Warnings.Add($"SI360 testing configuration was not found: {testingConfigurationPath}");
+            return configuration;
+        }
+
+        try
+        {
+            using var doc = JsonDocument.Parse(File.ReadAllText(testingConfigurationPath));
+            AddFlag(doc, configuration, "SignalR.Enabled");
+            AddFlag(doc, configuration, "Development.EnablePublicButton");
+            AddFlag(doc, configuration, "Development.DatacapCreditCard");
+            AddFlag(doc, configuration, "Development.EnableCashierDrawer");
+            AddFlag(doc, configuration, "Development.Loyalty");
+            AddFlag(doc, configuration, "Development.EnableQSR");
+            AddFlag(doc, configuration, "Development.EnableQA");
+            AddFlag(doc, configuration, "Logging.BaseDirectory");
+        }
+        catch (Exception ex)
+        {
+            configuration.Warnings.Add($"SI360 testing configuration could not be parsed: {ex.Message}");
+            return configuration;
+        }
+
+        WarnWhenFalse(configuration, "SignalR.Enabled", "SignalR is disabled in appsettings.Testing.json; send-order/KDS workflows may be limited to UI-state verification.");
+        WarnWhenFalse(configuration, "Development.EnablePublicButton", "Public Customers may be blocked because Development.EnablePublicButton is disabled in appsettings.Testing.json.");
+        WarnWhenFalse(configuration, "Development.DatacapCreditCard", "Credit-card and gift-card processor flows may be blocked because Development.DatacapCreditCard is disabled in appsettings.Testing.json.");
+        WarnWhenFalse(configuration, "Development.EnableCashierDrawer", "Cash drawer hardware flows are disabled in appsettings.Testing.json.");
+        WarnWhenFalse(configuration, "Development.Loyalty", "Loyalty-dependent flows are disabled in appsettings.Testing.json.");
+        WarnWhenFalse(configuration, "Development.EnableQSR", "QSR-dependent flows are disabled in appsettings.Testing.json.");
+        return configuration;
+    }
+
+    private static string ResolvePinSource(RunnerSettings settings)
+    {
+        if (!string.IsNullOrWhiteSpace(settings.Si360UiValidPin))
+            return "RunnerSettings.Si360UiValidPin";
+        return string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("SI360_UI_VALID_PIN"))
+            ? "Missing"
+            : "SI360_UI_VALID_PIN";
+    }
+
+    private static void AddFlag(JsonDocument doc, FlaUiRuntimeConfiguration configuration, string path)
+    {
+        if (!TryGetProperty(doc.RootElement, path.Split('.'), out var value))
+            return;
+
+        configuration.RuntimeFlags[path] = value.ValueKind switch
+        {
+            JsonValueKind.True => "true",
+            JsonValueKind.False => "false",
+            JsonValueKind.String => value.GetString() ?? string.Empty,
+            _ => value.ToString()
+        };
+    }
+
+    private static bool TryGetProperty(JsonElement root, IReadOnlyList<string> path, out JsonElement value)
+    {
+        value = root;
+        foreach (var segment in path)
+        {
+            if (value.ValueKind != JsonValueKind.Object ||
+                !value.TryGetProperty(segment, out value))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static void WarnWhenFalse(FlaUiRuntimeConfiguration configuration, string key, string warning)
+    {
+        if (configuration.RuntimeFlags.TryGetValue(key, out var value) &&
+            string.Equals(value, "false", StringComparison.OrdinalIgnoreCase))
+        {
+            configuration.Warnings.Add(warning);
+        }
     }
 }

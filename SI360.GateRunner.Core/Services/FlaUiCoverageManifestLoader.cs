@@ -66,12 +66,14 @@ public sealed class FlaUiCoverageManifestLoader : IFlaUiCoverageManifestLoader
         }
 
         result.Manifest = manifest;
-        Validate(manifest, settings, result.Errors);
+        Validate(manifest, settings, result.Errors, result.Warnings);
         return result;
     }
 
-    private static void Validate(FlaUiCoverageManifest manifest, RunnerSettings settings, List<string> errors)
+    private static void Validate(FlaUiCoverageManifest manifest, RunnerSettings settings, List<string> errors, List<string> warnings)
     {
+        errors.AddRange(settings.Validate());
+
         if (manifest.Sections.Count == 0)
             errors.Add("FlaUI coverage manifest must contain at least one section.");
 
@@ -96,6 +98,11 @@ public sealed class FlaUiCoverageManifestLoader : IFlaUiCoverageManifestLoader
             {
                 errors.Add($"FlaUI coverage source document was not found: {section.SourceDocument}");
             }
+            else if (section.Group == FlaUiCoverageGroup.UserFunctionsAndDiningRoomScenarios &&
+                     string.IsNullOrWhiteSpace(section.SourceDocument))
+            {
+                warnings.Add("USER FUNCTIONS AND DINING ROOM SCENARIOS is missing a sourceDocument.");
+            }
 
             foreach (var item in section.Items)
             {
@@ -114,6 +121,12 @@ public sealed class FlaUiCoverageManifestLoader : IFlaUiCoverageManifestLoader
                         errors.Add($"FlaUI coverage item '{item.Id}' source file was not found: {sourceFile}");
                 }
 
+                foreach (var evidencePath in item.EvidencePaths.Where(p => !string.IsNullOrWhiteSpace(p)))
+                {
+                    if (!File.Exists(ResolveSi360Path(settings, evidencePath)))
+                        errors.Add($"FlaUI coverage item '{item.Id}' evidence path was not found: {evidencePath}");
+                }
+
                 foreach (var filter in item.TestFilters)
                 {
                     if (string.IsNullOrWhiteSpace(filter) ||
@@ -124,8 +137,14 @@ public sealed class FlaUiCoverageManifestLoader : IFlaUiCoverageManifestLoader
                         errors.Add($"FlaUI coverage item '{item.Id}' has an invalid test filter '{filter}'.");
                     }
                 }
+
+                if (item.IsDerived && string.IsNullOrWhiteSpace(item.CanonicalScenario))
+                    warnings.Add($"FlaUI coverage item '{item.Id}' is marked derived but has no canonicalScenario.");
             }
         }
+
+        ValidateTestFiltersExist(manifest, settings, warnings);
+        ValidateSolutionIncludesFlaUiProjects(settings, warnings);
     }
 
     public static string ResolveSi360Path(RunnerSettings settings, string path)
@@ -137,5 +156,65 @@ public sealed class FlaUiCoverageManifestLoader : IFlaUiCoverageManifestLoader
         return string.IsNullOrWhiteSpace(solutionDir)
             ? path
             : Path.Combine(solutionDir, path.Replace('/', Path.DirectorySeparatorChar));
+    }
+
+    private static void ValidateTestFiltersExist(FlaUiCoverageManifest manifest, RunnerSettings settings, List<string> warnings)
+    {
+        var testProjectPath = settings.ResolveFlaUiTestProjectPath();
+        if (string.IsNullOrWhiteSpace(testProjectPath) || !File.Exists(testProjectPath))
+            return;
+
+        var projectDirectory = Path.GetDirectoryName(testProjectPath);
+        if (string.IsNullOrWhiteSpace(projectDirectory) || !Directory.Exists(projectDirectory))
+            return;
+
+        var sourceText = string.Join('\n', Directory.EnumerateFiles(projectDirectory, "*.cs", SearchOption.AllDirectories)
+            .Select(File.ReadAllText));
+
+        foreach (var item in manifest.Sections.SelectMany(s => s.Items))
+        {
+            foreach (var filter in item.TestFilters.Where(f => !string.IsNullOrWhiteSpace(f)))
+            {
+                var term = ExtractFilterTerm(filter);
+                if (!string.IsNullOrWhiteSpace(term) &&
+                    !sourceText.Contains(term, StringComparison.OrdinalIgnoreCase))
+                {
+                    warnings.Add($"FlaUI coverage item '{item.Id}' test filter was not found in SI360.UITests source: {filter}");
+                }
+            }
+        }
+    }
+
+    private static void ValidateSolutionIncludesFlaUiProjects(RunnerSettings settings, List<string> warnings)
+    {
+        if (string.IsNullOrWhiteSpace(settings.SolutionPath) || !File.Exists(settings.SolutionPath))
+            return;
+
+        var solutionText = File.ReadAllText(settings.SolutionPath);
+        foreach (var project in new[]
+                 {
+                     "SI360.UITests/SI360.UITests.csproj",
+                     "SI360.UITests.Core/SI360.UITests.Core.csproj",
+                     "SI360.UITests.PageObjects/SI360.UITests.PageObjects.csproj"
+                 })
+        {
+            if (!solutionText.Contains(project, StringComparison.OrdinalIgnoreCase) &&
+                !solutionText.Contains(project.Replace('/', '\\'), StringComparison.OrdinalIgnoreCase))
+            {
+                warnings.Add($"SolutionPath does not include FlaUI project '{project}'.");
+            }
+        }
+    }
+
+    private static string ExtractFilterTerm(string filter)
+    {
+        var term = filter.Trim().Trim('"');
+        var idx = term.IndexOf('~');
+        if (idx >= 0 && idx + 1 < term.Length)
+            term = term[(idx + 1)..];
+        idx = term.LastIndexOf('.');
+        if (idx >= 0 && idx + 1 < term.Length)
+            term = term[(idx + 1)..];
+        return term;
     }
 }

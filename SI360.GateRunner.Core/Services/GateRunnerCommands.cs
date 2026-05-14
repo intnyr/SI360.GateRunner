@@ -45,10 +45,12 @@ public static class GateRunnerCommands
     {
         var testProjectPath = Require(settings.ResolveFlaUiTestProjectPath(), nameof(settings.FlaUiTestProjectPath));
         var appPath = Require(settings.ResolveSi360UiAppPath(), nameof(settings.Si360UiAppPath));
+        var scenarioTimeoutSeconds = Math.Max(180, Math.Max(1, settings.PerTestTimeoutSeconds) * Math.Max(1, filterCount));
         var environment = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
             ["SI360_UI_APP_PATH"] = appPath
         };
+        AddWindowsDirectoryEnvironment(environment);
         var validPin = settings.ResolveSi360UiValidPin();
         if (!string.IsNullOrWhiteSpace(validPin))
             environment["SI360_UI_VALID_PIN"] = validPin;
@@ -57,10 +59,25 @@ public static class GateRunnerCommands
             "dotnet",
             $"test \"{testProjectPath}\" --no-build --nologo --filter \"{filter}\" --logger \"trx;LogFileName={trxName}\" --results-directory \"{runDirectory}\" -v normal",
             WorkingDirectoryFor(testProjectPath),
-            TimeSpan.FromSeconds(Math.Max(settings.GateTimeoutSeconds, settings.PerTestTimeoutSeconds * Math.Max(1, filterCount))),
+            TimeSpan.FromSeconds(scenarioTimeoutSeconds),
             runDirectory,
             "flaui-coverage",
             environment);
+    }
+
+    private static void AddWindowsDirectoryEnvironment(IDictionary<string, string> environment)
+    {
+        var windowsDirectory = Environment.GetEnvironmentVariable("windir");
+        if (string.IsNullOrWhiteSpace(windowsDirectory))
+            windowsDirectory = Environment.GetEnvironmentVariable("SystemRoot");
+        if (string.IsNullOrWhiteSpace(windowsDirectory))
+            windowsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+
+        if (string.IsNullOrWhiteSpace(windowsDirectory))
+            return;
+
+        environment["windir"] = windowsDirectory;
+        environment["SystemRoot"] = windowsDirectory;
     }
 
     public static ProcessCommandSnapshot Snapshot(string name, ProcessCommand command) =>

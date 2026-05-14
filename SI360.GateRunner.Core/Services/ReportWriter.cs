@@ -310,9 +310,25 @@ public sealed class ReportWriter : IReportWriter
                 loadedAt = s.FlaUiCoverage.LoadedAt,
                 manifestPath = Safe(s.FlaUiCoverage.ManifestPath, redactor),
                 loadErrors = s.FlaUiCoverage.LoadErrors.Select(e => Safe(e, redactor)),
+                loadWarnings = s.FlaUiCoverage.LoadWarnings.Select(w => Safe(w, redactor)),
+                runtimeConfiguration = new
+                {
+                    solutionPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.SolutionPath, redactor),
+                    testProjectPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.TestProjectPath, redactor),
+                    flaUiTestProjectPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.FlaUiTestProjectPath, redactor),
+                    si360UiAppPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.Si360UiAppPath, redactor),
+                    resultsDirectory = Safe(s.FlaUiCoverage.RuntimeConfiguration.ResultsDirectory, redactor),
+                    pinSource = Safe(s.FlaUiCoverage.RuntimeConfiguration.PinSource, redactor),
+                    testingConfigurationPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.TestingConfigurationPath, redactor),
+                    runtimeFlags = s.FlaUiCoverage.RuntimeConfiguration.RuntimeFlags.ToDictionary(
+                        kvp => Safe(kvp.Key, redactor),
+                        kvp => Safe(kvp.Value, redactor))
+                },
                 summary = new
                 {
                     s.FlaUiCoverage.Summary.Total,
+                    s.FlaUiCoverage.Summary.CanonicalTotal,
+                    s.FlaUiCoverage.Summary.DerivedTotal,
                     s.FlaUiCoverage.Summary.Automated,
                     s.FlaUiCoverage.Summary.Passed,
                     s.FlaUiCoverage.Summary.Failed,
@@ -330,6 +346,8 @@ public sealed class ReportWriter : IReportWriter
                         id = Safe(item.Item.Id, redactor),
                         name = Safe(item.Item.Name, redactor),
                         group = item.Item.Group.ToString(),
+                        isDerived = item.Item.IsDerived,
+                        canonicalScenario = Safe(item.Item.CanonicalScenario, redactor),
                         status = item.Status.ToString(),
                         automationStatus = item.Item.AutomationStatus.ToString(),
                         executionStatus = item.ExecutionStatus.ToString(),
@@ -484,7 +502,29 @@ public sealed class ReportWriter : IReportWriter
             sb.AppendLine();
         }
 
+        if (coverage.LoadWarnings.Count > 0)
+        {
+            sb.AppendLine("### Load Warnings");
+            sb.AppendLine();
+            foreach (var warning in coverage.LoadWarnings)
+                sb.AppendLine($"- {Escape(warning, redactor)}");
+            sb.AppendLine();
+        }
+
+        if (!string.IsNullOrWhiteSpace(coverage.RuntimeConfiguration.Si360UiAppPath))
+        {
+            sb.AppendLine("### Runtime Configuration");
+            sb.AppendLine();
+            sb.AppendLine($"- SI360 UI app: `{Escape(coverage.RuntimeConfiguration.Si360UiAppPath, redactor)}`");
+            sb.AppendLine($"- FlaUI test project: `{Escape(coverage.RuntimeConfiguration.FlaUiTestProjectPath, redactor)}`");
+            sb.AppendLine($"- Results directory: `{Escape(coverage.RuntimeConfiguration.ResultsDirectory, redactor)}`");
+            sb.AppendLine($"- PIN source: `{Escape(coverage.RuntimeConfiguration.PinSource, redactor)}`");
+            sb.AppendLine($"- Testing configuration: `{Escape(coverage.RuntimeConfiguration.TestingConfigurationPath ?? string.Empty, redactor)}`");
+            sb.AppendLine();
+        }
+
         sb.AppendLine($"**Total:** {coverage.Summary.Total}  ");
+        sb.AppendLine($"**Canonical:** {coverage.Summary.CanonicalTotal} &nbsp;&nbsp; **Derived:** {coverage.Summary.DerivedTotal}  ");
         sb.AppendLine($"**Automated:** {coverage.Summary.Automated}  ");
         sb.AppendLine($"**Passed:** {coverage.Summary.Passed} &nbsp;&nbsp; **Failed:** {coverage.Summary.Failed} &nbsp;&nbsp; **Blocked:** {coverage.Summary.Blocked} &nbsp;&nbsp; **Needs Review:** {coverage.Summary.NeedsReview} &nbsp;&nbsp; **Not Started:** {coverage.Summary.NotStarted}");
         sb.AppendLine();

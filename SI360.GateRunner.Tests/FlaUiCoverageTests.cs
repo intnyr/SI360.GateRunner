@@ -95,18 +95,14 @@ public sealed class FlaUiCoverageTests
             "ORDER TAKING PROCEDURES",
             new[]
             {
-                "Sign on",
-                "Select profile",
+                "Sign On Screen",
+                "Select Service Profile",
                 "Start a Table",
                 "Assign Customers to A Seat",
                 "Meal Type Selection",
-                "Additional Options - Reassign Seat",
-                "Additional Options - Remove Resident",
-                "Additional Options - Replace Customer",
                 "Public Customers",
                 "Adding Additional Seats",
                 "Add Order",
-                "Screen Layout",
                 "Select Menu Items",
                 "Modifying Orders",
                 "Forced Modifiers",
@@ -118,9 +114,6 @@ public sealed class FlaUiCoverageTests
                 "Check Settlement",
                 "Auto Pay",
                 "Pay Check",
-                "Pay Check - Cash",
-                "Pay Check - Direct Billing",
-                "Pay Check - Meal Plan",
                 "Split Payment"
             });
 
@@ -151,6 +144,17 @@ public sealed class FlaUiCoverageTests
                 "Transfer Check",
                 "Change Order Types"
             });
+
+        Assert.Equal(
+            "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md",
+            sections[1].GetProperty("sourceDocument").GetString());
+        Assert.All(sections[1].GetProperty("items").EnumerateArray(), item =>
+            Assert.Contains(
+                "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md",
+                item.GetProperty("evidencePaths").EnumerateArray().Select(path => path.GetString())));
+
+        Assert.DoesNotContain(sections[0].GetProperty("items").EnumerateArray(), item =>
+            item.TryGetProperty("isDerived", out var isDerived) && isDerived.GetBoolean());
     }
 
     [Fact]
@@ -216,10 +220,118 @@ public sealed class FlaUiCoverageTests
         Assert.Equal(FlaUiCoverageStatus.NeedsReview, items["restart"].Status);
         Assert.Equal(FlaUiCoverageStatus.NotStarted, items["reorder"].Status);
         Assert.Equal(4, run.Summary.Total);
+        Assert.Equal(4, run.Summary.CanonicalTotal);
+        Assert.Equal(0, run.Summary.DerivedTotal);
         Assert.Equal(1, run.Summary.Passed);
         Assert.Equal(1, run.Summary.Blocked);
         Assert.Equal(1, run.Summary.NeedsReview);
         Assert.Equal(1, run.Summary.NotStarted);
+    }
+
+    [Fact]
+    public void CoverageService_UsesLatestScenarioEvidenceInsteadOfOlderBlocker()
+    {
+        using var dir = new TempDirectory();
+        var settings = CreateSettings(dir.Path);
+        WriteSi360File(dir.Path, "DOCS/order.md");
+        WriteSi360File(dir.Path, "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs");
+        var manifestPath = Path.Combine(dir.Path, "manifest.json");
+        File.WriteAllText(manifestPath, ManifestJson(
+            """
+            {
+              "id": "order-taking-assign-customers-seat",
+              "name": "Assign Customers to A Seat",
+              "group": "OrderTakingProcedures",
+              "automationStatus": "Automated",
+              "verificationLevel": "EndToEnd",
+              "testFilters": [ "Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat" ],
+              "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ]
+            }
+            """,
+            """
+            {
+              "id": "reorder",
+              "name": "Reorder",
+              "group": "UserFunctionsAndDiningRoomScenarios",
+              "automationStatus": "NotAutomated",
+              "verificationLevel": "None"
+            }
+            """));
+
+        Directory.CreateDirectory(settings.ResultsDirectory);
+        var oldTrx = Path.Combine(settings.ResultsDirectory, "old-blocker.trx");
+        var newTrx = Path.Combine(settings.ResultsDirectory, "new-pass.trx");
+        File.WriteAllText(oldTrx, Trx(
+            ("Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat", "Failed", "AppFixture is not ready. SI360_UI_APP_PATH is required for UI tests.")));
+        File.WriteAllText(newTrx, Trx(
+            ("Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat", "Passed", null)));
+        File.SetLastWriteTimeUtc(oldTrx, DateTime.UtcNow.AddMinutes(-5));
+        File.SetLastWriteTimeUtc(newTrx, DateTime.UtcNow);
+
+        var service = new FlaUiCoverageService(new TestManifestLoader(manifestPath), new TrxResultParser());
+        var run = service.Load(settings);
+        var item = run.Sections.SelectMany(s => s.Items).Single(i => i.Item.Id == "order-taking-assign-customers-seat");
+
+        Assert.Equal(FlaUiCoverageStatus.Passed, item.Status);
+        Assert.Equal(FlaUiExecutionStatus.Passed, item.ExecutionStatus);
+        Assert.Equal(newTrx, item.TrxPath);
+        Assert.Null(item.BlockerReason);
+    }
+
+    [Fact]
+    public void CoverageService_ReportsRuntimeConfigurationWarnings()
+    {
+        using var dir = new TempDirectory();
+        var settings = CreateSettings(dir.Path);
+        WriteSi360File(dir.Path, "DOCS/order.md");
+        WriteSi360File(dir.Path, "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs");
+        var testingConfigPath = Path.Combine(dir.Path, "SI360.UI", "appsettings.Testing.json");
+        Directory.CreateDirectory(Path.GetDirectoryName(testingConfigPath)!);
+        File.WriteAllText(testingConfigPath, """
+            {
+              "SignalR": { "Enabled": false },
+              "Development": {
+                "EnablePublicButton": false,
+                "DatacapCreditCard": false,
+                "EnableCashierDrawer": false,
+                "Loyalty": false,
+                "EnableQSR": false,
+                "EnableQA": true
+              },
+              "Logging": { "BaseDirectory": "./test_logs" }
+            }
+            """);
+        var manifestPath = Path.Combine(dir.Path, "manifest.json");
+        File.WriteAllText(manifestPath, ManifestJson(
+            """
+            {
+              "id": "sign-on",
+              "name": "Sign on",
+              "group": "OrderTakingProcedures",
+              "automationStatus": "Automated",
+              "verificationLevel": "Discoverable",
+              "testFilters": [ "Functional_01_Login_To_Room_Should_Succeed" ],
+              "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ]
+            }
+            """,
+            """
+            {
+              "id": "reorder",
+              "name": "Reorder",
+              "group": "UserFunctionsAndDiningRoomScenarios",
+              "automationStatus": "NotAutomated",
+              "verificationLevel": "None"
+            }
+            """));
+
+        var service = new FlaUiCoverageService(new TestManifestLoader(manifestPath), new TrxResultParser());
+        var run = service.Load(settings);
+
+        Assert.Equal(settings.ResolveSi360UiAppPath(), run.RuntimeConfiguration.Si360UiAppPath);
+        Assert.Equal("RunnerSettings.Si360UiValidPin", run.RuntimeConfiguration.PinSource);
+        Assert.Contains("SignalR.Enabled", run.RuntimeConfiguration.RuntimeFlags.Keys);
+        Assert.Contains(run.LoadWarnings, warning => warning.Contains("SignalR is disabled", StringComparison.OrdinalIgnoreCase));
+        Assert.Contains(run.LoadWarnings, warning => warning.Contains("Public Customers", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -440,6 +552,55 @@ public sealed class FlaUiCoverageTests
     }
 
     [Fact]
+    public async Task CoverageRunner_WritesDiagnosticsWhenTimedOutRunDoesNotProduceTrx()
+    {
+        using var dir = new TempDirectory();
+        var settings = CreateSettings(dir.Path);
+        WriteSi360File(dir.Path, "DOCS/order.md");
+        WriteSi360File(dir.Path, "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs");
+        var manifestPath = Path.Combine(dir.Path, "manifest.json");
+        File.WriteAllText(manifestPath, ManifestJson(
+            """
+            {
+              "id": "sign-on",
+              "name": "Sign on",
+              "group": "OrderTakingProcedures",
+              "automationStatus": "Automated",
+              "verificationLevel": "Discoverable",
+              "testFilters": [ "Functional_01_Login_To_Room_Should_Succeed" ],
+              "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ]
+            }
+            """,
+            """
+            {
+              "id": "reorder",
+              "name": "Reorder",
+              "group": "UserFunctionsAndDiningRoomScenarios",
+              "automationStatus": "NotAutomated",
+              "verificationLevel": "None"
+            }
+            """));
+        var coverageService = new FlaUiCoverageService(new TestManifestLoader(manifestPath), new TrxResultParser());
+        var runner = new FlaUiCoverageRunner(
+            settings,
+            coverageService,
+            new CaptureProcessRunner(exitCode: -1, timedOut: true, diagnostics: "Process snapshot: timed out"));
+
+        var result = await runner.RunAsync(
+            new FlaUiCoverageRunRequest { Scenario = "sign-on" },
+            null,
+            CancellationToken.None);
+
+        Assert.True(result.TimedOut);
+        Assert.Contains(result.Errors, e => e.Contains("did not produce expected TRX", StringComparison.OrdinalIgnoreCase));
+        var diagnosticsPath = Path.Combine(result.RunDirectory!, "flaui-coverage.diagnostics.txt");
+        Assert.True(File.Exists(diagnosticsPath));
+        var diagnostics = await File.ReadAllTextAsync(diagnosticsPath);
+        Assert.Contains("Process snapshot: timed out", diagnostics);
+        Assert.Contains("Expected TRX exists: False", diagnostics);
+    }
+
+    [Fact]
     public async Task CoverageRunner_SkipsNotAutomatedScenarioWithoutStartingProcess()
     {
         using var dir = new TempDirectory();
@@ -623,6 +784,23 @@ public sealed class FlaUiCoverageTests
 
     private sealed class CaptureProcessRunner : IProcessRunner
     {
+        private readonly int _exitCode;
+        private readonly bool _timedOut;
+        private readonly bool _canceled;
+        private readonly string _diagnostics;
+
+        public CaptureProcessRunner(
+            int exitCode = 0,
+            bool timedOut = false,
+            bool canceled = false,
+            string diagnostics = "")
+        {
+            _exitCode = exitCode;
+            _timedOut = timedOut;
+            _canceled = canceled;
+            _diagnostics = diagnostics;
+        }
+
         public static ProcessCommand? LastCommand { get; set; }
 
         public Task<ProcessRunResult> RunAsync(
@@ -632,7 +810,14 @@ public sealed class FlaUiCoverageTests
         {
             LastCommand = command;
             log?.Report("captured flaui coverage run");
-            return Task.FromResult(new ProcessRunResult(0, "captured", string.Empty, false, false, command.ArtifactDirectory));
+            return Task.FromResult(new ProcessRunResult(
+                _exitCode,
+                "captured",
+                string.Empty,
+                _timedOut,
+                _canceled,
+                command.ArtifactDirectory,
+                _diagnostics));
         }
     }
 

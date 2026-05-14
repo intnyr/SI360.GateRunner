@@ -309,6 +309,9 @@
                             </DockPanel>
                         </Border>
                     </TabItem>
+                    <TabItem Header="Test Scenario Matrix">
+                        <views:TestScenarioMatrixView DataContext="{Binding TestScenarioMatrix}"/>
+                    </TabItem>
                 </TabControl>
             </Grid>
         </Grid>

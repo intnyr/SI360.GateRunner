@@ -8,7 +8,7 @@
       "items": [
         {
           "id": "order-taking-sign-on",
-          "name": "Sign on",
+          "name": "Sign On Screen",
           "group": "OrderTakingProcedures",
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
@@ -19,7 +19,7 @@
         },
         {
           "id": "order-taking-select-profile",
-          "name": "Select profile",
+          "name": "Select Service Profile",
           "group": "OrderTakingProcedures",
           "automationStatus": "Automated",
           "verificationLevel": "Helper",
@@ -48,7 +48,7 @@
           "testFilters": [ "Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat" ],
           "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs", "SI360.UI/Views/TableSelectionView.xaml" ],
           "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Functional_31 selects a seat through SeatButton, types a randomized single letter into CustomerSearchComboBox, chooses the fifth dropdown result, handles meal type if prompted, and verifies CustomerDetailPanel, CustomerNameHeader, and ResidentIdValue confirm the selected customer was assigned."
+          "notes": "Functional_31 signs in with a SecurityLevel 99 employee, selects a configured or discovered available table, scans occupied seats, opens CustomerSearchComboBox on an empty seat, types one deterministic randomized first-letter probe at a time, selects the fifth unassigned dropdown result, handles meal type if prompted, and verifies CustomerDetailPanel, CustomerNameHeader, ResidentIdValue, or seat text confirms assignment."
         },
         {
           "id": "order-taking-meal-type-selection",
@@ -57,45 +57,6 @@
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
           "testFilters": [ "Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat" ],
-          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
-          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Mapped from the verified Order Taking coverage register."
-        },
-        {
-          "id": "order-taking-additional-options-reassign-seat",
-          "name": "Additional Options - Reassign Seat",
-          "group": "OrderTakingProcedures",
-          "isDerived": true,
-          "canonicalScenario": "Additional Options",
-          "automationStatus": "Automated",
-          "verificationLevel": "EndToEnd",
-          "testFilters": [ "Functional_32_Additional_Option_Reassign_Seat_Should_Move_Customer_To_Target_Seat" ],
-          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
-          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Mapped from the verified Order Taking coverage register."
-        },
-        {
-          "id": "order-taking-additional-options-remove-resident",
-          "name": "Additional Options - Remove Resident",
-          "group": "OrderTakingProcedures",
-          "isDerived": true,
-          "canonicalScenario": "Additional Options",
-          "automationStatus": "Automated",
-          "verificationLevel": "EndToEnd",
-          "testFilters": [ "Functional_33_Additional_Option_Remove_Resident_Should_Clear_Selected_Seat" ],
-          "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
-          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Mapped from the verified Order Taking coverage register."
-        },
-        {
-          "id": "order-taking-additional-options-replace-customer",
-          "name": "Additional Options - Replace Customer",
-          "group": "OrderTakingProcedures",
-          "isDerived": true,
-          "canonicalScenario": "Additional Options",
-          "automationStatus": "Automated",
-          "verificationLevel": "EndToEnd",
-          "testFilters": [ "Functional_34_Additional_Option_Replace_Customer_Should_Assign_New_Customer" ],
           "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ],
           "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
           "notes": "Mapped from the verified Order Taking coverage register."
@@ -129,17 +90,6 @@
           "automationStatus": "Automated",
           "verificationLevel": "Discoverable",
           "testFilters": [ "Functional_03_Table_To_Ordering_Should_Navigate" ],
-          "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
-          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Mapped from the verified Order Taking coverage register."
-        },
-        {
-          "id": "order-taking-screen-layout",
-          "name": "Screen Layout",
-          "group": "OrderTakingProcedures",
-          "automationStatus": "Automated",
-          "verificationLevel": "Discoverable",
-          "testFilters": [ "Functional_10D_Ordering_Screen_Layout_Should_Expose_Core_Regions" ],
           "sourceFiles": [ "SI360.UITests/Functional/OrderLifecycleFunctionalTests.cs" ],
           "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
           "notes": "Mapped from the verified Order Taking coverage register."
@@ -260,46 +210,12 @@
           "group": "OrderTakingProcedures",
           "automationStatus": "Automated",
           "verificationLevel": "Discoverable",
-          "testFilters": [ "Functional_11_Payment_Entry_Action_Should_Navigate_To_Payment" ],
-          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs" ],
-          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Mapped from the verified Order Taking coverage register."
-        },
-        {
-          "id": "order-taking-pay-check-cash",
-          "name": "Pay Check - Cash",
-          "group": "OrderTakingProcedures",
-          "isDerived": true,
-          "canonicalScenario": "Pay Check",
-          "automationStatus": "Automated",
-          "verificationLevel": "EndToEnd",
-          "testFilters": [ "Close_Check_With_Cash_Should_Calculate_Change" ],
-          "sourceFiles": [ "SI360.UITests/Smoke/CashPaymentSmokeTests.cs" ],
-          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Mapped from the verified Order Taking coverage register."
-        },
-        {
-          "id": "order-taking-pay-check-direct-billing",
-          "name": "Pay Check - Direct Billing",
-          "group": "OrderTakingProcedures",
-          "isDerived": true,
-          "canonicalScenario": "Pay Check",
-          "automationStatus": "Automated",
-          "verificationLevel": "EndToEnd",
-          "testFilters": [ "Functional_21_Pay_Check_Direct_Billing_Should_Add_Payment_Media_When_Available" ],
-          "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs" ],
-          "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
-          "notes": "Mapped from the verified Order Taking coverage register."
-        },
-        {
-          "id": "order-taking-pay-check-meal-plan",
-          "name": "Pay Check - Meal Plan",
-          "group": "OrderTakingProcedures",
-          "isDerived": true,
-          "canonicalScenario": "Pay Check",
-          "automationStatus": "Automated",
-          "verificationLevel": "EndToEnd",
-          "testFilters": [ "Functional_22_Pay_Check_Meal_Plan_Should_Add_Payment_Media_When_Available" ],
+          "testFilters": [
+            "Functional_11_Payment_Entry_Action_Should_Navigate_To_Payment",
+            "Close_Check_With_Cash_Should_Calculate_Change",
+            "Functional_21_Pay_Check_Direct_Billing_Should_Add_Payment_Media_When_Available",
+            "Functional_22_Pay_Check_Meal_Plan_Should_Add_Payment_Media_When_Available"
+          ],
           "sourceFiles": [ "SI360.UITests/Functional/PaymentVariantFunctionalTests.cs" ],
           "evidencePaths": [ "DOCS/OrderTaking-FlaUI-Verified-Coverage-2026-05-06.md" ],
           "notes": "Mapped from the verified Order Taking coverage register."
@@ -489,14 +405,14 @@
         },
         {
           "id": "user-functions-restart",
-          "name": "Restart Application",
+          "name": "Restart",
           "group": "UserFunctionsAndDiningRoomScenarios",
           "automationStatus": "Automated",
           "verificationLevel": "EndToEnd",
           "testFilters": [ "Functional_59A_Restart_Application_Should_Confirm_And_Reattach" ],
           "sourceFiles": [ "SI360.UITests/Functional/UserFunctionInteractiveFunctionalTests.cs", "SI360.UI/Views/RestartConfirmationDialog.xaml", "SI360.UI/Services/NavigationService.cs" ],
           "evidencePaths": [ "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md" ],
-          "notes": "Dedicated Restart Application coverage opens the USER FUNCTION menu, confirms the restart dialog, and verifies process restart/re-attach."
+          "notes": "Dedicated Restart coverage opens the USER FUNCTION menu, confirms the restart dialog, and verifies process restart/re-attach."
         },
         {
           "id": "user-functions-server-sales-report",

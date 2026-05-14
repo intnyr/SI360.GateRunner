@@ -30,7 +30,6 @@ public sealed partial class FlaUiCoverageViewModel : ObservableObject
         ItemsView = CollectionViewSource.GetDefaultView(Items);
         ItemsView.Filter = FilterItem;
         ItemsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(FlaUiCoverageItemViewModel.Group)));
-        ItemsView.SortDescriptions.Add(new SortDescription(nameof(FlaUiCoverageItemViewModel.Status), ListSortDirection.Ascending));
         Refresh();
     }
 

@@ -110,7 +110,7 @@ public sealed class FlaUiCoverageService : IFlaUiCoverageService
         if (!string.IsNullOrWhiteSpace(latest.TrxPath))
             result.EvidencePaths.Add(latest.TrxPath);
 
-        var blockerReason = matched.Select(GetBlockerReason).FirstOrDefault(reason => !string.IsNullOrWhiteSpace(reason));
+        var blockerReason = GetBlockerReason(latest);
         if (!string.IsNullOrWhiteSpace(blockerReason))
         {
             result.ExecutionStatus = FlaUiExecutionStatus.Blocked;
@@ -119,16 +119,15 @@ public sealed class FlaUiCoverageService : IFlaUiCoverageService
             return result;
         }
 
-        if (matched.Any(m => m.Outcome.Status == TestStatus.Failed))
+        if (latest.Outcome.Status == TestStatus.Failed)
         {
-            var failed = matched.First(m => m.Outcome.Status == TestStatus.Failed);
             result.ExecutionStatus = FlaUiExecutionStatus.Failed;
             result.Status = FlaUiCoverageStatus.Failed;
-            result.ErrorMessage = failed.Outcome.ErrorMessage;
+            result.ErrorMessage = latest.Outcome.ErrorMessage;
             return result;
         }
 
-        if (matched.Any(m => m.Outcome.Status == TestStatus.Passed))
+        if (latest.Outcome.Status == TestStatus.Passed)
         {
             result.ExecutionStatus = FlaUiExecutionStatus.Passed;
             result.Status = item.AutomationStatus == FlaUiAutomationStatus.Automated
@@ -165,6 +164,10 @@ public sealed class FlaUiCoverageService : IFlaUiCoverageService
             return "SI360_UI_APP_PATH is required for FlaUI tests.";
         if (text.Contains("PIN login page was not ready", StringComparison.OrdinalIgnoreCase))
             return "SI360 launched, but the PIN login page was not ready for FlaUI automation.";
+        if (text.Contains("SecurityLevel = 99 is required", StringComparison.OrdinalIgnoreCase))
+            return "A dbo.Employee user with SecurityLevel = 99 and a resolvable PIN is required for this FlaUI scenario.";
+        if (text.Contains("No visible assignable table was found", StringComparison.OrdinalIgnoreCase))
+            return "An available table with at least one assignable seat is required for the Assign Customers to A Seat FlaUI scenario.";
         if (text.Contains("Unable to acquire current main window", StringComparison.OrdinalIgnoreCase) ||
             text.Contains("AppFixture is not ready", StringComparison.OrdinalIgnoreCase) ||
             text.Contains("AppFixture", StringComparison.OrdinalIgnoreCase) &&

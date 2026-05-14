@@ -95,18 +95,14 @@ public sealed class FlaUiCoverageTests
             "ORDER TAKING PROCEDURES",
             new[]
             {
-                "Sign on",
-                "Select profile",
+                "Sign On Screen",
+                "Select Service Profile",
                 "Start a Table",
                 "Assign Customers to A Seat",
                 "Meal Type Selection",
-                "Additional Options - Reassign Seat",
-                "Additional Options - Remove Resident",
-                "Additional Options - Replace Customer",
                 "Public Customers",
                 "Adding Additional Seats",
                 "Add Order",
-                "Screen Layout",
                 "Select Menu Items",
                 "Modifying Orders",
                 "Forced Modifiers",
@@ -118,9 +114,6 @@ public sealed class FlaUiCoverageTests
                 "Check Settlement",
                 "Auto Pay",
                 "Pay Check",
-                "Pay Check - Cash",
-                "Pay Check - Direct Billing",
-                "Pay Check - Meal Plan",
                 "Split Payment"
             });
 
@@ -145,7 +138,7 @@ public sealed class FlaUiCoverageTests
                 "Split Item",
                 "Reorder",
                 "Reset Service Profile",
-                "Restart Application",
+                "Restart",
                 "Server Sales Report",
                 "Employee Cashout Report",
                 "Transfer Check",
@@ -160,16 +153,8 @@ public sealed class FlaUiCoverageTests
                 "DOCS/UserFunctions-DiningRoomScenarios-FlaUI-Verified-Coverage-2026-05-07.md",
                 item.GetProperty("evidencePaths").EnumerateArray().Select(path => path.GetString())));
 
-        var derived = sections[0].GetProperty("items")
-            .EnumerateArray()
-            .Where(item => item.TryGetProperty("isDerived", out var isDerived) && isDerived.GetBoolean())
-            .ToDictionary(item => item.GetProperty("name").GetString() ?? string.Empty);
-        Assert.Equal("Additional Options", derived["Additional Options - Reassign Seat"].GetProperty("canonicalScenario").GetString());
-        Assert.Equal("Additional Options", derived["Additional Options - Remove Resident"].GetProperty("canonicalScenario").GetString());
-        Assert.Equal("Additional Options", derived["Additional Options - Replace Customer"].GetProperty("canonicalScenario").GetString());
-        Assert.Equal("Pay Check", derived["Pay Check - Cash"].GetProperty("canonicalScenario").GetString());
-        Assert.Equal("Pay Check", derived["Pay Check - Direct Billing"].GetProperty("canonicalScenario").GetString());
-        Assert.Equal("Pay Check", derived["Pay Check - Meal Plan"].GetProperty("canonicalScenario").GetString());
+        Assert.DoesNotContain(sections[0].GetProperty("items").EnumerateArray(), item =>
+            item.TryGetProperty("isDerived", out var isDerived) && isDerived.GetBoolean());
     }
 
     [Fact]
@@ -241,6 +226,56 @@ public sealed class FlaUiCoverageTests
         Assert.Equal(1, run.Summary.Blocked);
         Assert.Equal(1, run.Summary.NeedsReview);
         Assert.Equal(1, run.Summary.NotStarted);
+    }
+
+    [Fact]
+    public void CoverageService_UsesLatestScenarioEvidenceInsteadOfOlderBlocker()
+    {
+        using var dir = new TempDirectory();
+        var settings = CreateSettings(dir.Path);
+        WriteSi360File(dir.Path, "DOCS/order.md");
+        WriteSi360File(dir.Path, "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs");
+        var manifestPath = Path.Combine(dir.Path, "manifest.json");
+        File.WriteAllText(manifestPath, ManifestJson(
+            """
+            {
+              "id": "order-taking-assign-customers-seat",
+              "name": "Assign Customers to A Seat",
+              "group": "OrderTakingProcedures",
+              "automationStatus": "Automated",
+              "verificationLevel": "EndToEnd",
+              "testFilters": [ "Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat" ],
+              "sourceFiles": [ "SI360.UITests/Functional/CustomerWorkflowFunctionalTests.cs" ]
+            }
+            """,
+            """
+            {
+              "id": "reorder",
+              "name": "Reorder",
+              "group": "UserFunctionsAndDiningRoomScenarios",
+              "automationStatus": "NotAutomated",
+              "verificationLevel": "None"
+            }
+            """));
+
+        Directory.CreateDirectory(settings.ResultsDirectory);
+        var oldTrx = Path.Combine(settings.ResultsDirectory, "old-blocker.trx");
+        var newTrx = Path.Combine(settings.ResultsDirectory, "new-pass.trx");
+        File.WriteAllText(oldTrx, Trx(
+            ("Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat", "Failed", "AppFixture is not ready. SI360_UI_APP_PATH is required for UI tests.")));
+        File.WriteAllText(newTrx, Trx(
+            ("Functional_31_Meal_Type_Selection_Should_Assign_Resident_To_Seat", "Passed", null)));
+        File.SetLastWriteTimeUtc(oldTrx, DateTime.UtcNow.AddMinutes(-5));
+        File.SetLastWriteTimeUtc(newTrx, DateTime.UtcNow);
+
+        var service = new FlaUiCoverageService(new TestManifestLoader(manifestPath), new TrxResultParser());
+        var run = service.Load(settings);
+        var item = run.Sections.SelectMany(s => s.Items).Single(i => i.Item.Id == "order-taking-assign-customers-seat");
+
+        Assert.Equal(FlaUiCoverageStatus.Passed, item.Status);
+        Assert.Equal(FlaUiExecutionStatus.Passed, item.ExecutionStatus);
+        Assert.Equal(newTrx, item.TrxPath);
+        Assert.Null(item.BlockerReason);
     }
 
     [Fact]

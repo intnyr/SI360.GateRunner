@@ -312,6 +312,9 @@
                     <TabItem Header="Test Scenario Matrix">
                         <views:TestScenarioMatrixView DataContext="{Binding TestScenarioMatrix}"/>
                     </TabItem>
+                    <TabItem Header="FlaUI Scenario Matrix">
+                        <views:FlaUiScenarioMatrixView DataContext="{Binding FlaUiScenarioMatrix}"/>
+                    </TabItem>
                 </TabControl>
             </Grid>
         </Grid>

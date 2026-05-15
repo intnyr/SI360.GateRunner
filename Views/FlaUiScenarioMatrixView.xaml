@@ -1,0 +1,282 @@
+<UserControl x:Class="SI360.GateRunner.Views.FlaUiScenarioMatrixView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:SI360.GateRunner.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DataContext="{d:DesignInstance Type=vm:FlaUiScenarioMatrixViewModel}"
+             mc:Ignorable="d"
+             AutomationProperties.Name="FlaUI specific scenario matrix">
+    <UserControl.Resources>
+        <Style x:Key="FlaUiMatrixActionButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Height" Value="64"/>
+            <Setter Property="MinHeight" Value="64"/>
+            <Setter Property="MinWidth" Value="160"/>
+            <Setter Property="Padding" Value="28,0"/>
+            <Setter Property="Margin" Value="0,0,8,8"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+        <Style x:Key="FlaUiPriorityTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Priority}" Value="High">
+                    <Setter Property="Foreground" Value="{DynamicResource DangerRedBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Priority}" Value="Medium">
+                    <Setter Property="Foreground" Value="{DynamicResource WarningAmberBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Priority}" Value="Low">
+                    <Setter Property="Foreground" Value="{DynamicResource SuccessGreenBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="FlaUiMatrixStatusTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Status}" Value="NotRun">
+                    <Setter Property="Foreground" Value="{DynamicResource MutedForegroundBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Queued">
+                    <Setter Property="Foreground" Value="{DynamicResource WarningAmberBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Running">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Passed">
+                    <Setter Property="Foreground" Value="{DynamicResource SuccessGreenBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Failed">
+                    <Setter Property="Foreground" Value="{DynamicResource DangerRedBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Blocked">
+                    <Setter Property="Foreground" Value="{DynamicResource WarningAmberBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Skipped">
+                    <Setter Property="Foreground" Value="{DynamicResource MutedForegroundBrush}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="NotImplemented">
+                    <Setter Property="Foreground" Value="{DynamicResource MutedForegroundBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="260"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Margin="0,0,16,0"
+                    MaxHeight="112"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="0,0,0,1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Padding="0,0,8,8"
+                              AutomationProperties.Name="Scrollable FlaUI scenario matrix details">
+                    <StackPanel>
+                        <TextBlock Text="FlaUI Scenario Matrix" FontSize="20" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding SummaryText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding StatusText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding RunStatusText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding SourcePathText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap" FontFamily="Consolas" FontSize="12"/>
+                        <TextBlock Text="{Binding LoadErrorText}" Foreground="{DynamicResource DangerRedBrush}" TextWrapping="Wrap">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasLoadErrors}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <WrapPanel Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Button Content="Run All"
+                        Style="{StaticResource FlaUiMatrixActionButtonStyle}"
+                        Command="{Binding RunAllCommand}"
+                        AutomationProperties.Name="Run all mapped FlaUI scenario matrix rows"/>
+                <Button Content="Run Filtered"
+                        Style="{StaticResource FlaUiMatrixActionButtonStyle}"
+                        Command="{Binding RunFilteredCommand}"
+                        AutomationProperties.Name="Run filtered FlaUI scenario matrix rows"/>
+                <Button Content="Run Selected"
+                        Style="{StaticResource FlaUiMatrixActionButtonStyle}"
+                        Command="{Binding RunSelectedCommand}"
+                        AutomationProperties.Name="Run selected FlaUI scenario matrix row"/>
+                <Button Content="Refresh"
+                        Style="{StaticResource FlaUiMatrixActionButtonStyle}"
+                        Command="{Binding RefreshCommand}"
+                        AutomationProperties.Name="Refresh FlaUI scenario matrix"/>
+                <Button Content="Open Source"
+                        Style="{StaticResource FlaUiMatrixActionButtonStyle}"
+                        Command="{Binding OpenSourceDocumentCommand}"
+                        AutomationProperties.Name="Open FlaUI scenario matrix source document"/>
+                <Button Content="Copy Markdown"
+                        Style="{StaticResource FlaUiMatrixActionButtonStyle}"
+                        Command="{Binding CopySelectedMarkdownCommand}"
+                        AutomationProperties.Name="Copy selected FlaUI scenario matrix row as Markdown"/>
+            </WrapPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260" MinWidth="180"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     AutomationProperties.Name="Search FlaUI scenario matrix"
+                     ToolTip="Search priority, parent scenario, scenario name, description, controls, target, and evidence"/>
+            <WrapPanel Grid.Column="1" Margin="10,0,0,0">
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowHigh}" Content="High"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowMedium}" Content="Medium"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowLow}" Content="Low"/>
+            </WrapPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" MinWidth="420"/>
+                <ColumnDefinition Width="2*" MinWidth="300"/>
+            </Grid.ColumnDefinitions>
+
+            <DataGrid Grid.Column="0"
+                      ItemsSource="{Binding ItemsView}"
+                      SelectedItem="{Binding SelectedItem}"
+                      IsReadOnly="True"
+                      AutoGenerateColumns="False"
+                      CanUserResizeColumns="True"
+                      CanUserSortColumns="True"
+                      ColumnWidth="Auto"
+                      HorizontalScrollBarVisibility="Auto"
+                      AutomationProperties.Name="FlaUI scenario matrix grid">
+                <DataGrid.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.HeaderTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource SurfaceAltBrush}" Padding="10,6">
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
+                                </Border>
+                            </DataTemplate>
+                        </GroupStyle.HeaderTemplate>
+                    </GroupStyle>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Status" MinWidth="150" Width="Auto" CanUserResize="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding StatusLabel}"
+                                           Style="{StaticResource FlaUiMatrixStatusTextStyle}"
+                                           TextTrimming="CharacterEllipsis"
+                                           ToolTip="{Binding FailureDetails}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Priority" MinWidth="110" Width="Auto" CanUserResize="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Priority}"
+                                           Style="{StaticResource FlaUiPriorityTextStyle}"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Parent Scenario" Binding="{Binding ParentScenario}" MinWidth="220" Width="Auto">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="ToolTip" Value="{Binding ParentScenario}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Specific FlaUI Scenario" Binding="{Binding SpecificScenario}" MinWidth="260" Width="Auto">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="ToolTip" Value="{Binding SpecificScenario}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Mapped Test" Binding="{Binding MappedTestFilter}" MinWidth="260" Width="Auto">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontFamily" Value="Consolas"/>
+                                <Setter Property="FontSize" Value="13"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="ToolTip" Value="{Binding MappedTestFilter}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Description" Binding="{Binding Description}" MinWidth="300" Width="Auto"/>
+                    <DataGridTextColumn Header="Primary UI Areas / Controls" Binding="{Binding PrimaryUiAreasControls}" MinWidth="300" Width="Auto">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontFamily" Value="Consolas"/>
+                                <Setter Property="FontSize" Value="13"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="ToolTip" Value="{Binding PrimaryUiAreasControls}"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Verification Target" Binding="{Binding VerificationTarget}" MinWidth="280" Width="Auto"/>
+                    <DataGridTextColumn Header="Suggested Evidence" Binding="{Binding SuggestedEvidence}" MinWidth="220" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Column="1"
+                    Margin="12,0,0,0"
+                    Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="12"
+                    AutomationProperties.Name="FlaUI scenario matrix detail">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel DataContext="{Binding SelectedItem}">
+                        <TextBlock Text="{Binding SpecificScenario, FallbackValue='Select a FlaUI scenario'}"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding ParentScenario}" Foreground="{DynamicResource MutedForegroundBrush}" Margin="0,4,0,12" TextWrapping="Wrap"/>
+                        <TextBlock Text="Priority" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding Priority}" Style="{StaticResource FlaUiPriorityTextStyle}" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                        <TextBlock Text="Status" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding StatusLabel}" Style="{StaticResource FlaUiMatrixStatusTextStyle}" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                        <TextBlock Text="Mapped Test" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding MappedTestFilter}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                        <TextBlock Text="Description" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                        <TextBlock Text="Primary UI Areas / Controls" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding PrimaryUiAreasControls}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                        <TextBlock Text="Verification Target" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding VerificationTarget}" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                        <TextBlock Text="Suggested Evidence" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding SuggestedEvidence}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                        <TextBlock Text="Failure Details" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                        <TextBlock Text="{Binding FailureDetails}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                        <TextBlock Text="TRX" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                        <TextBlock Text="{Binding TrxPath}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

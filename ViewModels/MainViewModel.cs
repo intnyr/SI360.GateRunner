@@ -56,6 +56,7 @@ public partial class MainViewModel : ObservableObject
         IFlaUiCoverageService flaUiCoverageService,
         FlaUiCoverageViewModel flaUiCoverage,
         TestScenarioMatrixViewModel testScenarioMatrix,
+        FlaUiScenarioMatrixViewModel flaUiScenarioMatrix,
         ThemeManager themeManager,
         ToastNotifier toast)
     {
@@ -74,7 +75,9 @@ public partial class MainViewModel : ObservableObject
         _flaUiCoverageService = flaUiCoverageService;
         FlaUiCoverage = flaUiCoverage;
         TestScenarioMatrix = testScenarioMatrix;
+        FlaUiScenarioMatrix = flaUiScenarioMatrix;
         TestScenarioMatrix.LogLine += AppendLog;
+        FlaUiScenarioMatrix.LogLine += AppendLog;
         _themeManager = themeManager;
         _toast = toast;
 
@@ -105,6 +108,7 @@ public partial class MainViewModel : ObservableObject
     public ICollectionView FailuresView { get; }
     public FlaUiCoverageViewModel FlaUiCoverage { get; }
     public TestScenarioMatrixViewModel TestScenarioMatrix { get; }
+    public FlaUiScenarioMatrixViewModel FlaUiScenarioMatrix { get; }
 
     [ObservableProperty] private string logTail = string.Empty;
     [ObservableProperty] private string statusText = "Idle.";

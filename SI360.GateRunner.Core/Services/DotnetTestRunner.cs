@@ -54,4 +54,37 @@ public sealed class DotnetTestRunner
 
         return (result.ExitCode, trxPath, output);
     }
+
+    public async Task<(int ExitCode, string TrxPath, string StdOut)> RunFlaUiAsync(
+        string scenarioId,
+        string filter,
+        string runDir,
+        int filterCount,
+        IProgress<string>? log,
+        CancellationToken ct)
+    {
+        Directory.CreateDirectory(runDir);
+        var trxName = $"{scenarioId}_{DateTime.UtcNow:yyyyMMdd_HHmmss}Z.trx";
+        var trxPath = Path.Combine(runDir, trxName);
+
+        var sb = new StringBuilder();
+        var capture = new Progress<string>(line =>
+        {
+            sb.AppendLine(line);
+            log?.Report(line);
+        });
+
+        var result = await _processRunner.RunAsync(
+            GateRunnerCommands.FlaUiCoverage(_settings, filter, runDir, trxName, filterCount),
+            capture,
+            ct).ConfigureAwait(false);
+
+        var output = sb.ToString();
+        if (result.TimedOut)
+            output += $"{Environment.NewLine}[TIMEOUT] FlaUI scenario exceeded the configured timeout.";
+        if (result.Canceled)
+            output += $"{Environment.NewLine}[CANCELED] FlaUI scenario run was canceled.";
+
+        return (result.ExitCode, trxPath, output);
+    }
 }

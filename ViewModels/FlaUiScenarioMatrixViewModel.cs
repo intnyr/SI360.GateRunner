@@ -11,18 +11,18 @@ using SI360.GateRunner.Services;
 
 namespace SI360.GateRunner.ViewModels;
 
-public sealed partial class TestScenarioMatrixViewModel : ObservableObject
+public sealed partial class FlaUiScenarioMatrixViewModel : ObservableObject
 {
     private readonly RunnerSettings _settings;
-    private readonly ITestScenarioMatrixLoader _loader;
+    private readonly IFlaUiScenarioMatrixLoader _loader;
     private readonly DotnetTestRunner _runner;
     private readonly TrxResultParser _parser;
-    private TestScenarioMatrixDocument _document = new();
+    private FlaUiScenarioMatrixDocument _document = new();
     private CancellationTokenSource? _runCts;
 
-    public TestScenarioMatrixViewModel(
+    public FlaUiScenarioMatrixViewModel(
         RunnerSettings settings,
-        ITestScenarioMatrixLoader loader,
+        IFlaUiScenarioMatrixLoader loader,
         DotnetTestRunner runner,
         TrxResultParser parser)
     {
@@ -32,29 +32,27 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
         _parser = parser;
         ItemsView = CollectionViewSource.GetDefaultView(Items);
         ItemsView.Filter = FilterItem;
-        ItemsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(TestScenarioMatrixItemViewModel.Area)));
+        ItemsView.GroupDescriptions.Add(new PropertyGroupDescription(nameof(FlaUiScenarioMatrixItemViewModel.Priority)));
+        ItemsView.SortDescriptions.Add(new SortDescription(nameof(FlaUiScenarioMatrixItemViewModel.SourceOrder), ListSortDirection.Ascending));
         Refresh();
     }
 
     public event Action<string>? LogLine;
 
-    public ObservableCollection<TestScenarioMatrixItemViewModel> Items { get; } = new();
+    public ObservableCollection<FlaUiScenarioMatrixItemViewModel> Items { get; } = new();
     public ICollectionView ItemsView { get; }
 
-    [ObservableProperty] private TestScenarioMatrixItemViewModel? selectedItem;
+    [ObservableProperty] private FlaUiScenarioMatrixItemViewModel? selectedItem;
     [ObservableProperty] private string searchText = string.Empty;
-    [ObservableProperty] private string statusText = "Test scenario matrix not loaded.";
-    [ObservableProperty] private string runStatusText = "Ready to run mapped unit/integration/repository/service scenarios.";
+    [ObservableProperty] private string statusText = "FlaUI scenario matrix not loaded.";
+    [ObservableProperty] private string runStatusText = "Ready to run mapped FlaUI scenario matrix rows.";
     [ObservableProperty] private string sourcePathText = string.Empty;
     [ObservableProperty] private bool hasLoadErrors;
     [ObservableProperty] private string loadErrorText = string.Empty;
     [ObservableProperty] private bool isRunning;
-    [ObservableProperty] private bool showUnit = true;
-    [ObservableProperty] private bool showService = true;
-    [ObservableProperty] private bool showRepository = true;
-    [ObservableProperty] private bool showIntegration = true;
-    [ObservableProperty] private bool showStatic = true;
-    [ObservableProperty] private bool showOther = true;
+    [ObservableProperty] private bool showHigh = true;
+    [ObservableProperty] private bool showMedium = true;
+    [ObservableProperty] private bool showLow = true;
     [ObservableProperty] private bool showNotRun = true;
     [ObservableProperty] private bool showQueued = true;
     [ObservableProperty] private bool showRunning = true;
@@ -71,22 +69,17 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
     public int FailedCount => Items.Count(item => item.Status == TestScenarioMatrixStatus.Failed);
     public int RunningCount => Items.Count(item => item.Status == TestScenarioMatrixStatus.Running);
     public int QueuedCount => Items.Count(item => item.Status == TestScenarioMatrixStatus.Queued);
-    public int UnitCount => Items.Count(item => item.IsUnit);
-    public int ServiceCount => Items.Count(item => item.IsService);
-    public int RepositoryCount => Items.Count(item => item.IsRepository);
-    public int IntegrationCount => Items.Count(item => item.IsIntegration);
-    public int StaticCount => Items.Count(item => item.IsStatic);
-    public string SummaryText => $"{TotalCount} scenarios | {MappedCount} mapped | {NotImplementedCount} not implemented | {PassedCount} passed | {FailedCount} failed";
+    public int HighCount => Items.Count(item => item.IsHigh);
+    public int MediumCount => Items.Count(item => item.IsMedium);
+    public int LowCount => Items.Count(item => item.IsLow);
+    public string SummaryText => $"{TotalCount} FlaUI scenarios | {MappedCount} mapped | {NotImplementedCount} not implemented | {HighCount} high | {MediumCount} medium | {LowCount} low | {PassedCount} passed | {FailedCount} failed";
 
-    partial void OnSelectedItemChanged(TestScenarioMatrixItemViewModel? value) => NotifyRunCommands();
+    partial void OnSelectedItemChanged(FlaUiScenarioMatrixItemViewModel? value) => NotifyRunCommands();
     partial void OnIsRunningChanged(bool value) => NotifyRunCommands();
     partial void OnSearchTextChanged(string value) => ItemsView.Refresh();
-    partial void OnShowUnitChanged(bool value) => ItemsView.Refresh();
-    partial void OnShowServiceChanged(bool value) => ItemsView.Refresh();
-    partial void OnShowRepositoryChanged(bool value) => ItemsView.Refresh();
-    partial void OnShowIntegrationChanged(bool value) => ItemsView.Refresh();
-    partial void OnShowStaticChanged(bool value) => ItemsView.Refresh();
-    partial void OnShowOtherChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowHighChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowMediumChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowLowChanged(bool value) => ItemsView.Refresh();
     partial void OnShowNotRunChanged(bool value) => ItemsView.Refresh();
     partial void OnShowQueuedChanged(bool value) => ItemsView.Refresh();
     partial void OnShowRunningChanged(bool value) => ItemsView.Refresh();
@@ -99,7 +92,7 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
     [RelayCommand]
     public void Refresh()
     {
-        StatusText = "Loading test scenario matrix...";
+        StatusText = "Loading FlaUI scenario matrix...";
         Items.Clear();
 
         _document = _loader.Load(_settings);
@@ -107,15 +100,15 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
         HasLoadErrors = _document.LoadErrors.Count > 0;
         LoadErrorText = string.Join(Environment.NewLine, _document.LoadErrors);
 
-        foreach (var item in _document.Items.Select(i => new TestScenarioMatrixItemViewModel(i)))
+        foreach (var item in _document.Items.Select(scenario => new FlaUiScenarioMatrixItemViewModel(scenario)))
             Items.Add(item);
 
         SelectedItem = Items.FirstOrDefault();
         StatusText = HasLoadErrors
-            ? "Test scenario matrix loaded with errors."
+            ? "FlaUI scenario matrix loaded with errors."
             : Items.Count == 0
-                ? "No test scenario matrix rows found."
-                : $"Test scenario matrix loaded. {SummaryText}";
+                ? "No FlaUI scenario matrix rows found."
+                : $"FlaUI scenario matrix loaded. {SummaryText}";
         if (!IsRunning)
             RunStatusText = StatusText;
 
@@ -128,7 +121,7 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
     private Task RunAllAsync() => RunScenariosAsync(Items.ToList());
 
     [RelayCommand(CanExecute = nameof(CanRunScenarios))]
-    private Task RunFilteredAsync() => RunScenariosAsync(ItemsView.Cast<TestScenarioMatrixItemViewModel>().ToList());
+    private Task RunFilteredAsync() => RunScenariosAsync(ItemsView.Cast<FlaUiScenarioMatrixItemViewModel>().ToList());
 
     [RelayCommand(CanExecute = nameof(CanRunSelectedScenario))]
     private Task RunSelectedAsync()
@@ -141,7 +134,7 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
     private void CancelRun()
     {
         _runCts?.Cancel();
-        RunStatusText = "Cancelling matrix run...";
+        RunStatusText = "Cancelling FlaUI matrix run...";
     }
 
     [RelayCommand]
@@ -154,23 +147,23 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
     [RelayCommand]
     private void OpenSourceDocument() => OpenPath(SourcePathText);
 
-    private async Task RunScenariosAsync(IReadOnlyList<TestScenarioMatrixItemViewModel> requestedItems)
+    private async Task RunScenariosAsync(IReadOnlyList<FlaUiScenarioMatrixItemViewModel> requestedItems)
     {
         var candidates = requestedItems
             .Where(item => !item.IsQueuedOrRunning)
-            .DistinctBy(item => item.Scenario)
+            .DistinctBy(item => item.SpecificScenario)
             .ToList();
 
         if (candidates.Count == 0)
         {
-            RunStatusText = "No eligible scenarios to run.";
+            RunStatusText = "No eligible FlaUI scenarios to run.";
             return;
         }
 
         IsRunning = true;
         _runCts = new CancellationTokenSource();
         var startedAt = DateTime.UtcNow;
-        var runDir = Path.Combine(_settings.ResultsDirectory, $"TestScenarioMatrixRun_{startedAt:yyyyMMdd_HHmmss}Z");
+        var runDir = Path.Combine(_settings.ResultsDirectory, $"FlaUiScenarioMatrixRun_{startedAt:yyyyMMdd_HHmmss}Z");
         Directory.CreateDirectory(runDir);
 
         foreach (var item in candidates)
@@ -191,8 +184,8 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
             var runnable = candidates.Where(item => item.HasMappedTest).ToList();
             if (runnable.Count == 0)
             {
-                RunStatusText = "No mapped automated tests exist for the selected matrix scenarios.";
-                LogLine?.Invoke("[MATRIX] No mapped automated tests exist for the selected matrix scenarios.");
+                RunStatusText = "No mapped automated FlaUI tests exist for the selected scenario matrix rows.";
+                LogLine?.Invoke("[FLAUI MATRIX] No mapped automated FlaUI tests exist for the selected scenario matrix rows.");
                 return;
             }
 
@@ -202,24 +195,26 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
                 _runCts.Token.ThrowIfCancellationRequested();
                 item.Status = TestScenarioMatrixStatus.Running;
                 item.FailureDetails = string.Empty;
-                RunStatusText = $"Running matrix scenario {completed + 1}/{runnable.Count}: {item.Scenario}";
+                RunStatusText = $"Running FlaUI matrix scenario {completed + 1}/{runnable.Count}: {item.SpecificScenario}";
                 RefreshCounts();
 
                 var filter = $"FullyQualifiedName~{item.MappedTestFilter}";
-                LogLine?.Invoke($"[MATRIX] Running {item.Scenario}: {filter}");
-                var (exit, trxPath, stdOut) = await _runner.RunGateAsync(
-                    $"matrix-{Slug(item.Scenario)}",
+                LogLine?.Invoke($"[FLAUI MATRIX] Running {item.SpecificScenario}: {filter}");
+                var (exit, trxPath, stdOut) = await _runner.RunFlaUiAsync(
+                    $"flaui-matrix-{Slug(item.SpecificScenario)}",
                     filter,
                     runDir,
+                    1,
                     new Progress<string>(line => LogLine?.Invoke(line)),
                     _runCts.Token).ConfigureAwait(true);
 
                 item.TrxPath = trxPath;
                 item.Output = stdOut;
-                var outcomes = _parser.Parse(trxPath, item.Scenario);
+                var outcomes = _parser.Parse(trxPath, item.SpecificScenario);
+                var mappedMethodName = GetMethodName(item.MappedTestFilter);
                 var outcome = outcomes.FirstOrDefault(test =>
-                    test.TestName.Contains(item.Scenario, StringComparison.OrdinalIgnoreCase) ||
-                    test.TestName.Contains(Path.GetFileName(item.MappedTestFilter), StringComparison.OrdinalIgnoreCase));
+                    test.TestName.Contains(mappedMethodName, StringComparison.OrdinalIgnoreCase) ||
+                    test.TestName.Contains(item.SpecificScenario, StringComparison.OrdinalIgnoreCase));
 
                 if (outcome is null)
                 {
@@ -233,24 +228,21 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
                     ApplyOutcome(item, outcome);
                 }
 
-                if (item.Status == TestScenarioMatrixStatus.Failed ||
-                    item.Status == TestScenarioMatrixStatus.Blocked)
-                {
-                    LogLine?.Invoke($"[MATRIX] {item.Scenario} {item.StatusLabel}: {item.FailureDetails}");
-                }
+                if (item.Status is TestScenarioMatrixStatus.Failed or TestScenarioMatrixStatus.Blocked)
+                    LogLine?.Invoke($"[FLAUI MATRIX] {item.SpecificScenario} {item.StatusLabel}: {item.FailureDetails}");
 
                 completed++;
                 RefreshCounts();
                 ItemsView.Refresh();
             }
 
-            RunStatusText = $"Matrix run complete. {PassedCount} passed, {FailedCount} failed, {NotImplementedCount} not implemented.";
+            RunStatusText = $"FlaUI matrix run complete. {PassedCount} passed, {FailedCount} failed, {NotImplementedCount} not implemented.";
         }
         catch (OperationCanceledException)
         {
             foreach (var item in candidates.Where(item => item.IsQueuedOrRunning))
                 item.Status = TestScenarioMatrixStatus.Skipped;
-            RunStatusText = "Matrix run cancelled.";
+            RunStatusText = "FlaUI matrix run cancelled.";
         }
         catch (Exception ex)
         {
@@ -259,8 +251,8 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
                 item.Status = TestScenarioMatrixStatus.Blocked;
                 item.FailureDetails = ex.Message;
             }
-            RunStatusText = $"Matrix run failed: {ex.Message}";
-            LogLine?.Invoke($"[MATRIX] ERROR: {ex}");
+            RunStatusText = $"FlaUI matrix run failed: {ex.Message}";
+            LogLine?.Invoke($"[FLAUI MATRIX] ERROR: {ex}");
         }
         finally
         {
@@ -274,28 +266,25 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
 
     private bool FilterItem(object obj)
     {
-        if (obj is not TestScenarioMatrixItemViewModel item) return false;
+        if (obj is not FlaUiScenarioMatrixItemViewModel item) return false;
 
-        var typeVisible =
-            (ShowUnit && item.IsUnit) ||
-            (ShowService && item.IsService) ||
-            (ShowRepository && item.IsRepository) ||
-            (ShowIntegration && item.IsIntegration) ||
-            (ShowStatic && item.IsStatic) ||
-            (ShowOther && item.IsOther);
-        if (!typeVisible) return false;
+        var priorityVisible =
+            (ShowHigh && item.IsHigh) ||
+            (ShowMedium && item.IsMedium) ||
+            (ShowLow && item.IsLow);
+        if (!priorityVisible) return false;
 
         if (!IsStatusVisible(item.Status)) return false;
 
         if (string.IsNullOrWhiteSpace(SearchText)) return true;
         var haystack = string.Join('\n',
-            item.Area,
-            item.Scenario,
-            item.RecommendedTestType,
-            item.SetupInputs,
-            item.ExpectedResult,
-            item.SuggestedTargetCode,
-            item.Notes,
+            item.Priority,
+            item.ParentScenario,
+            item.SpecificScenario,
+            item.Description,
+            item.PrimaryUiAreasControls,
+            item.VerificationTarget,
+            item.SuggestedEvidence,
             item.MappedTestFilter,
             item.StatusLabel,
             item.FailureDetails,
@@ -340,11 +329,9 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
         OnPropertyChanged(nameof(FailedCount));
         OnPropertyChanged(nameof(RunningCount));
         OnPropertyChanged(nameof(QueuedCount));
-        OnPropertyChanged(nameof(UnitCount));
-        OnPropertyChanged(nameof(ServiceCount));
-        OnPropertyChanged(nameof(RepositoryCount));
-        OnPropertyChanged(nameof(IntegrationCount));
-        OnPropertyChanged(nameof(StaticCount));
+        OnPropertyChanged(nameof(HighCount));
+        OnPropertyChanged(nameof(MediumCount));
+        OnPropertyChanged(nameof(LowCount));
         OnPropertyChanged(nameof(SummaryText));
     }
 
@@ -360,7 +347,7 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
         CancelRunCommand.NotifyCanExecuteChanged();
     }
 
-    private static void ApplyOutcome(TestScenarioMatrixItemViewModel item, TestOutcome outcome)
+    private static void ApplyOutcome(FlaUiScenarioMatrixItemViewModel item, TestOutcome outcome)
     {
         item.Status = outcome.Status switch
         {
@@ -373,6 +360,17 @@ public sealed partial class TestScenarioMatrixViewModel : ObservableObject
             ? string.Join(Environment.NewLine,
                 new[] { outcome.ErrorMessage, outcome.StackTrace }.Where(text => !string.IsNullOrWhiteSpace(text)))
             : string.Empty;
+    }
+
+    private static string GetMethodName(string mappedTestFilter)
+    {
+        if (string.IsNullOrWhiteSpace(mappedTestFilter))
+            return string.Empty;
+
+        var lastDot = mappedTestFilter.LastIndexOf('.');
+        return lastDot >= 0 && lastDot < mappedTestFilter.Length - 1
+            ? mappedTestFilter[(lastDot + 1)..]
+            : mappedTestFilter;
     }
 
     private static string Slug(string value)

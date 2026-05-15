@@ -25,7 +25,6 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
     private readonly IProcessRunner _processRunner;
     private readonly IDeploymentMetadataValidator _metadataValidator;
     private readonly ISyntheticProbeRunner _probeRunner;
-    private readonly IFlaUiCoverageService _flaUiCoverageService;
 
     public GateRunOrchestrator(
         RunnerSettings settings,
@@ -38,8 +37,7 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
         IReportWriter reportWriter,
         IProcessRunner processRunner,
         IDeploymentMetadataValidator metadataValidator,
-        ISyntheticProbeRunner probeRunner,
-        IFlaUiCoverageService flaUiCoverageService)
+        ISyntheticProbeRunner probeRunner)
     {
         _settings = settings;
         _testRunner = testRunner;
@@ -52,7 +50,6 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
         _processRunner = processRunner;
         _metadataValidator = metadataValidator;
         _probeRunner = probeRunner;
-        _flaUiCoverageService = flaUiCoverageService;
     }
 
     public async Task<RunSummary> RunAsync(
@@ -148,7 +145,6 @@ public sealed class GateRunOrchestrator : IGateRunOrchestrator
         summary.DecisionRationale = decision.Rationale;
         summary.DecisionImpacts.Clear();
         summary.DecisionImpacts.AddRange(decision.Impacts);
-        summary.FlaUiCoverage = _flaUiCoverageService.Load(_settings);
         summary.Duration = DateTime.UtcNow - startedAt;
         var (md, json) = await _reportWriter.WriteAsync(summary, _settings.ResultsDirectory).ConfigureAwait(false);
         ReportRetentionPruner.Prune(_settings.ResultsDirectory, _settings.ReportRetentionDays, DateTimeOffset.UtcNow);

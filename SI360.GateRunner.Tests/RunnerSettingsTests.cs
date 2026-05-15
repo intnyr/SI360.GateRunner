@@ -44,6 +44,7 @@ public sealed class RunnerSettingsTests
             ["GATERUNNER_DeploymentMetadataPath"] = @"D:\metadata.json",
             ["GATERUNNER_ProbeMode"] = "Active",
             ["GATERUNNER_ProbeTimeoutSeconds"] = "45",
+            ["GATERUNNER_PerTestTimeoutSeconds"] = "75",
             ["GATERUNNER_ReportRetentionDays"] = "14",
             ["GATERUNNER_SupportBundleOutputPath"] = @"D:\bundle.zip",
             ["GATERUNNER_FlaUiTestProjectPath"] = @"D:\SI360.UITests\SI360.UITests.csproj",
@@ -57,6 +58,7 @@ public sealed class RunnerSettingsTests
         Assert.Equal(@"D:\metadata.json", settings.DeploymentMetadataPath);
         Assert.Equal("Active", settings.ProbeMode);
         Assert.Equal(45, settings.ProbeTimeoutSeconds);
+        Assert.Equal(75, settings.PerTestTimeoutSeconds);
         Assert.Equal(14, settings.ReportRetentionDays);
         Assert.Equal(@"D:\bundle.zip", settings.SupportBundleOutputPath);
         Assert.Equal(@"D:\SI360.UITests\SI360.UITests.csproj", settings.FlaUiTestProjectPath);
@@ -75,6 +77,7 @@ public sealed class RunnerSettingsTests
             BuildConfiguration = string.Empty,
             ProbeMode = "WriteAll",
             ProbeTimeoutSeconds = 0,
+            PerTestTimeoutSeconds = 0,
             ReportRetentionDays = 0
         };
 
@@ -86,6 +89,7 @@ public sealed class RunnerSettingsTests
         Assert.Contains(errors, e => e.Contains(nameof(RunnerSettings.BuildConfiguration), StringComparison.Ordinal));
         Assert.Contains(errors, e => e.Contains(nameof(RunnerSettings.ProbeMode), StringComparison.Ordinal));
         Assert.Contains(errors, e => e.Contains(nameof(RunnerSettings.ProbeTimeoutSeconds), StringComparison.Ordinal));
+        Assert.Contains(errors, e => e.Contains(nameof(RunnerSettings.PerTestTimeoutSeconds), StringComparison.Ordinal));
         Assert.Contains(errors, e => e.Contains(nameof(RunnerSettings.ReportRetentionDays), StringComparison.Ordinal));
     }
 

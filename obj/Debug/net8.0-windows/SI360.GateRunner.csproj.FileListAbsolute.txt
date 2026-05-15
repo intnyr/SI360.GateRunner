@@ -78,7 +78,6 @@ E:\GateRunner\obj\Debug\net8.0-windows\SI360.GateRunner.dll
 E:\GateRunner\obj\Debug\net8.0-windows\refint\SI360.GateRunner.dll
 E:\GateRunner\obj\Debug\net8.0-windows\SI360.GateRunner.pdb
 E:\GateRunner\bin\Debug\net8.0-windows\appsettings.json
-E:\GateRunner\bin\Debug\net8.0-windows\flaui-coverage-manifest.json
 E:\GateRunner\bin\Debug\net8.0-windows\SI360.GateRunner.exe
 E:\GateRunner\bin\Debug\net8.0-windows\SI360.GateRunner.deps.json
 E:\GateRunner\bin\Debug\net8.0-windows\SI360.GateRunner.runtimeconfig.json
@@ -129,7 +128,6 @@ E:\GateRunner\obj\Debug\net8.0-windows\Styles\SharedStyles.baml
 E:\GateRunner\obj\Debug\net8.0-windows\Views\SettingsWindow.baml
 E:\GateRunner\obj\Debug\net8.0-windows\App.baml
 E:\GateRunner\obj\Debug\net8.0-windows\Views\FailureInventoryView.g.cs
-E:\GateRunner\obj\Debug\net8.0-windows\Views\FlaUiCoverageView.g.cs
 E:\GateRunner\obj\Debug\net8.0-windows\Views\GateDetailView.g.cs
 E:\GateRunner\obj\Debug\net8.0-windows\Views\MainWindow.g.cs
 E:\GateRunner\obj\Debug\net8.0-windows\Views\ScorecardView.g.cs
@@ -140,7 +138,6 @@ E:\GateRunner\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
 E:\GateRunner\obj\Debug\net8.0-windows\SI360.GateRunner_MarkupCompile.cache
 E:\GateRunner\obj\Debug\net8.0-windows\SI360.GateRunner_MarkupCompile.lref
 E:\GateRunner\obj\Debug\net8.0-windows\Views\FailureInventoryView.baml
-E:\GateRunner\obj\Debug\net8.0-windows\Views\FlaUiCoverageView.baml
 E:\GateRunner\obj\Debug\net8.0-windows\Views\GateDetailView.baml
 E:\GateRunner\obj\Debug\net8.0-windows\Views\MainWindow.baml
 E:\GateRunner\obj\Debug\net8.0-windows\Views\ScorecardView.baml
@@ -155,3 +152,5 @@ E:\GateRunner\obj\Debug\net8.0-windows\SI360.GateRunner.genruntimeconfig.cache
 E:\GateRunner\obj\Debug\net8.0-windows\ref\SI360.GateRunner.dll
 E:\GateRunner\obj\Debug\net8.0-windows\Views\TestScenarioMatrixView.g.cs
 E:\GateRunner\obj\Debug\net8.0-windows\Views\TestScenarioMatrixView.baml
+E:\GateRunner\obj\Debug\net8.0-windows\Views\FlaUiScenarioMatrixView.g.cs
+E:\GateRunner\obj\Debug\net8.0-windows\Views\FlaUiScenarioMatrixView.baml

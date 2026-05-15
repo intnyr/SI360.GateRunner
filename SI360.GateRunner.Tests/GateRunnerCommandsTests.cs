@@ -51,10 +51,10 @@ public sealed class GateRunnerCommandsTests
     }
 
     [Fact]
-    public void FlaUiCoverageCommand_WritesTrxToCoverageRunDirectory()
+    public void FlaUiTestCommand_WritesTrxToRunDirectory()
     {
         var settings = Settings();
-        var command = GateRunnerCommands.FlaUiCoverage(
+        var command = GateRunnerCommands.FlaUiTest(
             settings,
             "FullyQualifiedName~Functional_01_Login_To_Room_Should_Succeed",
             "coverage-artifacts",
@@ -71,7 +71,7 @@ public sealed class GateRunnerCommandsTests
         Assert.Contains("--filter \"FullyQualifiedName~Functional_01_Login_To_Room_Should_Succeed\"", command.Arguments);
         Assert.Contains("--logger \"trx;LogFileName=coverage.trx\"", command.Arguments);
         Assert.Contains("--results-directory \"coverage-artifacts\"", command.Arguments);
-        Assert.Equal("flaui-coverage", command.ArtifactName);
+        Assert.Equal("flaui-test", command.ArtifactName);
         Assert.Equal("coverage-artifacts", command.ArtifactDirectory);
         Assert.Equal(180, command.Timeout.TotalSeconds);
     }

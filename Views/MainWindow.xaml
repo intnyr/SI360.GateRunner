@@ -39,7 +39,12 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Border Grid.Row="0" Background="{DynamicResource SurfaceBrush}" Padding="20,16" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0"
+                Height="108"
+                Background="{DynamicResource SurfaceBrush}"
+                Padding="20,16"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="0,0,0,1">
             <DockPanel LastChildFill="True">
                 <!-- #7 Grouped action cluster -->
                 <Border DockPanel.Dock="Left"
@@ -48,27 +53,27 @@
                         CornerRadius="12"
                         Padding="3">
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="_Run Gates  (F5)"
+                        <Button Content="Run Gates  (F5)"
                                 Style="{StaticResource PrimaryButtonStyle}"
                                 MinWidth="220"
                                 Command="{Binding RunGatesCommand}"
                                 AutomationProperties.Name="Run all gates"
                                 AutomationProperties.AutomationId="RunGatesButton"/>
-                        <Button Content="_Cancel  (Esc)"
+                        <Button Content="Cancel  (Esc)"
                                 Margin="4,0,0,0"
                                 MinWidth="180"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Command="{Binding CancelCommand}"
                                 AutomationProperties.Name="Cancel current run"
                                 AutomationProperties.AutomationId="CancelButton"/>
-                        <Button Content="_Open Report  (Ctrl+R)"
+                        <Button Content="Open Report  (Ctrl+R)"
                                 Margin="4,0,0,0"
                                 MinWidth="240"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Command="{Binding OpenReportCommand}"
                                 AutomationProperties.Name="Open last report"
                                 AutomationProperties.AutomationId="OpenReportButton"/>
-                        <Button Content="Export _Bundle  (Ctrl+B)"
+                        <Button Content="Export Bundle  (Ctrl+B)"
                                 Margin="4,0,0,0"
                                 MinWidth="230"
                                 Style="{StaticResource SecondaryButtonStyle}"
@@ -86,7 +91,7 @@
                         ToolTip="Toggle theme (Ctrl+T)"
                         AutomationProperties.Name="Toggle theme"/>
                 <Button DockPanel.Dock="Right"
-                        Content="_Settings"
+                        Content="Settings"
                         Margin="14,0,0,0"
                         MinWidth="130"
                         Style="{StaticResource SecondaryButtonStyle}"
@@ -94,71 +99,80 @@
                         ToolTip="Configure paths and timeouts"
                         AutomationProperties.Name="Open settings"
                         AutomationProperties.AutomationId="SettingsButton"/>
-                <StackPanel Orientation="Vertical" Margin="28,0,14,0" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding StatusText}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Foreground="{DynamicResource MutedForegroundBrush}" FontSize="13" TextTrimming="CharacterEllipsis">
-                            <Run Text="Solution: "/>
-                            <Run Text="{Binding SolutionPath, Mode=OneWay}"/>
-                        </TextBlock>
-                        <TextBlock Text="{Binding EtaText}" Foreground="{DynamicResource MutedForegroundBrush}" FontSize="13" Margin="16,0,0,0"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding PreviousRunText}" Foreground="{DynamicResource MutedForegroundBrush}" FontSize="12"/>
-                        <TextBlock Text="{Binding ScoreDeltaText}" Margin="10,0,0,0" FontSize="12" FontWeight="SemiBold">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="{DynamicResource MutedForegroundBrush}"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding ScoreDelta, Converter={x:Static sv:PositiveConverter.Instance}}" Value="True">
-                                            <Setter Property="Foreground" Value="{DynamicResource SuccessGreenBrush}"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding ScoreDelta, Converter={x:Static sv:NegativeConverter.Instance}}" Value="True">
-                                            <Setter Property="Foreground" Value="{DynamicResource DangerRedBrush}"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </StackPanel>
-                    <TextBlock Text="{Binding SettingsWarningText}"
-                               FontSize="12"
-                               Foreground="{DynamicResource DangerRedBrush}"
-                               TextWrapping="Wrap"
-                               AutomationProperties.Name="Settings warning">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasSettingsWarnings}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                    <TextBlock Text="{Binding RuntimeReadinessText}"
-                               FontSize="12"
-                               Foreground="{DynamicResource MutedForegroundBrush}"
-                               TextWrapping="Wrap"
-                               AutomationProperties.Name="Runtime readiness status"/>
-                    <TextBlock Text="{Binding CatalogWarningText}"
-                               FontSize="12"
-                               Foreground="{DynamicResource WarningAmberBrush}"
-                               TextWrapping="Wrap"
-                               AutomationProperties.Name="Catalog warning">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasCatalogWarnings}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </StackPanel>
+                <Border Margin="28,0,14,0"
+                        MaxHeight="76"
+                        VerticalAlignment="Center"
+                        ClipToBounds="True">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  AutomationProperties.Name="Run status and readiness summary">
+                        <StackPanel Orientation="Vertical" Margin="0,0,8,0">
+                            <TextBlock Text="{Binding StatusText}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Foreground="{DynamicResource MutedForegroundBrush}" FontSize="13" TextTrimming="CharacterEllipsis">
+                                    <Run Text="Solution: "/>
+                                    <Run Text="{Binding SolutionPath, Mode=OneWay}"/>
+                                </TextBlock>
+                                <TextBlock Text="{Binding EtaText}" Foreground="{DynamicResource MutedForegroundBrush}" FontSize="13" Margin="16,0,0,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding PreviousRunText}" Foreground="{DynamicResource MutedForegroundBrush}" FontSize="12"/>
+                                <TextBlock Text="{Binding ScoreDeltaText}" Margin="10,0,0,0" FontSize="12" FontWeight="SemiBold">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="{DynamicResource MutedForegroundBrush}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ScoreDelta, Converter={x:Static sv:PositiveConverter.Instance}}" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource SuccessGreenBrush}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ScoreDelta, Converter={x:Static sv:NegativeConverter.Instance}}" Value="True">
+                                                    <Setter Property="Foreground" Value="{DynamicResource DangerRedBrush}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                            <TextBlock Text="{Binding SettingsWarningText}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource DangerRedBrush}"
+                                       TextWrapping="Wrap"
+                                       AutomationProperties.Name="Settings warning">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasSettingsWarnings}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBlock Text="{Binding RuntimeReadinessText}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource MutedForegroundBrush}"
+                                       TextWrapping="Wrap"
+                                       AutomationProperties.Name="Runtime readiness status"/>
+                            <TextBlock Text="{Binding CatalogWarningText}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource WarningAmberBrush}"
+                                       TextWrapping="Wrap"
+                                       AutomationProperties.Name="Catalog warning">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasCatalogWarnings}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
             </DockPanel>
         </Border>
 
@@ -241,9 +255,6 @@
                     <TabItem Header="Gate Detail">
                         <views:GateDetailView DataContext="{Binding SelectedGate}"/>
                     </TabItem>
-                    <TabItem Header="FlaUI Coverage">
-                        <views:FlaUiCoverageView DataContext="{Binding FlaUiCoverage}"/>
-                    </TabItem>
                     <TabItem Header="Failures">
                         <views:FailureInventoryView/>
                     </TabItem>
@@ -266,37 +277,106 @@
                         </DataGrid>
                     </TabItem>
                     <TabItem Header="Metadata">
-                        <DataGrid ItemsSource="{Binding MetadataIssues}"
-                                  AutoGenerateColumns="False"
-                                  IsReadOnly="True"
-                                  AutomationProperties.Name="Deployment metadata validation issues">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="110"/>
-                                <DataGridTextColumn Header="Code" Binding="{Binding Code}" Width="180"/>
-                                <DataGridTextColumn Header="Field" Binding="{Binding Field}" Width="220"/>
-                                <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <Grid Margin="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                                <TextBlock Text="Deployment Metadata" FontSize="20" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding MetadataStatusText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                                <TextBlock Text="{Binding RuntimeReadinessText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                            </StackPanel>
+
+                            <Border Grid.Row="1"
+                                    Background="{DynamicResource SurfaceBrush}"
+                                    BorderBrush="{DynamicResource BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="6"
+                                    Padding="12"
+                                    Margin="0,0,0,12">
+                                <Grid DataContext="{Binding DeploymentMetadata.Metadata}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Site" FontWeight="SemiBold" Margin="0,0,12,8"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SiteId, TargetNullValue=-, FallbackValue=-}" TextWrapping="Wrap" Margin="0,0,24,8"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Environment" FontWeight="SemiBold" Margin="0,0,12,8"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding EnvironmentName, TargetNullValue=-, FallbackValue=-}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Version" FontWeight="SemiBold" Margin="0,0,12,8"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DeploymentVersion, TargetNullValue=-, FallbackValue=-}" TextWrapping="Wrap" Margin="0,0,24,8"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" Text="Schema" FontWeight="SemiBold" Margin="0,0,12,8"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding SchemaVersion, TargetNullValue=-, FallbackValue=-}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="SignalR Hub" FontWeight="SemiBold" Margin="0,0,12,8"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding Si360SignalRHubUrl, TargetNullValue=-, FallbackValue=-}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Sync Health" FontWeight="SemiBold" Margin="0,0,12,8"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding SyncHealthHubEndpoint, TargetNullValue=-, FallbackValue=-}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Third-party KDS" FontWeight="SemiBold" Margin="0,0,12,0"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ThirdPartyKdsEndpoint, TargetNullValue=-, FallbackValue=-}" TextWrapping="Wrap"/>
+                                </Grid>
+                            </Border>
+
+                            <DataGrid Grid.Row="2"
+                                      ItemsSource="{Binding DeploymentMetadata.Issues}"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      AutomationProperties.Name="Deployment metadata validation issues">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="110"/>
+                                    <DataGridTextColumn Header="Code" Binding="{Binding Code}" Width="180"/>
+                                    <DataGridTextColumn Header="Field" Binding="{Binding Field}" Width="180"/>
+                                    <DataGridTextColumn Header="Message" Binding="{Binding Message}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
                     </TabItem>
                     <TabItem Header="Probes">
-                        <DataGrid ItemsSource="{Binding ProbeResults}"
-                                  AutoGenerateColumns="False"
-                                  IsReadOnly="True"
-                                  AutomationProperties.Name="Synthetic probe results">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="110"/>
-                                <DataGridTextColumn Header="Probe" Binding="{Binding Name}" Width="260"/>
-                                <DataGridTextColumn Header="Duration (ms)" Binding="{Binding DurationMs, StringFormat=0.0}" Width="120"/>
-                                <DataGridTextColumn Header="Contract" Binding="{Binding ContractVersion}" Width="160"/>
-                                <DataGridTextColumn Header="Endpoint" Binding="{Binding Endpoint}" Width="260"/>
-                                <DataGridTextColumn Header="Diagnostics" Binding="{Binding Diagnostics}" Width="*"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <Grid Margin="12">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" Margin="0,0,0,12">
+                                <TextBlock Text="Synthetic Probes" FontSize="20" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding ProbesStatusText}" Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+                            </StackPanel>
+                            <DataGrid Grid.Row="1"
+                                      ItemsSource="{Binding SyntheticProbes}"
+                                      AutoGenerateColumns="False"
+                                      IsReadOnly="True"
+                                      AutomationProperties.Name="Synthetic probe results">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="110"/>
+                                    <DataGridTextColumn Header="Probe" Binding="{Binding Name}" Width="180"/>
+                                    <DataGridTextColumn Header="Endpoint" Binding="{Binding Endpoint}" Width="2*"/>
+                                    <DataGridTextColumn Header="Contract" Binding="{Binding ContractVersion}" Width="150"/>
+                                    <DataGridTextColumn Header="ms" Binding="{Binding DurationMs, StringFormat={}{0:N0}}" Width="90"/>
+                                    <DataGridTextColumn Header="Diagnostics" Binding="{Binding Diagnostics}" Width="2*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
                     </TabItem>
-                    <TabItem Header="dotnet output">
+                    <TabItem Header="Dotnet Output">
                         <Border Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
                             <DockPanel>
-                                <TextBlock DockPanel.Dock="Top" Text="dotnet output" FontSize="14" FontWeight="SemiBold" Margin="12,8,0,4"/>
+                                <TextBlock DockPanel.Dock="Top" Text="Dotnet Output" FontSize="14" FontWeight="SemiBold" Margin="12,8,0,4"/>
                                 <TextBox Text="{Binding LogTail, Mode=OneWay}"
                                          IsReadOnly="True"
                                          FontFamily="Consolas"
@@ -311,6 +391,9 @@
                     </TabItem>
                     <TabItem Header="Test Scenario Matrix">
                         <views:TestScenarioMatrixView DataContext="{Binding TestScenarioMatrix}"/>
+                    </TabItem>
+                    <TabItem Header="FlaUI Scenario Matrix">
+                        <views:FlaUiScenarioMatrixView DataContext="{Binding FlaUiScenarioMatrix}"/>
                     </TabItem>
                 </TabControl>
             </Grid>

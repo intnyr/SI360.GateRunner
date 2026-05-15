@@ -29,7 +29,6 @@ public partial class MainViewModel : ObservableObject
     private readonly IDeploymentMetadataValidator _metadataValidator;
     private readonly ISyntheticProbeRunner _probeRunner;
     private readonly ISupportBundleExporter _supportBundleExporter;
-    private readonly IFlaUiCoverageService _flaUiCoverageService;
     private readonly ThemeManager _themeManager;
     private readonly ToastNotifier _toast;
     private CancellationTokenSource? _cts;
@@ -53,9 +52,8 @@ public partial class MainViewModel : ObservableObject
         IDeploymentMetadataValidator metadataValidator,
         ISyntheticProbeRunner probeRunner,
         ISupportBundleExporter supportBundleExporter,
-        IFlaUiCoverageService flaUiCoverageService,
-        FlaUiCoverageViewModel flaUiCoverage,
         TestScenarioMatrixViewModel testScenarioMatrix,
+        FlaUiScenarioMatrixViewModel flaUiScenarioMatrix,
         ThemeManager themeManager,
         ToastNotifier toast)
     {
@@ -71,10 +69,10 @@ public partial class MainViewModel : ObservableObject
         _metadataValidator = metadataValidator;
         _probeRunner = probeRunner;
         _supportBundleExporter = supportBundleExporter;
-        _flaUiCoverageService = flaUiCoverageService;
-        FlaUiCoverage = flaUiCoverage;
         TestScenarioMatrix = testScenarioMatrix;
+        FlaUiScenarioMatrix = flaUiScenarioMatrix;
         TestScenarioMatrix.LogLine += AppendLog;
+        FlaUiScenarioMatrix.LogLine += AppendLog;
         _themeManager = themeManager;
         _toast = toast;
 
@@ -98,13 +96,12 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<FailureItemViewModel> Failures { get; } = new();
     public ObservableCollection<BuildError> BuildErrors { get; } = new();
     public ObservableCollection<QualityIssue> QualityIssues { get; } = new();
-    public ObservableCollection<DeploymentMetadataIssue> MetadataIssues { get; } = new();
-    public ObservableCollection<SyntheticProbeResult> ProbeResults { get; } = new();
+    public ObservableCollection<SyntheticProbeResult> SyntheticProbes { get; } = new();
     public ScorecardViewModel Scorecard { get; }
     public ICollectionView GatesView { get; }
     public ICollectionView FailuresView { get; }
-    public FlaUiCoverageViewModel FlaUiCoverage { get; }
     public TestScenarioMatrixViewModel TestScenarioMatrix { get; }
+    public FlaUiScenarioMatrixViewModel FlaUiScenarioMatrix { get; }
 
     [ObservableProperty] private string logTail = string.Empty;
     [ObservableProperty] private string statusText = "Idle.";
@@ -121,6 +118,9 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool hasCatalogWarnings;
     [ObservableProperty] private string runtimeReadinessText = "Runtime readiness: Unknown. Phase-1 probes are read-only.";
     [ObservableProperty] private string supportBundlePath = string.Empty;
+    [ObservableProperty] private DeploymentMetadataValidationResult deploymentMetadata = new();
+    [ObservableProperty] private string metadataStatusText = "Deployment metadata has not been loaded.";
+    [ObservableProperty] private string probesStatusText = "Synthetic probes have not been run.";
 
     // Filter chips
     [ObservableProperty] private bool showRed = true;
@@ -177,7 +177,6 @@ public partial class MainViewModel : ObservableObject
     {
         SolutionPath = _settings.SolutionPath;
         TestProjectPath = _settings.TestProjectPath;
-        FlaUiCoverage.Refresh();
         RefreshWarnings();
         LoadPreviousRun();
     }
@@ -191,10 +190,10 @@ public partial class MainViewModel : ObservableObject
             warnings.Add("Test project path is missing or invalid.");
         var flaUiTestProjectPath = _settings.ResolveFlaUiTestProjectPath();
         if (string.IsNullOrWhiteSpace(flaUiTestProjectPath) || !File.Exists(flaUiTestProjectPath))
-            warnings.Add("FlaUI test project path is missing or invalid; FlaUI Coverage run actions will be disabled by execution guard.");
+            warnings.Add("FlaUI test project path is missing or invalid; FlaUI Scenario Matrix run actions will be disabled by execution guard.");
         var si360UiAppPath = _settings.ResolveSi360UiAppPath();
         if (string.IsNullOrWhiteSpace(si360UiAppPath) || !File.Exists(si360UiAppPath))
-            warnings.Add("SI360 UI app path is missing or invalid; FlaUI Coverage scenarios cannot launch the app.");
+            warnings.Add("SI360 UI app path is missing or invalid; FlaUI Scenario Matrix scenarios cannot launch the app.");
         if (_settings.GateTimeoutSeconds <= 0 || _settings.BuildTimeoutSeconds <= 0 || _settings.RestoreTimeoutSeconds <= 0)
             warnings.Add("Timeout values must be greater than zero.");
 
@@ -268,7 +267,6 @@ public partial class MainViewModel : ObservableObject
                     .CollectAsync(_settings, _processRunner, runDir, _cts.Token)
                     .ConfigureAwait(true)
             };
-            summary.FlaUiCoverage = _flaUiCoverageService.Load(_settings);
             foreach (var warning in _catalogDriftAnalyzer.Validate(_settings))
             {
                 summary.GateCatalogWarnings.Add(warning);
@@ -452,7 +450,6 @@ public partial class MainViewModel : ObservableObject
         summary.ReportJsonPath = json;
         LatestReportPath = md;
         _latestSummary = summary;
-        FlaUiCoverage.Refresh();
         OpenReportCommand.NotifyCanExecuteChanged();
         ExportSupportBundleCommand.NotifyCanExecuteChanged();
     }
@@ -713,9 +710,11 @@ public partial class MainViewModel : ObservableObject
         lock (_logLock) { _logBuffer.Clear(); LogTail = string.Empty; }
         LatestReportPath = null;
         _latestSummary = null;
-        MetadataIssues.Clear();
-        ProbeResults.Clear();
         QualityIssues.Clear();
+        DeploymentMetadata = new DeploymentMetadataValidationResult();
+        SyntheticProbes.Clear();
+        MetadataStatusText = "Deployment metadata has not been loaded.";
+        ProbesStatusText = "Synthetic probes have not been run.";
         RuntimeReadinessText = "Runtime readiness: Unknown. Phase-1 probes are read-only.";
         OpenReportCommand.NotifyCanExecuteChanged();
         ExportSupportBundleCommand.NotifyCanExecuteChanged();
@@ -748,24 +747,32 @@ public partial class MainViewModel : ObservableObject
 
     private async Task CollectRuntimeReadinessAsync(RunSummary summary, CancellationToken cancellationToken)
     {
-        MetadataIssues.Clear();
-        ProbeResults.Clear();
         if (string.IsNullOrWhiteSpace(_settings.DeploymentMetadataPath))
         {
             summary.RuntimeReadiness = RuntimeReadinessDecision.Unknown;
             summary.RuntimeReadinessRationale = "Deployment metadata was not configured.";
             RuntimeReadinessText = "Runtime readiness: Unknown. Deployment metadata not configured. Phase-1 probes are read-only.";
+            DeploymentMetadata = new DeploymentMetadataValidationResult();
+            SyntheticProbes.Clear();
+            MetadataStatusText = "Deployment metadata path is not configured.";
+            ProbesStatusText = "Synthetic probes were not run because deployment metadata is not configured.";
             return;
         }
 
         summary.DeploymentMetadata = _metadataValidator.LoadAndValidate(_settings.DeploymentMetadataPath);
-        foreach (var issue in summary.DeploymentMetadata.Issues)
-            MetadataIssues.Add(issue);
+        DeploymentMetadata = summary.DeploymentMetadata;
+        MetadataStatusText = summary.DeploymentMetadata.IsValid
+            ? "Deployment metadata is valid."
+            : $"Deployment metadata has {summary.DeploymentMetadata.Issues.Count} validation issue(s).";
 
         var probes = await _probeRunner.RunAsync(_settings, summary.DeploymentMetadata, cancellationToken).ConfigureAwait(true);
         summary.SyntheticProbes.AddRange(probes);
-        foreach (var probe in probes)
-            ProbeResults.Add(probe);
+        SyntheticProbes.Clear();
+        foreach (var probe in summary.SyntheticProbes)
+            SyntheticProbes.Add(probe);
+        ProbesStatusText = summary.SyntheticProbes.Count == 0
+            ? "No synthetic probes were run."
+            : $"Synthetic probes: {summary.SyntheticProbes.Count} total, {summary.SyntheticProbes.Count(p => p.Status == SyntheticProbeStatus.Passed)} passed, {summary.SyntheticProbes.Count(p => p.Status is SyntheticProbeStatus.Failed or SyntheticProbeStatus.Error)} failed/error.";
 
         if (!summary.DeploymentMetadata.IsValid)
         {

@@ -16,6 +16,9 @@
             <Setter Property="Margin" Value="0,0,8,8"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
         </Style>
         <Style x:Key="CoverageStatusTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>

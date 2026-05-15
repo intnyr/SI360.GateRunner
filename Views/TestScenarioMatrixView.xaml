@@ -16,6 +16,9 @@
             <Setter Property="Margin" Value="0,0,8,8"/>
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
         </Style>
         <Style x:Key="MatrixTypeTextStyle" TargetType="TextBlock">
             <Setter Property="Foreground" Value="{DynamicResource ForegroundBrush}"/>
@@ -82,7 +85,7 @@
 
             <Border Grid.Column="0"
                     Margin="0,0,16,0"
-                    MaxHeight="112"
+                    MaxHeight="56"
                     BorderBrush="{DynamicResource BorderBrush}"
                     BorderThickness="0,0,0,1">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"
@@ -124,18 +127,14 @@
                         Style="{StaticResource MatrixActionButtonStyle}"
                         Command="{Binding RunSelectedCommand}"
                         AutomationProperties.Name="Run selected test scenario matrix row"/>
+                <Button Content="Cancel"
+                        Style="{StaticResource MatrixActionButtonStyle}"
+                        Command="{Binding CancelRunCommand}"
+                        AutomationProperties.Name="Cancel test scenario matrix run"/>
                 <Button Content="Refresh"
                         Style="{StaticResource MatrixActionButtonStyle}"
                         Command="{Binding RefreshCommand}"
                         AutomationProperties.Name="Refresh test scenario matrix"/>
-                <Button Content="Open Source"
-                        Style="{StaticResource MatrixActionButtonStyle}"
-                        Command="{Binding OpenSourceDocumentCommand}"
-                        AutomationProperties.Name="Open test scenario matrix source document"/>
-                <Button Content="Copy Markdown"
-                        Style="{StaticResource MatrixActionButtonStyle}"
-                        Command="{Binding CopySelectedMarkdownCommand}"
-                        AutomationProperties.Name="Copy selected test scenario matrix row as Markdown"/>
             </WrapPanel>
         </Grid>
 
@@ -155,6 +154,14 @@
                 <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowIntegration}" Content="Integration"/>
                 <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowStatic}" Content="Static"/>
                 <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowOther}" Content="Other"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowNotRun}" Content="Not Run"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowQueued}" Content="Queued"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowRunning}" Content="Running"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowPassed}" Content="Passed"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowFailed}" Content="Failed"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowBlocked}" Content="Blocked"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowSkipped}" Content="Skipped"/>
+                <ToggleButton Style="{StaticResource ChipToggleStyle}" IsChecked="{Binding ShowNotImplemented}" Content="Not Implemented"/>
             </WrapPanel>
         </Grid>
 
@@ -249,33 +256,45 @@
                     CornerRadius="6"
                     Padding="12"
                     AutomationProperties.Name="Test scenario matrix detail">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <StackPanel DataContext="{Binding SelectedItem}">
-                        <TextBlock Text="{Binding Scenario, FallbackValue='Select a test scenario'}"
-                                   FontSize="20"
-                                   FontWeight="Bold"
-                                   TextWrapping="Wrap"/>
-                        <TextBlock Text="{Binding Area}" Foreground="{DynamicResource MutedForegroundBrush}" Margin="0,4,0,12" TextWrapping="Wrap"/>
-                        <TextBlock Text="Recommended Test Type" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding RecommendedTestType}" Style="{StaticResource MatrixTypeTextStyle}" TextWrapping="Wrap" Margin="0,2,0,10"/>
-                        <TextBlock Text="Status" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding StatusLabel}" Style="{StaticResource MatrixStatusTextStyle}" TextWrapping="Wrap" Margin="0,2,0,10"/>
-                        <TextBlock Text="Mapped Test" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding MappedTestFilter}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,10"/>
-                        <TextBlock Text="Setup / Inputs" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding SetupInputs}" TextWrapping="Wrap" Margin="0,2,0,10"/>
-                        <TextBlock Text="Expected Result" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding ExpectedResult}" TextWrapping="Wrap" Margin="0,2,0,10"/>
-                        <TextBlock Text="Suggested Target Code" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding SuggestedTargetCode}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,10"/>
-                        <TextBlock Text="Notes" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding Notes}" TextWrapping="Wrap" Margin="0,2,0,0"/>
-                        <TextBlock Text="Failure Details" FontWeight="SemiBold" Margin="0,10,0,0"/>
-                        <TextBlock Text="{Binding FailureDetails}" TextWrapping="Wrap" Margin="0,2,0,0"/>
-                        <TextBlock Text="TRX" FontWeight="SemiBold" Margin="0,10,0,0"/>
-                        <TextBlock Text="{Binding TrxPath}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,0"/>
-                    </StackPanel>
-                </ScrollViewer>
+                <DockPanel>
+                    <WrapPanel DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="0,12,0,0">
+                        <Button Content="Open Source"
+                                Style="{StaticResource MatrixActionButtonStyle}"
+                                Command="{Binding OpenSourceDocumentCommand}"
+                                AutomationProperties.Name="Open test scenario matrix source document"/>
+                        <Button Content="Copy Markdown"
+                                Style="{StaticResource MatrixActionButtonStyle}"
+                                Command="{Binding CopySelectedMarkdownCommand}"
+                                AutomationProperties.Name="Copy selected test scenario matrix row as Markdown"/>
+                    </WrapPanel>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel DataContext="{Binding SelectedItem}">
+                            <TextBlock Text="{Binding Scenario, FallbackValue='Select a test scenario'}"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding Area}" Foreground="{DynamicResource MutedForegroundBrush}" Margin="0,4,0,12" TextWrapping="Wrap"/>
+                            <TextBlock Text="Recommended Test Type" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding RecommendedTestType}" Style="{StaticResource MatrixTypeTextStyle}" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                            <TextBlock Text="Status" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding StatusLabel}" Style="{StaticResource MatrixStatusTextStyle}" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                            <TextBlock Text="Mapped Test" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding MappedTestFilter}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                            <TextBlock Text="Setup / Inputs" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding SetupInputs}" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                            <TextBlock Text="Expected Result" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding ExpectedResult}" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                            <TextBlock Text="Suggested Target Code" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding SuggestedTargetCode}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                            <TextBlock Text="Notes" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding Notes}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            <TextBlock Text="Failure Details" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                            <TextBlock Text="{Binding FailureDetails}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                            <TextBlock Text="TRX" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                            <TextBlock Text="{Binding TrxPath}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </DockPanel>
             </Border>
         </Grid>
     </Grid>

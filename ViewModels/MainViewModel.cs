@@ -101,8 +101,6 @@ public partial class MainViewModel : ObservableObject
     public ObservableCollection<FailureItemViewModel> Failures { get; } = new();
     public ObservableCollection<BuildError> BuildErrors { get; } = new();
     public ObservableCollection<QualityIssue> QualityIssues { get; } = new();
-    public ObservableCollection<DeploymentMetadataIssue> MetadataIssues { get; } = new();
-    public ObservableCollection<SyntheticProbeResult> ProbeResults { get; } = new();
     public ScorecardViewModel Scorecard { get; }
     public ICollectionView GatesView { get; }
     public ICollectionView FailuresView { get; }
@@ -717,8 +715,6 @@ public partial class MainViewModel : ObservableObject
         lock (_logLock) { _logBuffer.Clear(); LogTail = string.Empty; }
         LatestReportPath = null;
         _latestSummary = null;
-        MetadataIssues.Clear();
-        ProbeResults.Clear();
         QualityIssues.Clear();
         RuntimeReadinessText = "Runtime readiness: Unknown. Phase-1 probes are read-only.";
         OpenReportCommand.NotifyCanExecuteChanged();
@@ -752,8 +748,6 @@ public partial class MainViewModel : ObservableObject
 
     private async Task CollectRuntimeReadinessAsync(RunSummary summary, CancellationToken cancellationToken)
     {
-        MetadataIssues.Clear();
-        ProbeResults.Clear();
         if (string.IsNullOrWhiteSpace(_settings.DeploymentMetadataPath))
         {
             summary.RuntimeReadiness = RuntimeReadinessDecision.Unknown;
@@ -763,13 +757,9 @@ public partial class MainViewModel : ObservableObject
         }
 
         summary.DeploymentMetadata = _metadataValidator.LoadAndValidate(_settings.DeploymentMetadataPath);
-        foreach (var issue in summary.DeploymentMetadata.Issues)
-            MetadataIssues.Add(issue);
 
         var probes = await _probeRunner.RunAsync(_settings, summary.DeploymentMetadata, cancellationToken).ConfigureAwait(true);
         summary.SyntheticProbes.AddRange(probes);
-        foreach (var probe in probes)
-            ProbeResults.Add(probe);
 
         if (!summary.DeploymentMetadata.IsValid)
         {

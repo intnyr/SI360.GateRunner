@@ -53,6 +53,14 @@ public sealed partial class FlaUiScenarioMatrixViewModel : ObservableObject
     [ObservableProperty] private bool showHigh = true;
     [ObservableProperty] private bool showMedium = true;
     [ObservableProperty] private bool showLow = true;
+    [ObservableProperty] private bool showNotRun = true;
+    [ObservableProperty] private bool showQueued = true;
+    [ObservableProperty] private bool showRunning = true;
+    [ObservableProperty] private bool showPassed = true;
+    [ObservableProperty] private bool showFailed = true;
+    [ObservableProperty] private bool showBlocked = true;
+    [ObservableProperty] private bool showSkipped = true;
+    [ObservableProperty] private bool showNotImplemented = true;
 
     public int TotalCount => Items.Count;
     public int MappedCount => Items.Count(item => item.HasMappedTest);
@@ -72,6 +80,14 @@ public sealed partial class FlaUiScenarioMatrixViewModel : ObservableObject
     partial void OnShowHighChanged(bool value) => ItemsView.Refresh();
     partial void OnShowMediumChanged(bool value) => ItemsView.Refresh();
     partial void OnShowLowChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowNotRunChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowQueuedChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowRunningChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowPassedChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowFailedChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowBlockedChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowSkippedChanged(bool value) => ItemsView.Refresh();
+    partial void OnShowNotImplementedChanged(bool value) => ItemsView.Refresh();
 
     [RelayCommand]
     public void Refresh()
@@ -112,6 +128,13 @@ public sealed partial class FlaUiScenarioMatrixViewModel : ObservableObject
     {
         if (SelectedItem is null) return Task.CompletedTask;
         return RunScenariosAsync(new[] { SelectedItem }.ToList());
+    }
+
+    [RelayCommand(CanExecute = nameof(CanCancelRun))]
+    private void CancelRun()
+    {
+        _runCts?.Cancel();
+        RunStatusText = "Cancelling FlaUI matrix run...";
     }
 
     [RelayCommand]
@@ -251,6 +274,8 @@ public sealed partial class FlaUiScenarioMatrixViewModel : ObservableObject
             (ShowLow && item.IsLow);
         if (!priorityVisible) return false;
 
+        if (!IsStatusVisible(item.Status)) return false;
+
         if (string.IsNullOrWhiteSpace(SearchText)) return true;
         var haystack = string.Join('\n',
             item.Priority,
@@ -261,9 +286,24 @@ public sealed partial class FlaUiScenarioMatrixViewModel : ObservableObject
             item.VerificationTarget,
             item.SuggestedEvidence,
             item.MappedTestFilter,
-            item.StatusLabel);
+            item.StatusLabel,
+            item.FailureDetails,
+            item.TrxPath);
         return haystack.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
     }
+
+    private bool IsStatusVisible(TestScenarioMatrixStatus status) => status switch
+    {
+        TestScenarioMatrixStatus.NotRun => ShowNotRun,
+        TestScenarioMatrixStatus.Queued => ShowQueued,
+        TestScenarioMatrixStatus.Running => ShowRunning,
+        TestScenarioMatrixStatus.Passed => ShowPassed,
+        TestScenarioMatrixStatus.Failed => ShowFailed,
+        TestScenarioMatrixStatus.Blocked => ShowBlocked,
+        TestScenarioMatrixStatus.Skipped => ShowSkipped,
+        TestScenarioMatrixStatus.NotImplemented => ShowNotImplemented,
+        _ => true
+    };
 
     private static void OpenPath(string path)
     {
@@ -297,12 +337,14 @@ public sealed partial class FlaUiScenarioMatrixViewModel : ObservableObject
 
     private bool CanRunScenarios() => !IsRunning && Items.Count > 0;
     private bool CanRunSelectedScenario() => !IsRunning && SelectedItem is not null;
+    private bool CanCancelRun() => IsRunning;
 
     private void NotifyRunCommands()
     {
         RunAllCommand.NotifyCanExecuteChanged();
         RunFilteredCommand.NotifyCanExecuteChanged();
         RunSelectedCommand.NotifyCanExecuteChanged();
+        CancelRunCommand.NotifyCanExecuteChanged();
     }
 
     private static void ApplyOutcome(FlaUiScenarioMatrixItemViewModel item, TestOutcome outcome)

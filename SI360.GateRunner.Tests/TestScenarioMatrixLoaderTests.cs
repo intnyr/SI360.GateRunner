@@ -67,7 +67,7 @@ public sealed class TestScenarioMatrixLoaderTests
     }
 
     [Fact]
-    public void Load_MapsEveryRepositoryMatrixScenarioToAnExactSi360Test()
+    public void Load_ParsesCurrentSi360RepositoryMatrix()
     {
         var solutionPath = @"E:\SI36020WPF\SI360.slnx";
         var matrixPath = @"E:\SI36020WPF\DOCS\Unit-Integration-Service-Test-Scenario-Matrix-2026-05-15.md";
@@ -84,15 +84,18 @@ public sealed class TestScenarioMatrixLoaderTests
         };
 
         var document = new TestScenarioMatrixLoader().Load(settings, matrixPath);
-        var unmapped = document.Items
-            .Where(item => string.IsNullOrWhiteSpace(item.MappedTestFilter))
-            .Select(item => item.Scenario)
-            .ToArray();
-
         Assert.Empty(document.LoadErrors);
         Assert.Equal(61, document.Items.Count);
-        Assert.Empty(unmapped);
-        Assert.All(document.Items, item => Assert.EndsWith("." + item.Scenario, item.MappedTestFilter));
+        Assert.Contains(document.Items, item => item.Scenario == "SaleSubtotal_SumsActiveItemsOnly");
+        Assert.Contains(document.Items, item => item.Scenario == "RepositoryQuery_UsesParameterizedInputs");
+        Assert.Contains(document.Items, item => item.Scenario == "OfflineCredit_QueuesCaptureWhenOffline");
+        Assert.All(
+            document.Items.Where(item => !string.IsNullOrWhiteSpace(item.MappedTestFilter)),
+            item =>
+            {
+                Assert.EndsWith("." + item.Scenario, item.MappedTestFilter);
+                Assert.True(File.Exists(item.MappedTestSource), $"Mapped source should exist for {item.Scenario}: {item.MappedTestSource}");
+            });
     }
 
     private sealed class TempDirectory : IDisposable

@@ -77,10 +77,13 @@ public sealed class FlaUiScenarioMatrixLoaderTests
         Assert.True(document.Items.Count(item => !string.IsNullOrWhiteSpace(item.MappedTestFilter)) > 0);
         Assert.Contains(document.Items, item =>
             item.SpecificScenario == "Valid PIN Authenticates" &&
-            item.MappedTestFilter?.EndsWith("Sign_On_Screen_Should_Authenticate_To_Service_Profile_Or_Room_Selection", StringComparison.Ordinal) == true);
+            item.MappedTestFilter?.EndsWith("Valid_Login_Should_Navigate_To_Room_Selection", StringComparison.Ordinal) == true);
         Assert.Contains(document.Items, item =>
-            item.SpecificScenario == "Sell Gift Card Dialog Opens" &&
-            item.MappedTestFilter?.EndsWith("Functional_51_Sell_Gift_Card_Should_Open_Dialog_And_Expose_Numpad", StringComparison.Ordinal) == true);
+            item.SpecificScenario == "Add Standard Menu Item" &&
+            item.MappedTestFilter?.EndsWith("Functional_04_Add_Item_Should_Show_Order_Row", StringComparison.Ordinal) == true);
+        Assert.All(
+            document.Items.Where(item => !string.IsNullOrWhiteSpace(item.MappedTestFilter)),
+            item => Assert.True(File.Exists(item.MappedTestSource), $"Mapped source should exist for {item.SpecificScenario}: {item.MappedTestSource}"));
     }
 
     private sealed class TempDirectory : IDisposable

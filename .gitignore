@@ -1,36 +1,115 @@
-# Build output
-bin/
-obj/
-artifacts/
-
-# IDE state
-.vs/
-.vscode/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
+# Build and publish output
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Pp]ublish/
+[Aa]rtifacts/
 *_wpftmp.csproj
+*.nupkg
+*.snupkg
 
-# Test and diagnostic artifacts
-TestResults/
-**/TestResults/
+# Test results, coverage, and generated reports
+[Tt]est[Rr]esults/
+**/[Tt]est[Rr]esults/
+[Cc]overage[Rr]esults/
+**/[Cc]overage[Rr]esults/
 *.trx
 *.coverage
 *.coveragexml
+*.testlog
+*.binlog
+*.blg
+*.etl
+*.junit.xml
+*.opencover.xml
+*.cobertura.xml
 
-# Local dependency/cache folders
-.dotnet-cli-home/
-.nuget/
-
-# GateRunner runtime output
+# GateRunner runtime output and bundles
 GateRun_*/
 GateRun_*.json
 GateRun_*.md
+GateRunnerSupportBundle_*.zip
+*.support.zip
+*.diagnostics.txt
 
-# Logs and temporary files
+# UI automation screenshots, videos, and traces
+[Ss]creenshots/
+**/[Ss]creenshots/
+[Vv]ideos/
+**/[Vv]ideos/
+[Tt]races/
+**/[Tt]races/
+[Pp]laywright-[Rr]eport/
+test-results/
+*.trace
+*.trace.zip
+*.har
+*.webm
+*.mp4
+
+# Logs, dumps, and temporary files
+[Ll]ogs/
+**/[Ll]ogs/
 *.log
-.tmp/
+*.dmp
+*.dump
 *.tmp
+*.temp
 *.cache
 *.bak
+.tmp/
+tmp/
+temp/
+
+# IDE and editor state
+.vs/
+.vscode/
+.idea/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+
+# Local dependency and tool caches
+.dotnet-cli-home/
+.nuget/
+.dotnet/
+.cache/
+packages/
+node_modules/
+.pytest_cache/
+.mypy_cache/
+
+# Local databases
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.mdf
+*.ldf
+
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
+!**/.env.example
+appsettings.Local.json
+appsettings.*.local.json
+*.secrets.json
+user-secrets/
+secrets/
+*.pfx
+*.p12
+*.pem
+*.key
+*.cer
+*.crt

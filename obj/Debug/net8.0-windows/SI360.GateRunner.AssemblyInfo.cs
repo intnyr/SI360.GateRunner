@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SI360.GateRunner")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+900014626bf147b1d836b6b415d3bb89d85f4d5e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2a3ec0b68b67926037c7cc4057f5391711fbc8df")]
 [assembly: System.Reflection.AssemblyProductAttribute("SI360.GateRunner")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SI360.GateRunner")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

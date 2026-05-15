@@ -144,6 +144,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0"
+                     VerticalAlignment="Top"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Search test scenario matrix"
                      ToolTip="Search area, scenario, type, setup, expected result, target code, and notes"/>

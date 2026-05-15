@@ -141,6 +141,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0"
+                     VerticalAlignment="Top"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                      AutomationProperties.Name="Search FlaUI scenario matrix"
                      ToolTip="Search priority, parent scenario, scenario name, description, controls, target, and evidence"/>

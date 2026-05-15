@@ -29,12 +29,15 @@ Use this runbook when an engineer or QA owner needs a local pre-deployment gate 
 
    - solution path points to `SI360.slnx`
    - test project path points to `SI360.Tests.csproj`
+   - FlaUI test project path points to `SI360.UITests.csproj`
+   - SI360 UI app path points to the built `SI360.UI.exe`
+   - SI360 valid PIN is configured when authenticated FlaUI matrix rows need to run
    - results directory is writable
-   - restore, build, and gate timeouts are positive
+   - restore, build, gate, and per-test FlaUI timeouts are positive
 
 4. Click Run Gates or press `F5`.
 
-5. Review the decision banner, failure inventory, catalog warnings, and generated report.
+5. Review the decision banner, failure inventory, catalog warnings, matrix tabs, and generated report.
 
 ## Expected Artifacts
 

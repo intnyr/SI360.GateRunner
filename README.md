@@ -35,8 +35,11 @@ GateRunner auto-discovers `SI360.slnx` by probing from the app directory and kno
 
 - SI360 solution path
 - SI360 test project path
+- SI360 FlaUI test project path
+- SI360 UI executable path
+- SI360 valid PIN for authenticated FlaUI runs
 - results directory
-- restore, build, and gate timeouts
+- restore, build, gate, and per-test FlaUI timeouts
 - build configuration, deployment metadata path, probe mode/timeout, retention days, and support bundle path
 
 Settings are saved to `%APPDATA%\SI360.GateRunner\settings.json`.
@@ -71,7 +74,7 @@ Each run writes:
 
 The JSON report includes:
 
-- `schemaVersion`: current contract version, currently `2.2`
+- `schemaVersion`: current contract version, currently `2.3`
 - `startedAt` in UTC, `durationSeconds`, and environment `LocalUtcOffset`
 - `decision`
 - `environment`: tool version, machine, OS, runtime, SDK, repo path, branch, commit, artifact directory, command snapshots
@@ -113,6 +116,8 @@ The WPF app provides:
 - primary actions for Run Gates, Cancel, Open Report, Settings, and theme switching
 - keyboard shortcuts for primary workflows
 - gate status filters and per-gate rerun
+- Test Scenario Matrix for SI360 unit, integration, repository, and service scenarios
+- FlaUI Scenario Matrix for SI360 WPF UI automation scenarios
 - score delta from the prior JSON report
 - visible settings and catalog warnings
 - quality issue traceability from source location to score and decision impact

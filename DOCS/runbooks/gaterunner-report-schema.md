@@ -27,7 +27,6 @@ The JSON report includes `schemaVersion`. Additive fields are allowed in minor u
 - `healthContracts`
 - `deploymentMetadata`
 - `syntheticProbes`
-- `flauiCoverage`
 - `qualityIssues`
 - `gradingImpacts`
 - `scorecard`
@@ -63,29 +62,18 @@ GateRunner prunes old `GateRun_*` Markdown reports, JSON reports, and per-run ar
 
 `syntheticProbes` contains read-only phase-1 probe results with endpoint, status, duration, contract version, and redacted diagnostics.
 
-## FlaUI Coverage Semantics
+## Scenario Matrix UI Semantics
 
-`flauiCoverage` is an additive checklist section for SI360 WPF FlaUI coverage. It is grouped into exactly:
+GateRunner exposes SI360 scenario matrices in the WPF app instead of embedding the old FlaUI coverage checklist into the run JSON report.
 
-- `ORDER TAKING PROCEDURES`
-- `USER FUNCTIONS AND DINING ROOM SCENARIOS`
+- `Test Scenario Matrix` loads `E:\SI36020WPF\DOCS\Unit-Integration-Service-Test-Scenario-Matrix-2026-05-15.md` and tracks unit, integration, repository, and service test rows.
+- `FlaUI Scenario Matrix` loads `E:\SI36020WPF\DOCS\FlaUI-Specific-Scenario-Matrix-2026-05-15.md` and tracks SI360 WPF FlaUI rows grouped by `High`, `Medium`, and `Low` priority.
 
-Each item has one checklist status: `NotStarted`, `Passed`, `Failed`, `Blocked`, or `NeedsReview`. Automation availability and latest execution status are kept separate so discoverability-only coverage is not mistaken for a passing end-to-end run. Evidence paths may include TRX files, source files, report files, screenshots, UI tree dumps, and artifact folders.
-
-The known FlaUI fixture startup issue, `Unable to acquire current main window`, is represented as `Blocked` when it prevents live execution.
-
-The `flauiCoverage` object includes:
-
-- `schemaVersion`: coverage manifest schema version.
-- `loadedAt`: UTC time when coverage was evaluated.
-- `manifestPath`: manifest used for the run.
-- `loadErrors`: manifest or source validation failures.
-- `summary`: total, automated, passed, failed, blocked, needs-review, and not-started counts.
-- `sections`: the two coverage groups and item rows with scenario id/name, checklist status, automation status, execution status, verification level, latest TRX/test reference, evidence paths, source files, blocker reason, error message, and notes.
+Both matrix tabs can run mapped tests, write TRX output to the configured results directory, and mark unmapped rows as `Not Implemented`. Matrix execution state is an interactive GateRunner UI concern; it is not part of the current `GateRun_*.json` schema.
 
 ## Quality Issue And Grading Semantics
 
-Schema `2.3` keeps the deployment-integrity ledger from `2.2` and adds FlaUI coverage reporting:
+Schema `2.3` keeps the deployment-integrity ledger from `2.2` and adds strict quality issue reporting:
 
 - `qualityIssues`: every warning or error that affects GateRunner grading.
 - `gradingImpacts`: the same issue set shaped for consumers that need issue-to-score-to-decision traceability.

@@ -10,7 +10,6 @@ public static class GateRunnerAppServices
     {
         services.AddSingleton<ThemeManager>();
         services.AddSingleton<ToastNotifier>();
-        services.AddSingleton<FlaUiCoverageViewModel>();
         services.AddSingleton<TestScenarioMatrixViewModel>();
         services.AddSingleton<FlaUiScenarioMatrixViewModel>();
         services.AddSingleton<MainViewModel>();

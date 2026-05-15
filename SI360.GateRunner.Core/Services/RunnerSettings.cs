@@ -164,6 +164,8 @@ public sealed class RunnerSettings
             errors.Add("BuildTimeoutSeconds must be greater than zero.");
         if (GateTimeoutSeconds <= 0)
             errors.Add("GateTimeoutSeconds must be greater than zero.");
+        if (PerTestTimeoutSeconds <= 0)
+            errors.Add("PerTestTimeoutSeconds must be greater than zero.");
         if (ProbeTimeoutSeconds <= 0)
             errors.Add("ProbeTimeoutSeconds must be greater than zero.");
         if (ReportRetentionDays <= 0)

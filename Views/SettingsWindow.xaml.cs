@@ -14,21 +14,58 @@ public partial class SettingsWindow : Window
         InitializeComponent();
         _settings = settings;
 
-        SolutionPathBox.Text = settings.SolutionPath;
-        TestProjectPathBox.Text = settings.TestProjectPath;
-        FlaUiTestProjectPathBox.Text = settings.ResolveFlaUiTestProjectPath();
-        Si360UiAppPathBox.Text = settings.ResolveSi360UiAppPath();
-        Si360UiValidPinBox.Password = settings.ResolveSi360UiValidPin();
-        ResultsDirectoryBox.Text = settings.ResultsDirectory;
-        RestoreTimeoutBox.Text = settings.RestoreTimeoutSeconds.ToString();
-        BuildTimeoutBox.Text = settings.BuildTimeoutSeconds.ToString();
-        GateTimeoutBox.Text = settings.GateTimeoutSeconds.ToString();
-        BuildConfigurationBox.Text = settings.BuildConfiguration;
-        DeploymentMetadataPathBox.Text = settings.DeploymentMetadataPath;
-        ProbeModeBox.Text = settings.ProbeMode;
-        ProbeTimeoutBox.Text = settings.ProbeTimeoutSeconds.ToString();
-        RetentionDaysBox.Text = settings.ReportRetentionDays.ToString();
-        SupportBundleOutputPathBox.Text = settings.SupportBundleOutputPath;
+        Populate(settings, useDetectedFallbacks: true);
+    }
+
+    private void UseDetectedValues_Click(object sender, RoutedEventArgs e)
+    {
+        Populate(RunnerSettings.Discover(), useDetectedFallbacks: true);
+        if (!string.IsNullOrWhiteSpace(_settings.Si360UiValidPin))
+            Si360UiValidPinBox.Password = _settings.Si360UiValidPin;
+        ValidationText.Text = "Detected values loaded. Review and save to persist them.";
+    }
+
+    private void Populate(RunnerSettings source, bool useDetectedFallbacks)
+    {
+        var detected = useDetectedFallbacks ? RunnerSettings.Discover() : new RunnerSettings();
+        var solutionPath = FirstExistingFile(source.SolutionPath, detected.SolutionPath);
+        var solutionDir = string.IsNullOrWhiteSpace(solutionPath)
+            ? RunnerSettings.DefaultSi360Root
+            : Path.GetDirectoryName(solutionPath) ?? RunnerSettings.DefaultSi360Root;
+
+        SolutionPathBox.Text = FirstNonEmpty(solutionPath, Path.Combine(RunnerSettings.DefaultSi360Root, "SI360.slnx"));
+        TestProjectPathBox.Text = FirstExistingFile(
+            source.TestProjectPath,
+            detected.TestProjectPath,
+            Path.Combine(solutionDir, "SI360.Tests", "SI360.Tests.csproj"));
+        FlaUiTestProjectPathBox.Text = FirstExistingFile(
+            source.FlaUiTestProjectPath,
+            source.ResolveFlaUiTestProjectPath(),
+            detected.FlaUiTestProjectPath,
+            Path.Combine(solutionDir, "SI360.UITests", "SI360.UITests.csproj"));
+        Si360UiAppPathBox.Text = FirstExistingFile(
+            source.Si360UiAppPath,
+            source.ResolveSi360UiAppPath(),
+            detected.Si360UiAppPath,
+            Path.Combine(solutionDir, "SI360.UI", "bin", source.BuildConfiguration, "net8.0-windows", "SI360.UI.exe"),
+            Path.Combine(solutionDir, "SI360.UI", "bin", "Debug", "net8.0-windows", "SI360.UI.exe"));
+        Si360UiValidPinBox.Password = source.ResolveSi360UiValidPin();
+        ResultsDirectoryBox.Text = FirstNonEmpty(
+            source.ResultsDirectory,
+            detected.ResultsDirectory,
+            Path.Combine(solutionDir, "TestResults"));
+        RestoreTimeoutBox.Text = PositiveOrDefault(source.RestoreTimeoutSeconds, 300).ToString();
+        BuildTimeoutBox.Text = PositiveOrDefault(source.BuildTimeoutSeconds, 600).ToString();
+        GateTimeoutBox.Text = PositiveOrDefault(source.GateTimeoutSeconds, 900).ToString();
+        PerTestTimeoutBox.Text = PositiveOrDefault(source.PerTestTimeoutSeconds, 60).ToString();
+        BuildConfigurationBox.Text = FirstNonEmpty(source.BuildConfiguration, "Release");
+        DeploymentMetadataPathBox.Text = FirstExistingFile(
+            source.DeploymentMetadataPath,
+            Path.Combine(solutionDir, "SI360.UI", "deployment-metadata.json"));
+        ProbeModeBox.Text = FirstNonEmpty(source.ProbeMode, "ReadOnly");
+        ProbeTimeoutBox.Text = PositiveOrDefault(source.ProbeTimeoutSeconds, 30).ToString();
+        RetentionDaysBox.Text = PositiveOrDefault(source.ReportRetentionDays, 30).ToString();
+        SupportBundleOutputPathBox.Text = source.SupportBundleOutputPath;
     }
 
     private void Save_Click(object sender, RoutedEventArgs e)
@@ -37,6 +74,7 @@ public partial class SettingsWindow : Window
         if (!ValidatePositiveInt(RestoreTimeoutBox.Text, out var restoreTimeout) ||
             !ValidatePositiveInt(BuildTimeoutBox.Text, out var buildTimeout) ||
             !ValidatePositiveInt(GateTimeoutBox.Text, out var gateTimeout) ||
+            !ValidatePositiveInt(PerTestTimeoutBox.Text, out var perTestTimeout) ||
             !ValidatePositiveInt(ProbeTimeoutBox.Text, out var probeTimeout) ||
             !ValidatePositiveInt(RetentionDaysBox.Text, out var retentionDays))
         {
@@ -105,6 +143,7 @@ public partial class SettingsWindow : Window
         _settings.RestoreTimeoutSeconds = restoreTimeout;
         _settings.BuildTimeoutSeconds = buildTimeout;
         _settings.GateTimeoutSeconds = gateTimeout;
+        _settings.PerTestTimeoutSeconds = perTestTimeout;
         _settings.BuildConfiguration = BuildConfigurationBox.Text.Trim();
         _settings.DeploymentMetadataPath = DeploymentMetadataPathBox.Text.Trim();
         _settings.ProbeMode = probeMode;
@@ -116,6 +155,24 @@ public partial class SettingsWindow : Window
 
     private static bool ValidatePositiveInt(string value, out int parsed) =>
         int.TryParse(value, out parsed) && parsed > 0;
+
+    private static int PositiveOrDefault(int value, int defaultValue) => value > 0 ? value : defaultValue;
+
+    private static string FirstNonEmpty(params string[] values) =>
+        values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value))?.Trim() ?? string.Empty;
+
+    private static string FirstExistingFile(params string[] values)
+    {
+        foreach (var value in values)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                continue;
+            if (File.Exists(value))
+                return value.Trim();
+        }
+
+        return FirstNonEmpty(values);
+    }
 
     private static bool IsValidProbeMode(string value) =>
         string.Equals(value, "Disabled", StringComparison.OrdinalIgnoreCase) ||

@@ -75,7 +75,7 @@ public sealed class DotnetTestRunner
         });
 
         var result = await _processRunner.RunAsync(
-            GateRunnerCommands.FlaUiCoverage(_settings, filter, runDir, trxName, filterCount),
+            GateRunnerCommands.FlaUiTest(_settings, filter, runDir, trxName, filterCount),
             capture,
             ct).ConfigureAwait(false);
 

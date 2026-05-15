@@ -36,7 +36,7 @@ public static class GateRunnerCommands
             runDirectory,
             $"gate-{gateId}");
 
-    public static ProcessCommand FlaUiCoverage(
+    public static ProcessCommand FlaUiTest(
         RunnerSettings settings,
         string filter,
         string runDirectory,
@@ -61,7 +61,7 @@ public static class GateRunnerCommands
             WorkingDirectoryFor(testProjectPath),
             TimeSpan.FromSeconds(scenarioTimeoutSeconds),
             runDirectory,
-            "flaui-coverage",
+            "flaui-test",
             environment);
     }
 

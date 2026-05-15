@@ -30,8 +30,8 @@
         <Setter Property="MinWidth" Value="160"/>
         <Setter Property="Padding" Value="28,0"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
-        <Setter Property="Foreground" Value="{DynamicResource OnPrimaryForegroundBrush}"/>
+        <Setter Property="Background" Value="#FF0A4BAD"/>
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -50,15 +50,16 @@
                         <Border.RenderTransform>
                             <ScaleTransform ScaleX="1" ScaleY="1"/>
                         </Border.RenderTransform>
-                        <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
-                                          RecognizesAccessKey="True"
-                                          TextElement.Foreground="{TemplateBinding Foreground}"
-                                          TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                        <TextBlock Text="{TemplateBinding Content}"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   FontWeight="{TemplateBinding FontWeight}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="b" Property="Background" Value="{DynamicResource PrimaryHoverBrush}"/>
+                            <Setter TargetName="b" Property="Background" Value="#FF0A4BAD"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="b" Property="RenderTransform">
@@ -68,8 +69,8 @@
                             </Setter>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="b" Property="Background" Value="{DynamicResource DisabledBgBrush}"/>
-                            <Setter Property="Foreground" Value="{DynamicResource DisabledFgBrush}"/>
+                            <Setter TargetName="b" Property="Background" Value="#FF0A4BAD"/>
+                            <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

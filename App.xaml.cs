@@ -96,6 +96,8 @@ public partial class App : Application
     {
         if (settings.GateTimeoutSeconds <= 0)
             settings.GateTimeoutSeconds = 900;
+        if (settings.PerTestTimeoutSeconds <= 0)
+            settings.PerTestTimeoutSeconds = 60;
         if (settings.BuildTimeoutSeconds <= 0)
             settings.BuildTimeoutSeconds = 600;
         if (settings.RestoreTimeoutSeconds <= 0)

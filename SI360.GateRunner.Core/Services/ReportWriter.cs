@@ -116,8 +116,6 @@ public sealed class ReportWriter : IReportWriter
             sb.AppendLine();
         }
 
-        AppendFlaUiCoverageMarkdown(sb, s.FlaUiCoverage, redactor);
-
         sb.AppendLine("## Run History");
         sb.AppendLine();
         if (s.History.PriorRunFound)
@@ -304,64 +302,6 @@ public sealed class ReportWriter : IReportWriter
                 durationMs = p.DurationMs,
                 diagnostics = Safe(p.Diagnostics, redactor)
             }),
-            flauiCoverage = new
-            {
-                schemaVersion = Safe(s.FlaUiCoverage.SchemaVersion, redactor),
-                loadedAt = s.FlaUiCoverage.LoadedAt,
-                manifestPath = Safe(s.FlaUiCoverage.ManifestPath, redactor),
-                loadErrors = s.FlaUiCoverage.LoadErrors.Select(e => Safe(e, redactor)),
-                loadWarnings = s.FlaUiCoverage.LoadWarnings.Select(w => Safe(w, redactor)),
-                runtimeConfiguration = new
-                {
-                    solutionPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.SolutionPath, redactor),
-                    testProjectPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.TestProjectPath, redactor),
-                    flaUiTestProjectPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.FlaUiTestProjectPath, redactor),
-                    si360UiAppPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.Si360UiAppPath, redactor),
-                    resultsDirectory = Safe(s.FlaUiCoverage.RuntimeConfiguration.ResultsDirectory, redactor),
-                    pinSource = Safe(s.FlaUiCoverage.RuntimeConfiguration.PinSource, redactor),
-                    testingConfigurationPath = Safe(s.FlaUiCoverage.RuntimeConfiguration.TestingConfigurationPath, redactor),
-                    runtimeFlags = s.FlaUiCoverage.RuntimeConfiguration.RuntimeFlags.ToDictionary(
-                        kvp => Safe(kvp.Key, redactor),
-                        kvp => Safe(kvp.Value, redactor))
-                },
-                summary = new
-                {
-                    s.FlaUiCoverage.Summary.Total,
-                    s.FlaUiCoverage.Summary.CanonicalTotal,
-                    s.FlaUiCoverage.Summary.DerivedTotal,
-                    s.FlaUiCoverage.Summary.Automated,
-                    s.FlaUiCoverage.Summary.Passed,
-                    s.FlaUiCoverage.Summary.Failed,
-                    s.FlaUiCoverage.Summary.Blocked,
-                    s.FlaUiCoverage.Summary.NeedsReview,
-                    s.FlaUiCoverage.Summary.NotStarted
-                },
-                sections = s.FlaUiCoverage.Sections.Select(section => new
-                {
-                    group = section.Group.ToString(),
-                    name = Safe(section.Name, redactor),
-                    sourceDocument = Safe(section.SourceDocument, redactor),
-                    items = section.Items.Select(item => new
-                    {
-                        id = Safe(item.Item.Id, redactor),
-                        name = Safe(item.Item.Name, redactor),
-                        group = item.Item.Group.ToString(),
-                        isDerived = item.Item.IsDerived,
-                        canonicalScenario = Safe(item.Item.CanonicalScenario, redactor),
-                        status = item.Status.ToString(),
-                        automationStatus = item.Item.AutomationStatus.ToString(),
-                        executionStatus = item.ExecutionStatus.ToString(),
-                        verificationLevel = Safe(item.Item.VerificationLevel, redactor),
-                        latestTestName = Safe(item.LatestTestName, redactor),
-                        trxPath = Safe(item.TrxPath, redactor),
-                        errorMessage = Safe(item.ErrorMessage, redactor),
-                        blockerReason = Safe(item.BlockerReason, redactor),
-                        sourceFiles = item.Item.SourceFiles.Select(p => Safe(p, redactor)),
-                        evidencePaths = item.EvidencePaths.Select(p => Safe(p, redactor)),
-                        notes = Safe(item.Item.Notes, redactor)
-                    })
-                })
-            },
             gateCatalogWarnings = s.GateCatalogWarnings.Select(w => new
             {
                 Code = Safe(w.Code, redactor),
@@ -489,59 +429,4 @@ public sealed class ReportWriter : IReportWriter
         return idx >= 0 ? normalized[(idx + marker.Length)..] : Path.GetFileName(filePath);
     }
 
-    private static void AppendFlaUiCoverageMarkdown(StringBuilder sb, FlaUiCoverageRun coverage, ISecretRedactor redactor)
-    {
-        sb.AppendLine("## FlaUI Coverage");
-        sb.AppendLine();
-        if (coverage.LoadErrors.Count > 0)
-        {
-            sb.AppendLine("### Load Errors");
-            sb.AppendLine();
-            foreach (var error in coverage.LoadErrors)
-                sb.AppendLine($"- {Escape(error, redactor)}");
-            sb.AppendLine();
-        }
-
-        if (coverage.LoadWarnings.Count > 0)
-        {
-            sb.AppendLine("### Load Warnings");
-            sb.AppendLine();
-            foreach (var warning in coverage.LoadWarnings)
-                sb.AppendLine($"- {Escape(warning, redactor)}");
-            sb.AppendLine();
-        }
-
-        if (!string.IsNullOrWhiteSpace(coverage.RuntimeConfiguration.Si360UiAppPath))
-        {
-            sb.AppendLine("### Runtime Configuration");
-            sb.AppendLine();
-            sb.AppendLine($"- SI360 UI app: `{Escape(coverage.RuntimeConfiguration.Si360UiAppPath, redactor)}`");
-            sb.AppendLine($"- FlaUI test project: `{Escape(coverage.RuntimeConfiguration.FlaUiTestProjectPath, redactor)}`");
-            sb.AppendLine($"- Results directory: `{Escape(coverage.RuntimeConfiguration.ResultsDirectory, redactor)}`");
-            sb.AppendLine($"- PIN source: `{Escape(coverage.RuntimeConfiguration.PinSource, redactor)}`");
-            sb.AppendLine($"- Testing configuration: `{Escape(coverage.RuntimeConfiguration.TestingConfigurationPath ?? string.Empty, redactor)}`");
-            sb.AppendLine();
-        }
-
-        sb.AppendLine($"**Total:** {coverage.Summary.Total}  ");
-        sb.AppendLine($"**Canonical:** {coverage.Summary.CanonicalTotal} &nbsp;&nbsp; **Derived:** {coverage.Summary.DerivedTotal}  ");
-        sb.AppendLine($"**Automated:** {coverage.Summary.Automated}  ");
-        sb.AppendLine($"**Passed:** {coverage.Summary.Passed} &nbsp;&nbsp; **Failed:** {coverage.Summary.Failed} &nbsp;&nbsp; **Blocked:** {coverage.Summary.Blocked} &nbsp;&nbsp; **Needs Review:** {coverage.Summary.NeedsReview} &nbsp;&nbsp; **Not Started:** {coverage.Summary.NotStarted}");
-        sb.AppendLine();
-
-        foreach (var section in coverage.Sections)
-        {
-            sb.AppendLine($"### {Escape(section.Name, redactor)}");
-            sb.AppendLine();
-            sb.AppendLine("| Scenario | Status | Automation | Execution | Verification | Evidence | Notes |");
-            sb.AppendLine("|----------|--------|------------|-----------|--------------|----------|-------|");
-            foreach (var item in section.Items)
-            {
-                var evidence = item.EvidencePaths.Count > 0 ? string.Join("<br>", item.EvidencePaths.Select(p => $"`{Escape(p, redactor)}`")) : "-";
-                var notes = item.BlockerReason ?? item.Item.Notes;
-                sb.AppendLine($"| {Escape(item.Item.Name, redactor)} | {item.Status} | {item.Item.AutomationStatus} | {item.ExecutionStatus} | {Escape(item.Item.VerificationLevel, redactor)} | {evidence} | {Escape(notes, redactor)} |");
-            }
-            sb.AppendLine();
-        }
-    }
 }

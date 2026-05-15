@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 E:\GateRunner\App.xaml
-9-555857213
+10612801860
 2-28378812
-201665891945
+23-459742353
 237-1938036797
-Styles\DarkTheme.xaml;Styles\LightTheme.xaml;Styles\SharedStyles.xaml;Views\FailureInventoryView.xaml;Views\FlaUiCoverageView.xaml;Views\GateDetailView.xaml;Views\MainWindow.xaml;Views\ScorecardView.xaml;Views\SettingsWindow.xaml;
+Styles\DarkTheme.xaml;Styles\LightTheme.xaml;Styles\SharedStyles.xaml;Views\FailureInventoryView.xaml;Views\FlaUiCoverageView.xaml;Views\GateDetailView.xaml;Views\MainWindow.xaml;Views\ScorecardView.xaml;Views\SettingsWindow.xaml;Views\TestScenarioMatrixView.xaml;
 
 False
 

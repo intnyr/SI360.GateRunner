@@ -10,7 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
             <Border Padding="16" CornerRadius="8" Background="{DynamicResource SurfaceBrush}">
@@ -53,6 +53,56 @@
             </Border>
         </StackPanel>
         <TextBlock Grid.Row="1" Text="Formula: Overall = Scenario x 0.6 + Probabilistic x 0.4. Decision: >=95 GO, >=85 HOLD, else NO-GO."
-                   Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap"/>
+                   Foreground="{DynamicResource MutedForegroundBrush}" TextWrapping="Wrap" Margin="0,0,0,12"/>
+        <DataGrid Grid.Row="2"
+                  ItemsSource="{Binding GateItems}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Gate" Binding="{Binding DisplayName}" MinWidth="220" Width="2*"/>
+                <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="150"/>
+                <DataGridTemplateColumn Header="Grade" Width="90">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Grade}" FontWeight="Bold">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{DynamicResource MutedForegroundBrush}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Grade}" Value="A+">
+                                                <Setter Property="Foreground" Value="{DynamicResource SuccessGreenBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Grade}" Value="A">
+                                                <Setter Property="Foreground" Value="{DynamicResource SuccessGreenBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Grade}" Value="B+">
+                                                <Setter Property="Foreground" Value="{DynamicResource WarningAmberBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Grade}" Value="B">
+                                                <Setter Property="Foreground" Value="{DynamicResource WarningAmberBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Grade}" Value="C">
+                                                <Setter Property="Foreground" Value="{DynamicResource WarningAmberBrush}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Grade}" Value="F">
+                                                <Setter Property="Foreground" Value="{DynamicResource DangerRedBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="120"/>
+                <DataGridTextColumn Header="Result" Binding="{Binding ResultSummary}" MinWidth="220" Width="2*"/>
+                <DataGridTextColumn Header="Expected" Binding="{Binding ExpectedTestCount}" Width="90"/>
+                <DataGridTextColumn Header="Reason" Binding="{Binding Reason}" MinWidth="320" Width="3*"/>
+                <DataGridTextColumn Header="Evidence" Binding="{Binding Evidence}" MinWidth="260" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

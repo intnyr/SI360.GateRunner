@@ -366,7 +366,7 @@ public partial class MainViewModel : ObservableObject
                 QualityIssueAggregator.RefreshDerivedIssues(summary);
                 RefreshQualityIssues(summary);
                 ApplyDecision(summary);
-                Scorecard.Apply(summary.Scorecard, summary.Decision);
+                Scorecard.Apply(summary.Scorecard, summary.Decision, summary.GateResults);
 
                 var prev = PreviousRunLoader.LoadLatest(_settings.ResultsDirectory);
                 await FinalizeAsync(summary, startedAt);
@@ -380,6 +380,7 @@ public partial class MainViewModel : ObservableObject
             }
             else
             {
+                Scorecard.ApplyGateResults(Gates.Select(g => g.Result));
                 StatusText = $"Re-ran {singleGate.DisplayName}: {singleGate.Passed} passed, {singleGate.Failed} failed.";
             }
         }

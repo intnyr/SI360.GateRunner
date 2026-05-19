@@ -53,6 +53,50 @@ public sealed class TestScenarioMatrixLoaderTests
     }
 
     [Fact]
+    public void Load_MapsScenarioRowsToSuggestedTargetTestClassWhenExactScenarioMethodIsMissing()
+    {
+        using var dir = new TempDirectory();
+        var solutionPath = Path.Combine(dir.Path, "SI360.slnx");
+        Directory.CreateDirectory(Path.Combine(dir.Path, "DOCS"));
+        Directory.CreateDirectory(Path.Combine(dir.Path, "SI360.Tests", "Services"));
+        File.WriteAllText(solutionPath, string.Empty);
+        File.WriteAllText(
+            Path.Combine(dir.Path, TestScenarioMatrixLoader.DefaultDocumentRelativePath),
+            """
+            # Unit, Integration, Repository, and Service Test Scenario Matrix
+
+            ## Scenario Matrix
+
+            | Area | Specific Test Scenario | Recommended Test Type | Setup / Inputs | Expected Result | Suggested Target Code | Notes |
+            |---|---|---|---|---|---|---|
+            | Repository / Service Calculations | AutoGratuity_AppliesWhenThresholdMet | Service test | Guest count meets rule | Auto gratuity amount is added | `AutoGratuityService` | Include exact threshold boundary. |
+
+            ## Tracking Notes
+            """);
+        File.WriteAllText(
+            Path.Combine(dir.Path, "SI360.Tests", "Services", "AutoGratuityServiceTests.cs"),
+            """
+            namespace SI360.Tests.Services;
+
+            public sealed class AutoGratuityServiceTests
+            {
+                [Fact]
+                public void CalculatesConfiguredGratuity()
+                {
+                }
+            }
+            """);
+
+        var settings = new RunnerSettings { SolutionPath = solutionPath };
+        var document = new TestScenarioMatrixLoader().Load(settings);
+
+        Assert.Empty(document.LoadErrors);
+        var item = Assert.Single(document.Items);
+        Assert.Equal("SI360.Tests.Services.AutoGratuityServiceTests", item.MappedTestFilter);
+        Assert.EndsWith("AutoGratuityServiceTests.cs", item.MappedTestSource);
+    }
+
+    [Fact]
     public void Load_ReportsMissingDocument()
     {
         using var dir = new TempDirectory();
@@ -86,6 +130,9 @@ public sealed class TestScenarioMatrixLoaderTests
         var document = new TestScenarioMatrixLoader().Load(settings, matrixPath);
         Assert.Empty(document.LoadErrors);
         Assert.Equal(61, document.Items.Count);
+        Assert.True(
+            document.Items.Count(item => !string.IsNullOrWhiteSpace(item.MappedTestFilter)) > 0,
+            "current SI360 matrix should map at least some rows to executable tests");
         Assert.Contains(document.Items, item => item.Scenario == "SaleSubtotal_SumsActiveItemsOnly");
         Assert.Contains(document.Items, item => item.Scenario == "RepositoryQuery_UsesParameterizedInputs");
         Assert.Contains(document.Items, item => item.Scenario == "OfflineCredit_QueuesCaptureWhenOffline");
@@ -93,7 +140,6 @@ public sealed class TestScenarioMatrixLoaderTests
             document.Items.Where(item => !string.IsNullOrWhiteSpace(item.MappedTestFilter)),
             item =>
             {
-                Assert.EndsWith("." + item.Scenario, item.MappedTestFilter);
                 Assert.True(File.Exists(item.MappedTestSource), $"Mapped source should exist for {item.Scenario}: {item.MappedTestSource}");
             });
     }

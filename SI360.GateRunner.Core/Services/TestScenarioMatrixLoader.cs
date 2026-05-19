@@ -130,12 +130,71 @@ public sealed class TestScenarioMatrixLoader : ITestScenarioMatrixLoader
         {
             var match = methods.FirstOrDefault(method =>
                 string.Equals(method.Name, item.Scenario, StringComparison.OrdinalIgnoreCase));
-            if (match is null)
+            if (match is not null)
+            {
+                item.MappedTestFilter = match.FullyQualifiedName;
+                item.MappedTestSource = match.SourcePath;
+                continue;
+            }
+
+            var fallback = ResolveTargetCodeFallback(item, methods);
+            if (fallback is null)
                 continue;
 
-            item.MappedTestFilter = match.FullyQualifiedName;
-            item.MappedTestSource = match.SourcePath;
+            item.MappedTestFilter = fallback.FullyQualifiedClassName;
+            item.MappedTestSource = fallback.SourcePath;
         }
+    }
+
+    private static DiscoveredTestMethod? ResolveTargetCodeFallback(
+        TestScenarioMatrixItem item,
+        IReadOnlyCollection<DiscoveredTestMethod> methods)
+    {
+        var targetTokens = ExtractTargetCodeTokens(item.SuggestedTargetCode).ToList();
+        if (targetTokens.Count == 0)
+            return null;
+
+        return methods
+            .Select(method => new
+            {
+                Method = method,
+                Score = targetTokens.Max(token => ScoreTargetMatch(token, method))
+            })
+            .Where(candidate => candidate.Score > 0)
+            .OrderByDescending(candidate => candidate.Score)
+            .ThenBy(candidate => candidate.Method.FullyQualifiedName, StringComparer.OrdinalIgnoreCase)
+            .Select(candidate => candidate.Method)
+            .FirstOrDefault();
+    }
+
+    private static IEnumerable<string> ExtractTargetCodeTokens(string suggestedTargetCode)
+    {
+        foreach (var rawToken in suggestedTargetCode.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        {
+            var token = TakeIdentifier(rawToken);
+            if (string.IsNullOrWhiteSpace(token))
+                continue;
+
+            yield return token;
+        }
+    }
+
+    private static int ScoreTargetMatch(string targetToken, DiscoveredTestMethod method)
+    {
+        var expectedClassName = targetToken.EndsWith("Tests", StringComparison.OrdinalIgnoreCase)
+            ? targetToken
+            : $"{targetToken}Tests";
+
+        if (string.Equals(method.ClassName, expectedClassName, StringComparison.OrdinalIgnoreCase))
+            return 100;
+
+        if (method.ClassName.Contains(targetToken, StringComparison.OrdinalIgnoreCase))
+            return 75;
+
+        if (method.Name.Contains(targetToken, StringComparison.OrdinalIgnoreCase))
+            return 50;
+
+        return 0;
     }
 
     private static string ResolveTestRoot(RunnerSettings settings)
@@ -187,7 +246,10 @@ public sealed class TestScenarioMatrixLoader : ITestScenarioMatrixLoader
                         var fullName = string.IsNullOrWhiteSpace(namespaceName)
                             ? $"{currentClass}.{methodName}"
                             : $"{namespaceName}.{currentClass}.{methodName}";
-                        result.Add(new DiscoveredTestMethod(methodName, fullName, file));
+                        var fullClassName = string.IsNullOrWhiteSpace(namespaceName)
+                            ? currentClass
+                            : $"{namespaceName}.{currentClass}";
+                        result.Add(new DiscoveredTestMethod(methodName, fullName, currentClass, fullClassName, file));
                         pendingTestAttribute = false;
                     }
                 }
@@ -237,5 +299,10 @@ public sealed class TestScenarioMatrixLoader : ITestScenarioMatrixLoader
         return string.IsNullOrWhiteSpace(identifier) ? null : identifier;
     }
 
-    private sealed record DiscoveredTestMethod(string Name, string FullyQualifiedName, string SourcePath);
+    private sealed record DiscoveredTestMethod(
+        string Name,
+        string FullyQualifiedName,
+        string ClassName,
+        string FullyQualifiedClassName,
+        string SourcePath);
 }

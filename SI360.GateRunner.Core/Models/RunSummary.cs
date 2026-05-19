@@ -96,7 +96,7 @@ public sealed record GateCatalogWarning(string Code, string Message);
 
 public sealed class RunEnvironment
 {
-    public string ToolVersion { get; set; } = typeof(RunEnvironment).Assembly.GetName().Version?.ToString() ?? "unknown";
+    public string ToolVersion { get; set; } = global::SI360.GateRunner.Services.AppVersionInfo.Version;
     public string MachineName { get; set; } = System.Environment.MachineName;
     public string OSVersion { get; set; } = System.Environment.OSVersion.VersionString;
     public string RuntimeVersion { get; set; } = System.Environment.Version.ToString();

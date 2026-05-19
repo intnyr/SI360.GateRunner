@@ -11,7 +11,6 @@
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>SI360.GateRunner</RootNamespace>
     <AssemblyName>SI360.GateRunner</AssemblyName>
-    <Version>1.0.0</Version>
     <LangVersion>latest</LangVersion>
     <ApplicationIcon>Resources\gaterunner.ico</ApplicationIcon>
   </PropertyGroup>

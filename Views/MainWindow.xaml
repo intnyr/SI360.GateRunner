@@ -107,7 +107,10 @@
                                   HorizontalScrollBarVisibility="Disabled"
                                   AutomationProperties.Name="Run status and readiness summary">
                         <StackPanel Orientation="Vertical" Margin="0,0,8,0">
-                            <TextBlock Text="{Binding StatusText}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding StatusText}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding AppVersionText}" Foreground="{DynamicResource MutedForegroundBrush}" FontSize="13" Margin="12,4,0,0"/>
+                            </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Foreground="{DynamicResource MutedForegroundBrush}" FontSize="13" TextTrimming="CharacterEllipsis">
                                     <Run Text="Solution: "/>

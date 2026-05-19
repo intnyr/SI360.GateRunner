@@ -172,6 +172,7 @@ public partial class MainViewModel : ObservableObject
 
     // Theme (#9)
     [ObservableProperty] private string themeToggleText = "Light";
+    public string AppVersionText => AppVersionInfo.DisplayVersion;
 
     public void RefreshSettings()
     {

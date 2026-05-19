@@ -29,6 +29,7 @@ try
 {
     return command switch
     {
+        "version" or "--version" or "-v" => Version(),
         "discover" => Discover(host.Services),
         "validate-catalog" => ValidateCatalog(host.Services),
         "validate-metadata" => ValidateMetadata(host.Services),
@@ -147,6 +148,7 @@ static int Help()
       run-probes                       Run read-only synthetic runtime probes.
       run                              Run restore, build, all gates, and emit reports.
       summarize [--report <path>]      Print a JSON report.
+      version                          Print GateRunner version.
 
     Options:
       --solution <path>                Override SI360 solution path.
@@ -163,6 +165,12 @@ static int Help()
       --support-bundle <path>          Support bundle output path.
       --gate-timeout-seconds <number>  Override per-gate timeout.
     """);
+    return 0;
+}
+
+static int Version()
+{
+    Console.WriteLine($"SI360 GateRunner {AppVersionInfo.DisplayVersion}");
     return 0;
 }
 

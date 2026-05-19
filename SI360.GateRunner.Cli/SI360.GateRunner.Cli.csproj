@@ -7,7 +7,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>SI360.GateRunner.Cli</RootNamespace>
     <AssemblyName>SI360.GateRunner.Cli</AssemblyName>
-    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

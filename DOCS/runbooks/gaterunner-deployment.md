@@ -7,7 +7,7 @@ Use this runbook to build and publish GateRunner release artifacts.
 ## Publish Command
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File E:\GateRunner\Scripts\Publish-GateRunner.ps1 -Version 1.0.0
+powershell -ExecutionPolicy Bypass -File E:\GateRunner\Scripts\Publish-GateRunner.ps1 -Version 2026.5.3
 ```
 
 ## Output
@@ -30,4 +30,8 @@ Future installer integration can copy the published WPF artifact into the SI360 
 
 ## Versioning
 
-The publish script passes `Version`, `AssemblyVersion`, and `FileVersion` MSBuild properties. The version appears in report environment metadata through assembly version discovery.
+GateRunner uses `Year.Month.Release#` versioning, for example `2026.5.3`.
+
+`Directory.Build.props` is the single local source for the default app version. Update `VersionPrefix` there for normal development builds.
+
+The publish script passes `Version`, `AssemblyVersion`, and `FileVersion` MSBuild properties for release artifacts. The desktop header and CLI `version` command show the semantic version, while report environment metadata keeps the full informational version stamped by MSBuild.

@@ -23,7 +23,7 @@ dotnet run --project .\SI360.GateRunner.csproj -c Release
 For a release artifact:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\Scripts\Publish-GateRunner.ps1 -Version 1.0.0
+powershell -ExecutionPolicy Bypass -File .\Scripts\Publish-GateRunner.ps1 -Version 2026.5.3
 ```
 
 The publish script restores, builds, tests, and publishes framework-dependent `win-x86` WPF output plus CLI output under `artifacts\GateRunner\<version>`.

@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "1.0.0",
+    [string]$Version = "2026.5.3",
     [string]$Configuration = "Release",
     [string]$Runtime = "win-x86"
 )
@@ -10,7 +10,7 @@ $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $artifactRoot = Join-Path $repoRoot "artifacts\GateRunner\$Version"
 $wpfOutput = Join-Path $artifactRoot "wpf"
 $cliOutput = Join-Path $artifactRoot "cli"
-$assemblyVersion = if ($Version -match '^(\d+\.\d+\.\d+)(?:\.\d+)?') { $Matches[1] } else { "1.0.0" }
+$assemblyVersion = if ($Version -match '^(\d+\.\d+\.\d+)(?:\.\d+)?') { $Matches[1] } else { "2026.5.3" }
 
 if (-not $repoRoot.EndsWith("GateRunner")) {
     throw "Unexpected repository root: $repoRoot"

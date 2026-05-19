@@ -15,5 +15,15 @@ public static class AppVersionInfo
         Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version
         ?? Version;
 
-    public static string DisplayVersion => $"v{Version}";
+    public static string DisplayVersion => $"v{SemanticVersion}";
+
+    public static string SemanticVersion
+    {
+        get
+        {
+            var version = Version;
+            var metadataIndex = version.IndexOf('+', StringComparison.Ordinal);
+            return metadataIndex > 0 ? version[..metadataIndex] : version;
+        }
+    }
 }
